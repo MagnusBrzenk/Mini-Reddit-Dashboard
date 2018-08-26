@@ -1,21 +1,20 @@
-import { SUBREDDITSTAT, SUBREDDITSTATSFEED } from "__MODELS";
-import { parseSubredditSearch } from "__FUNCTIONS/redditFunctions/parseSubredditSearch";
+import { SUBREDDITDATUM, SUBREDDITDATA } from "__MODELS";
 import { AnyAction, Reducer } from "redux";
 import { AppActions } from "__REDUX/actions";
 
 //When in development, use the "demo" feed:
 const bDev: boolean = !!false && process.env.NODE_ENV !== "production";
-const localDefault: SUBREDDITSTATSFEED.Interface = !!bDev ? SUBREDDITSTATSFEED.Demo : SUBREDDITSTATSFEED.Default;
+const localDefault: SUBREDDITDATA.Interface = !!bDev ? SUBREDDITDATA.Demo : SUBREDDITDATA.Default;
 
 /**
  * Reducer governing the array of contacts used to build feed
  * @param substate0
  * @param action
  */
-export const subredditStatsFeedReducer: Reducer<SUBREDDITSTATSFEED.ImType, AnyAction> = function(
-    substate0: SUBREDDITSTATSFEED.ImType = SUBREDDITSTATSFEED.genIm(localDefault),
+export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = function(
+    substate0: SUBREDDITDATA.ImType = SUBREDDITDATA.genIm(localDefault),
     action: AnyAction
-): SUBREDDITSTATSFEED.ImType {
+): SUBREDDITDATA.ImType {
     //
 
     //////////////////////

@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { SUBREDDITSTAT, SUBREDDITSTATSFEED } from "__MODELS";
+// import { SUBREDDITSTAT, SUBREDDITSTATSFEED } from "__MODELS";
 
 /////////////////////////////
 export namespace AppActions {
@@ -15,7 +15,8 @@ export namespace AppActions {
         // SUBREDDITSTATSFEED ACTIONS
         FETCH_SUBREDDITSTAT = "FETCH_SUBREDDITSTAT",
         SEARCH_FOR_SUBREDDIT = "SEARCH_FOR_SUBREDDIT",
-        SEARCH_FOR_SUBREDDIT_FULFILLED = "SEARCH_FOR_SUBREDDIT_FULFILLED"
+        SEARCH_FOR_SUBREDDIT_FULFILLED = "SEARCH_FOR_SUBREDDIT_FULFILLED",
+        ADD_SUBREDDIT_STAT_TO_FEED = "ADD_SUBREDDIT_STAT_TO_FEED"
     }
 
     /* ACTION CREATORS */
@@ -28,6 +29,7 @@ export namespace AppActions {
     export const fetchSubredditStat = CreateAction<string>(Types.FETCH_SUBREDDITSTAT);
     export const searchForSubreddit = CreateAction<string>(Types.SEARCH_FOR_SUBREDDIT);
     export const searchForSubredditFulfilled = CreateAction<string[]>(Types.SEARCH_FOR_SUBREDDIT_FULFILLED);
+    export const addSubredditStatToFeed = CreateAction<string>(Types.ADD_SUBREDDIT_STAT_TO_FEED);
 }
 
 /*-------------------------------------- DO NOT EDIT --------------------------------------*/

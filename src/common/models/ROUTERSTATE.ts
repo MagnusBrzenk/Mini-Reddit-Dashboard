@@ -6,8 +6,8 @@ import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
  */
 export namespace ROUTERSTATE {
     export interface Interface {
-        location: any;
-        action: any;
+        readonly location: any;
+        readonly action: any;
     }
 
     export const Default: Readonly<Interface> = {

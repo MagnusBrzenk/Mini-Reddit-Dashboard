@@ -1,5 +1,5 @@
 import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
-import { SUBREDDITSTATSFEED } from "./SUBREDDITSTATSFEED";
+import { SUBREDDITDATA } from "./SUBREDDITDATA";
 import { SUBREDDITSEARCH } from "./SUBREDDITSEARCH";
 import { ROUTERSTATE } from "./ROUTERSTATE";
 
@@ -9,13 +9,13 @@ import { ROUTERSTATE } from "./ROUTERSTATE";
  */
 export namespace ROOTSTATE {
     export interface Interface {
-        subredditStatsFeed: SUBREDDITSTATSFEED.Interface;
-        subredditSearch: SUBREDDITSEARCH.Interface;
-        router: ROUTERSTATE.Interface;
+        readonly subredditData: SUBREDDITDATA.Interface;
+        readonly subredditSearch: SUBREDDITSEARCH.Interface;
+        readonly router: ROUTERSTATE.Interface;
     }
 
     export const Default: Interface = {
-        subredditStatsFeed: SUBREDDITSTATSFEED.Default,
+        subredditData: SUBREDDITDATA.Default,
         subredditSearch: SUBREDDITSEARCH.Default,
         router: ROUTERSTATE.Default
     };

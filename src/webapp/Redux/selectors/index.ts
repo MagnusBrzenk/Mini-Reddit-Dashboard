@@ -1,12 +1,13 @@
 import { createSelector } from "reselect";
-import { ROOTSTATE, SUBREDDITSTATSFEED, SUBREDDITSTAT } from "__MODELS";
+import { ROOTSTATE, SUBREDDITDATA, SUBREDDITDATUM } from "__MODELS";
+import { getImType } from "__METATYPING";
 
 /////////////////////////////////////////////////////////
 // ELEMENTAL SELECTORS
 /////////////////////////////////////////////////////////
 
-export const getAllSubredditStats = (state: ROOTSTATE.ImType): SUBREDDITSTAT.ImTypes => {
-    return state.get("subredditStatsFeed").get("subredditStats");
+export const getAllSubredditDatums = (state: ROOTSTATE.ImType): getImType<SUBREDDITDATUM.Interface[]> => {
+    return state.get("subredditData").get("subredditDatums");
 };
 
 /////////////////////////////////////////////////////////

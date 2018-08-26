@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { getAllSubredditStats } from "__REDUX/selectors";
-import { SUBREDDITSTAT, SUBREDDITSTATSFEED, ROOTSTATE } from "__MODELS";
+import { getAllSubredditDatums } from "__REDUX/selectors";
+import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 
 import { AppActions } from "__REDUX/actions";
 import PREZ from "__UTILS/frontendPresentation";
@@ -13,19 +13,21 @@ interface IState {}
 //Never change IProps for containers; it will always be determined by the intersection of these 3 interfaces:
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
-class DashboardComponent extends React.Component<IProps, IState> {
+class Graph2DComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {};
     }
 
     render() {
+        const dashboardBackgroundColor = PREZ.primaryColor;
         return (
-            <div className="dashboard">
+            <div className="graph-2d">
                 <style jsx>{`
-                    .home-page {
+                    .graph-2d {
                         width: 100%;
                         height: 100%;
+                        background-color: ${dashboardBackgroundColor};
                         overflow: hidden;
                     }
                 `}</style>
@@ -42,11 +44,11 @@ class DashboardComponent extends React.Component<IProps, IState> {
  * Data sent from redux state to component props via selectors
  */
 interface IReduxStateToProps {
-    subredditStats: SUBREDDITSTAT.ImTypes;
+    subredditDatums: SUBREDDITDATUM.ImTypes;
 }
 function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
     return {
-        subredditStats: getAllSubredditStats(state)
+        subredditDatums: getAllSubredditDatums(state)
     };
 }
 
@@ -63,7 +65,7 @@ const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     };
 };
 
-export const Dashboard = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
+export const Graph2D = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
     mapStateToProps,
     mapDispatchToProps
-)(DashboardComponent);
+)(Graph2DComponent);

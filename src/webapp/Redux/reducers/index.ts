@@ -4,12 +4,12 @@ import { ROOTSTATE } from "__MODELS";
 import { Reducer } from "redux";
 
 // Substate reducers
-import { subredditStatsFeedReducer } from "__REDUX/reducers/subredditStatsFeedReducer";
+import { subredditDataReducer } from "__REDUX/reducers/subredditDataReducer";
 import { subredditSearchReducer } from "__REDUX/reducers/subredditSearchReducer";
 import { routerReducer } from "__REDUX/reducers/routerReducer";
 
 const reducerMappings: IReducerMappings = {
-    subredditStatsFeed: subredditStatsFeedReducer,
+    subredditData: subredditDataReducer,
     subredditSearch: subredditSearchReducer,
     router: routerReducer
 };

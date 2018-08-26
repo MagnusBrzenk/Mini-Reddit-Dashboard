@@ -61,13 +61,20 @@ namespace FrontendPresentation {
         return fontSizePercent;
     }
 
-    /**
-     * Theme Params
-     */
-    export const primaryColorDark: string = "#356859";
-    export const primaryColor: string = "#37966F";
-    export const primaryColorLight: string = "#B9E4C9";
-    export const secondaryColor: string = "#FD5523";
+    /////////////////////////////////////////////////////
+    // Color Theme Params
+    /////////////////////////////////////////////////////
+    // // Green
+    // export const primaryColorDark: string = "#356859";
+    // export const primaryColor: string = "#37966F";
+    // export const primaryColorLight: string = "#B9E4C9";
+    // export const secondaryColor: string = "#FD5523";
+    // export const displayWhite: string = "#f5fffa";
+    // // Purple
+    export const primaryColorDark: string = "#373853";
+    export const primaryColor: string = "#8D67FF";
+    export const primaryColorLight: string = "#D5C5FF";
+    export const secondaryColor: string = "#20E0B0";
     export const displayWhite: string = "#f5fffa";
 }
 

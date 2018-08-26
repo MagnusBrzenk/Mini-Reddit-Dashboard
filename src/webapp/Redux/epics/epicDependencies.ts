@@ -1,4 +1,4 @@
-import { SUBREDDITSTAT, SUBREDDITSTATSFEED, REDDIT, NETWORK } from "__MODELS";
+import { SUBREDDITDATUM, SUBREDDITDATA, REDDIT, NETWORK } from "__MODELS";
 import { parseSubredditSearch } from "__FUNCTIONS/redditFunctions/parseSubredditSearch";
 import { __debug } from "__FUNCTIONS/__debug";
 const debug = __debug("EPIC-DEP");

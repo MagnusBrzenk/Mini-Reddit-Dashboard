@@ -1,14 +1,10 @@
 import * as React from "react";
-import { Dashboard } from "__CONTAINERS/Dashboard";
-import { SubredditMenu } from "__CONTAINERS/SubredditMenu";
+import { Dashboard } from "__COMPONENTS/Dashboard";
+import PREZ from "__UTILS/frontendPresentation";
 
-interface IProps {
-    id?: string;
-}
+interface IProps {}
 
-interface IState {
-    id?: string;
-}
+interface IState {}
 
 export class HomePage extends React.Component<IProps, IState> {
     constructor(props: IProps) {
@@ -24,10 +20,14 @@ export class HomePage extends React.Component<IProps, IState> {
                         width: 100%;
                         height: 100%;
                     }
+                    .dashboard-wrapper {
+                        width: 100%;
+                        height: 100%;
+                    }
                 `}</style>
-                <div>Hello!!!</div>
-                <SubredditMenu />
-                <Dashboard />
+                <div className="dashboard-wrapper">
+                    <Dashboard />
+                </div>
             </div>
         );
     }

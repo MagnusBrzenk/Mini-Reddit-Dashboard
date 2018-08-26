@@ -3,8 +3,8 @@
  * NOTE: might incur load-time-ordering errors if you import from this file
  */
 
-export { SUBREDDITSTATSFEED } from "./SUBREDDITSTATSFEED";
-export { SUBREDDITSTAT } from "./SUBREDDITSTAT";
+export { SUBREDDITDATA } from "./SUBREDDITDATA";
+export { SUBREDDITDATUM } from "./SUBREDDITDATUM";
 export { NETWORK } from "./NETWORK";
 export { REDDIT } from "./REDDIT";
 export { ROUTERSTATE } from "./ROUTERSTATE";

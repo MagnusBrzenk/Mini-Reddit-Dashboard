@@ -2,20 +2,20 @@ import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
 import { __debug } from "__FUNCTIONS/__debug";
 const debug = __debug("CONTACT");
 
-export namespace SUBREDDITSTAT {
+export namespace SUBREDDITDATUM {
     export interface Interface {
-        name: string;
-        history: any;
-        retrievalDate?: string;
+        readonly name: string;
+        readonly history: any;
+        readonly retrievalDate?: string;
     }
 
-    export const Default: Readonly<Interface> = {
+    export const Default: Interface = {
         name: "XXX",
         history: {},
         retrievalDate: new Date().toDateString()
     };
 
-    export const Defaults: Interface[] = [];
+    export const Defaults: Interface[] = [{ ...Default }];
 
     export const Demo: Interface = {
         name: "news",
@@ -37,6 +37,8 @@ export namespace SUBREDDITSTAT {
                     return null;
                 }
             //More detailed type tests, etc. go here:
+
+            //...
 
             //All tests passed
             return input as Interface;

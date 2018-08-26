@@ -1,6 +1,6 @@
 import { epicDependencies } from "__REDUX/epics/epicDependencies";
 import { AppActions } from "__REDUX/actions";
-import { ROOTSTATE, SUBREDDITSTAT } from "__MODELS";
+import { ROOTSTATE, SUBREDDITDATA } from "__MODELS";
 import { from, Observable, of, merge } from "rxjs"; //Get types and/or observable-creation functions
 import { mergeMap, map } from "rxjs/operators"; //Get piping operators
 import { combineEpics, ofType, Epic } from "redux-observable";

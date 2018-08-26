@@ -1,16 +1,19 @@
 import * as React from "react";
+import Immutable from "immutable";
+import { getImType } from "__METATYPING";
 import { connect } from "react-redux";
-import { getAllSubredditStats } from "__REDUX/selectors";
+import { getAllSubredditDatums } from "__REDUX/selectors";
 import { genUniqueId } from "__UTILS/genUniqueId";
-import { SUBREDDITSTAT, SUBREDDITSTATSFEED, ROOTSTATE } from "__MODELS";
+import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 import { AppActions } from "__REDUX/actions";
 import PREZ from "__UTILS/frontendPresentation";
 
 interface IParentProps {}
 
-interface IState {}
+interface IState {
+    searchWord: string;
+}
 
-//Never change IProps for containers; it will always be determined by the intersection of these 3 interfaces:
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
 class SubredditMenuComponent extends React.Component<IProps, IState> {
@@ -18,73 +21,130 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            searchWord: "xxxx"
+        };
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleClickOnSubredditMenuItem = this.handleClickOnSubredditMenuItem.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.cbSearchForSubbreddit(this.state.searchWord);
     }
 
     handleInputChange(e: React.FormEvent<HTMLInputElement>) {
         e.preventDefault();
-
-        // const form: HTMLFormElement = event.target as any;
-        // const data: FormData = new FormData(form);
-        // const searchWord: string = data.get("subreddit-search") as any;
-
-        const inputField: HTMLElement | null = document.getElementById(this.searchSubredditInputFieldId) as any;
-
         const searchWord: string = e.currentTarget.value;
-
-        console.log("searchWord >>> ", searchWord);
-
-        if (!!searchWord) this.props.cbSearchForSubbreddit(searchWord);
-        else this.props.cbClearSubredditSearch();
+        this.setState({ searchWord }, () => {
+            if (this.state.searchWord.length >= 3) this.props.cbSearchForSubbreddit(this.state.searchWord);
+            else this.props.cbClearSubredditSearch();
+        });
     }
 
-    // (e: React.FormEvent<HTMLInputElement>) => {
-    //     //
-    //     // The word-search callback is embedded within this simple-flagging mechanism
-    //     // to delay triggering by  in case user types/deletes quickly
-    //     //
-    //     if (!!this.props.onTextInputChange) {
-    //         const delayTriggeringWordSearchPeriod: number = 500;
-    //         this.inputTextLatestValue = e.currentTarget.value;
-    //         if (!this.bSearchingWord) this.bSearchingWord = true;
-    //         setTimeout(() => {
-    //             this.props.onTextInputChange!(this.inputTextLatestValue);
-    //             this.bSearchingWord = false;
-    //         }, !!this.inputTextLatestValue ? delayTriggeringWordSearchPeriod : 0);
-    //     }
-    // }
+    handleClickOnSubredditMenuItem(index: number) {
+        //
+        const subredditName: string = this.props.matchedSubreddits.get(index); //index;
+        console.log("subredditName >>>", subredditName);
+        this.props.cbAddSubredditStatToFeed(subredditName);
+    }
 
     render() {
+        //Presentation params
+        // const itemBorderColor = PREZ.primaryColorDark;
+        // const itemBorderColor = PREZ.secondaryColor;
+        const itemBorderColor = "rgba(0,0,0,0)";
+        const textIndentPxls: number = 10;
+        const subredditItemHeightPxls: number = 30;
+        // State params
+        const { matchedSubreddits } = this.props;
+        const { searchWord } = this.state;
+        //Derived params
+        const bDisplayMatchedSubreddits = searchWord.length >= 3;
+        // console.log(">>>>>>>>", matchedSubreddits);
+
         return (
-            <div className="dashboard">
+            <div className="subreddit-menu">
                 <style jsx>{`
-                    .home-page {
+                    .subreddit-menu {
                         width: 100%;
                         height: 100%;
-                        overflow: hidden;
                     }
                     .subreddit-search-form {
                         width: 100%;
                     }
+                    .search-subreddit-input-field {
+                        box-sizing: border-box;
+                        background-color: ${PREZ.primaryColorLight};
+                        border: 0px solid rgba(0.5, 0, 0, 0.5);
+                        margin: 1px 0px;
+                        width: 100%;
+                        height: 40px;
+                        text-indent: ${textIndentPxls}px;
+                    }
+                    .search-subreddit-input-field::placeholder {
+                        font-size: 120%;
+                        transform: translateX(0px);
+                    }
+                    .subreddit-menu-items-wrapper {
+                        width: 100%;
+                        height: calc(100% - 40px);
+                        overflow: scroll;
+                    }
+                    .subreddit-menu-item {
+                        width: 100%;
+                        height: 30px;
+                        background-color: ${PREZ.primaryColor};
+                        border: 2px solid ${itemBorderColor};
+                        color: ${PREZ.displayWhite};
+                        display: flex;
+                        align-items: center;
+                        justify-content: left;
+                        box-sizing: border-box;
+                        padding-left: ${textIndentPxls}px;
+                        margin-top: 1px;
+                        cursor: pointer;
+                    }
+                    .subreddit-menu-item + .subreddit-menu-item {
+                        border-top: 0px solid ${itemBorderColor};
+                    }
                 `}</style>
-                <form //
-                    // onSubmit={e => this.handleSubmit(e)}
-                    noValidate
-                    className={"subreddit-search-form"}
-                >
-                    <input //
-                        onChange={e => this.handleInputChange(e)}
+                <form className={"subreddit-search-form"}>
+                    <input
                         className="search-subreddit-input-field"
+                        onChange={e => this.handleInputChange(e)}
                         id={this.searchSubredditInputFieldId}
                         name="subreddit-search"
-                        required
                         placeholder="Search"
+                        required
                     />
                 </form>
-                {this.props.matchedSubreddits.map((el, ind) => (
-                    <div key={ind}> {el} </div>
-                ))}
+                <div className="subreddit-menu-items-wrapper">
+                    {!!bDisplayMatchedSubreddits ? (
+                        <div className="">
+                            {this.props.matchedSubreddits.map((el, ind) => (
+                                <div //
+                                    className="subreddit-menu-item"
+                                    onClick={e => this.handleClickOnSubredditMenuItem(ind!)}
+                                    key={ind}
+                                >
+                                    {el}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="">
+                            {this.props.subredditDatums.map((el, ind) => (
+                                <div //
+                                    className="subreddit-menu-item"
+                                    onClick={e => this.handleClickOnSubredditMenuItem(ind!)}
+                                    key={ind}
+                                >
+                                    {JSON.stringify(el.get("name"))}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         );
     }
@@ -95,13 +155,13 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
 //////////////////////////////////////////////////////////////////////////
 
 interface IReduxStateToProps {
-    subredditStats: SUBREDDITSTAT.ImTypes;
+    subredditDatums: SUBREDDITDATUM.ImTypes;
     searchWord: string;
-    matchedSubreddits: string[];
+    matchedSubreddits: getImType<string[]>;
 }
 function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
     return {
-        subredditStats: state.get("subredditStatsFeed").get("subredditStats"),
+        subredditDatums: state.get("subredditData").get("subredditDatums"),
         searchWord: state.get("subredditSearch").get("searchWord"),
         matchedSubreddits: state.get("subredditSearch").get("matchedSubreddits")
     };
@@ -110,11 +170,13 @@ function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
 interface IReduxCallbacks {
     cbClearSubredditSearch: typeof AppActions.clearSubredditSearch;
     cbSearchForSubbreddit: typeof AppActions.searchForSubreddit;
+    cbAddSubredditStatToFeed: typeof AppActions.addSubredditStatToFeed;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbClearSubredditSearch: () => dispatch(AppActions.clearSubredditSearch()),
-        cbSearchForSubbreddit: (searchWord: string) => dispatch(AppActions.searchForSubreddit(searchWord))
+        cbSearchForSubbreddit: (searchWord: string) => dispatch(AppActions.searchForSubreddit(searchWord)),
+        cbAddSubredditStatToFeed: (subredditName: string) => dispatch(AppActions.addSubredditStatToFeed(subredditName))
     };
 };
 

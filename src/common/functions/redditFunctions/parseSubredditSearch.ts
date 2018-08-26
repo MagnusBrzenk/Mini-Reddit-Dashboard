@@ -6,11 +6,5 @@ import { REDDIT } from "__MODELS";
  * @param response
  */
 export function parseSubredditSearch(response: REDDIT.ISubredditSearchResult): string[] {
-    console.log("@@@@@@@@@@@@@@@@@@@@@");
-
-    console.log(JSON.stringify(response));
-
-    // response.data.children.map(el => el.data.display_name);
-
     return response.data.children.map(el => el.data.display_name);
 }

@@ -46,7 +46,7 @@ export interface ImMethodsInterface<T> extends DeleteMethods<T>, GetMethods<T>, 
     ): getImType<T>;
 
     map<V1 extends T extends any[] ? T[number] : never>(
-        cb: (el: any, ind?: number, arr?: any) => any
+        cb: (el: getImType<V1>, ind?: number, arr?: any) => any
     ): getImType<any[]>;
 
     findIndex<V1 extends T extends any[] ? T[number] : never>(
