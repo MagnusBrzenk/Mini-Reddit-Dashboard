@@ -5,13 +5,17 @@ const debug = __debug("CONTACT");
 export namespace SUBREDDITDATUM {
     export interface Interface {
         readonly name: string;
-        readonly history: any;
+        readonly binWidth10: number[];
+        readonly binWidth100: number[];
+        readonly images: string[];
         readonly retrievalDate?: string;
     }
 
     export const Default: Interface = {
         name: "XXX",
-        history: {},
+        binWidth10: [...Array(100)].map(() => 0),
+        binWidth100: [...Array(10)].map(() => 0),
+        images: [],
         retrievalDate: new Date().toDateString()
     };
 
@@ -19,7 +23,9 @@ export namespace SUBREDDITDATUM {
 
     export const Demo: Interface = {
         name: "news",
-        history: {},
+        binWidth10: [...Array(100)].map(() => Math.round(Math.random() * 50)),
+        binWidth100: [17, 21, 22, 17, 27, 18, 24, 14, 22, 2],
+        images: [],
         retrievalDate: new Date().toDateString()
     };
 

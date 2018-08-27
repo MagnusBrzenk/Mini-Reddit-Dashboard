@@ -6,6 +6,7 @@ import { getAllSubredditDatums } from "__REDUX/selectors";
 import { genUniqueId } from "__UTILS/genUniqueId";
 import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 import { AppActions } from "__REDUX/actions";
+import { getRedditDatum } from "__FUNCTIONS/redditFunctions/getRedditDatum";
 import PREZ from "__UTILS/frontendPresentation";
 
 interface IParentProps {}
@@ -22,14 +23,17 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            searchWord: "xxxx"
+            searchWord: ""
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleClickOnSubredditMenuItem = this.handleClickOnSubredditMenuItem.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.cbSearchForSubbreddit(this.state.searchWord);
+
+        //
+        await getRedditDatum("all");
     }
 
     handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -107,6 +111,11 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     .subreddit-menu-item + .subreddit-menu-item {
                         border-top: 0px solid ${itemBorderColor};
                     }
+                    .subreddit-datum {
+                        background-color: ${PREZ.primaryColorDark};
+                        border: 2px solid ${itemBorderColor};
+                        color: ${PREZ.displayWhite};
+                    }
                 `}</style>
                 <form className={"subreddit-search-form"}>
                     <input
@@ -135,7 +144,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                         <div className="">
                             {this.props.subredditDatums.map((el, ind) => (
                                 <div //
-                                    className="subreddit-menu-item"
+                                    className="subreddit-menu-item subreddit-datum"
                                     onClick={e => this.handleClickOnSubredditMenuItem(ind!)}
                                     key={ind}
                                 >
