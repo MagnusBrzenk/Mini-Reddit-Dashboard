@@ -8,6 +8,7 @@ export namespace SUBREDDITDATUM {
         readonly binWidth10: number[];
         readonly binWidth100: number[];
         readonly images: string[];
+        readonly bDisplayed: boolean;
         readonly retrievalDate?: string;
     }
 
@@ -16,6 +17,7 @@ export namespace SUBREDDITDATUM {
         binWidth10: [...Array(100)].map(() => 0),
         binWidth100: [...Array(10)].map(() => 0),
         images: [],
+        bDisplayed: false,
         retrievalDate: new Date().toDateString()
     };
 
@@ -26,6 +28,7 @@ export namespace SUBREDDITDATUM {
         binWidth10: [...Array(100)].map(() => Math.round(Math.random() * 50)),
         binWidth100: [17, 21, 22, 17, 27, 18, 24, 14, 22, 2],
         images: [],
+        bDisplayed: false,
         retrievalDate: new Date().toDateString()
     };
 

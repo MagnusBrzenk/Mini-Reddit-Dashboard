@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-// import { SUBREDDITSTAT, SUBREDDITSTATSFEED } from "__MODELS";
+import { SUBREDDITDATUM, SUBREDDITDATA } from "__MODELS";
 
 /////////////////////////////
 export namespace AppActions {
@@ -8,28 +8,30 @@ export namespace AppActions {
     /* ACTION TYPES */
 
     export enum Types {
-        // SUBREDDITSEARCH ACTIONS
+        // SEARCH ACTIONS
         SET_SUBREDDIT_SEARCH_WORD = "SET_SUBREDDIT_SEARCH_WORD",
         CLEAR_SUBREDDIT_SEARCH = "CLEAR_SUBREDDIT_SEARCH",
-
-        // SUBREDDITSTATSFEED ACTIONS
-        FETCH_SUBREDDITSTAT = "FETCH_SUBREDDITSTAT",
         SEARCH_FOR_SUBREDDIT = "SEARCH_FOR_SUBREDDIT",
         SEARCH_FOR_SUBREDDIT_FULFILLED = "SEARCH_FOR_SUBREDDIT_FULFILLED",
-        ADD_SUBREDDIT_STAT_TO_FEED = "ADD_SUBREDDIT_STAT_TO_FEED"
+
+        // DATA ACTIONS
+        FETCH_SUBREDDIT_DATUM = "FETCH_SUBREDDIT_DATUM",
+        FETCH_SUBREDDIT_DATUM_FULFILLED = "FETCH_SUBREDDIT_DATUM_FULFILLED"
     }
 
     /* ACTION CREATORS */
 
-    // SUBREDDITSEARCH ACTIONS
+    // SEARCH ACTIONS
     export const setSubredditSearchWord = CreateAction<string>(Types.SET_SUBREDDIT_SEARCH_WORD);
     export const clearSubredditSearch = CreateAction(Types.CLEAR_SUBREDDIT_SEARCH);
-
-    // SUBREDDITSTATSFEED ACTIONS
-    export const fetchSubredditStat = CreateAction<string>(Types.FETCH_SUBREDDITSTAT);
     export const searchForSubreddit = CreateAction<string>(Types.SEARCH_FOR_SUBREDDIT);
     export const searchForSubredditFulfilled = CreateAction<string[]>(Types.SEARCH_FOR_SUBREDDIT_FULFILLED);
-    export const addSubredditStatToFeed = CreateAction<string>(Types.ADD_SUBREDDIT_STAT_TO_FEED);
+
+    // DATA ACTIONS
+    export const fetchSubredditDatum = CreateAction<string>(Types.FETCH_SUBREDDIT_DATUM);
+    export const fetchSubredditDatumFulfilled = CreateAction<SUBREDDITDATUM.Interface>(
+        Types.FETCH_SUBREDDIT_DATUM_FULFILLED
+    );
 }
 
 /*-------------------------------------- DO NOT EDIT --------------------------------------*/

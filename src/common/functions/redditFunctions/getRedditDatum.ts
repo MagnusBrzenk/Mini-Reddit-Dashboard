@@ -8,10 +8,10 @@ import { getTopRedditPosts } from "./getTopRedditPosts";
 export async function getRedditDatum(subredditName: string): Promise<SUBREDDITDATUM.Interface> {
     //
 
-    subredditName = "pics";
-    subredditName = "news";
-    subredditName = "cats";
-    subredditName = "funny";
+    // subredditName = "pics";
+    // subredditName = "news";
+    // subredditName = "cats";
+    // subredditName = "funny";
     // subredditName = "Wellthatsucks";
 
     const posts: REDDIT.IPost[] = await getTopRedditPosts();
@@ -38,6 +38,7 @@ export async function getRedditDatum(subredditName: string): Promise<SUBREDDITDA
 
     const subredditDataum: SUBREDDITDATUM.Interface = {
         name: subredditName,
+        bDisplayed: true,
         images,
         binWidth10,
         binWidth100

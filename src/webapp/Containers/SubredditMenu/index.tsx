@@ -26,14 +26,17 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
             searchWord: ""
         };
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleClickOnSubredditMenuItem = this.handleClickOnSubredditMenuItem.bind(this);
+        this.handleClickOnMatchedSubredditItem = this.handleClickOnMatchedSubredditItem.bind(this);
     }
 
     async componentDidMount() {
+        //////////////////////////////////////
+        // Spin off async fetch of reddit data
+        console.log("///////////////////");
         this.props.cbSearchForSubbreddit(this.state.searchWord);
-
-        //
-        await getRedditDatum("all");
+        console.log("///////////////////");
+        //////////////////////
+        getRedditDatum("all");
     }
 
     handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -45,11 +48,20 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
         });
     }
 
-    handleClickOnSubredditMenuItem(index: number) {
+    handleClickOnMatchedSubredditItem(index: number) {
         //
         const subredditName: string = this.props.matchedSubreddits.get(index); //index;
         console.log("subredditName >>>", subredditName);
-        this.props.cbAddSubredditStatToFeed(subredditName);
+        this.props.cbAddSubredditDatumToFeed(subredditName);
+        //
+        //
+        const inputField: HTMLElement | null = document.getElementById(this.searchSubredditInputFieldId);
+        if (!!inputField) (inputField as HTMLInputElement).value = "";
+        this.setState({ searchWord: "" });
+    }
+
+    handleClickOnSubredditDatumItem(index: number) {
+        //
     }
 
     render() {
@@ -96,7 +108,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     }
                     .subreddit-menu-item {
                         width: 100%;
-                        height: 30px;
+                        height: 40px;
                         background-color: ${PREZ.primaryColor};
                         border: 2px solid ${itemBorderColor};
                         color: ${PREZ.displayWhite};
@@ -112,7 +124,8 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                         border-top: 0px solid ${itemBorderColor};
                     }
                     .subreddit-datum {
-                        background-color: ${PREZ.primaryColorDark};
+                        // background-color: ${PREZ.primaryColorDark};
+                        background-color: pink;
                         border: 2px solid ${itemBorderColor};
                         color: ${PREZ.displayWhite};
                     }
@@ -131,9 +144,9 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     {!!bDisplayMatchedSubreddits ? (
                         <div className="">
                             {this.props.matchedSubreddits.map((el, ind) => (
-                                <div //
+                                <div
                                     className="subreddit-menu-item"
-                                    onClick={e => this.handleClickOnSubredditMenuItem(ind!)}
+                                    onClick={e => this.handleClickOnMatchedSubredditItem(ind!)}
                                     key={ind}
                                 >
                                     {el}
@@ -145,7 +158,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                             {this.props.subredditDatums.map((el, ind) => (
                                 <div //
                                     className="subreddit-menu-item subreddit-datum"
-                                    onClick={e => this.handleClickOnSubredditMenuItem(ind!)}
+                                    onClick={e => this.handleClickOnSubredditDatumItem(ind!)}
                                     key={ind}
                                 >
                                     {JSON.stringify(el.get("name"))}
@@ -179,13 +192,13 @@ function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
 interface IReduxCallbacks {
     cbClearSubredditSearch: typeof AppActions.clearSubredditSearch;
     cbSearchForSubbreddit: typeof AppActions.searchForSubreddit;
-    cbAddSubredditStatToFeed: typeof AppActions.addSubredditStatToFeed;
+    cbAddSubredditDatumToFeed: typeof AppActions.fetchSubredditDatum;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbClearSubredditSearch: () => dispatch(AppActions.clearSubredditSearch()),
         cbSearchForSubbreddit: (searchWord: string) => dispatch(AppActions.searchForSubreddit(searchWord)),
-        cbAddSubredditStatToFeed: (subredditName: string) => dispatch(AppActions.addSubredditStatToFeed(subredditName))
+        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName))
     };
 };
 
