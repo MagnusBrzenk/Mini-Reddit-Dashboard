@@ -51,9 +51,9 @@ class Graph2DComponent extends React.Component<IProps, IState> {
             }))
         );
 
-        // console.log("%%%%%%%%%%%");
-        // console.log(allPlottingData);
-        // console.log("%%%%%%%%%%%");
+        console.log("%%%%%%%%%%%");
+        console.log(allPlottingData);
+        console.log("%%%%%%%%%%%");
 
         return (
             <div className="graph-2d">

@@ -4,21 +4,12 @@ type IDataPoint = LineChart.IDataPoint;
 
 export default class D3Controller {
     readonly svgDivWrapperId: string;
-    private plottingData: [IDataPoint[]] | undefined;
-
-    ////////////////////////////////////////////////////////
-    constructor(refId: string, plottingData: [IDataPoint[]]) {
-        ////////////////////////////////////////////////////
-
-        //Class assignments
+    // private plottingData: [IDataPoint[]] | undefined;
+    constructor(refId: string) {
         this.svgDivWrapperId = refId;
-        this.plottingData = plottingData;
-
-        //
-        this.drawD3Chart();
     }
 
-    public drawD3Chart() {
+    public drawD3Chart(plottingData: [IDataPoint[]], color: string = "red") {
         this.resetSVG();
 
         const svgDivWrapper = document.getElementById(this.svgDivWrapperId);
@@ -28,7 +19,7 @@ export default class D3Controller {
         console.log("~~~~~~~~~~~~~~~~~~~~");
         console.log("wrapperWidth", wrapperWidth);
         console.log("wrapperHeight", wrapperHeight);
-        console.log(this.plottingData);
+        console.log(plottingData);
         console.log("~~~~~~~~~~~~~~~~~~~~");
 
         const margin = { top: 50, right: 50, bottom: 50, left: 50 };
@@ -42,25 +33,28 @@ export default class D3Controller {
         // const totalPoints: number = this.state.data.length;
         // const dataset = this.state.data; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
 
-        const totalPoints: number = this.plottingData!.length;
-        const dataset: IDataPoint[] = this.plottingData![0]; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
+        const totalPoints: number = plottingData!.length;
+        const datasets: [IDataPoint[]] = plottingData!; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
+        // const dataset: IDataPoint[] = this.plottingData![0]; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
 
         console.log("<><><><><><><><>");
-        console.log(dataset);
-        console.log(dataset.map(el => el.x));
+        console.log(datasets);
+        // console.log(dataset.map(el => el.x));
         console.log("<><><><><><><><>");
 
-        const maxX: number = Math.ceil(Math.max.apply(null, dataset.map(el => el.x)));
-        const maxY: number = Math.ceil(Math.max.apply(null, dataset.map(el => el.y)));
+        const maxXs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.x))));
+        const maxX = Math.ceil(Math.max.apply(null, maxXs.map(el => el)));
+        const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
+        const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
 
-        console.log("________________");
-        console.log(maxX, maxY);
-        console.log(
-            // Math.ceil(Math.max.apply(dataset.map(el => el.y))),
-            Math.max.apply(dataset.map(el => el.y)),
-            dataset.map(el => el.y)
-        );
-        console.log("----------------");
+        // console.log("________________");
+        // console.log(maxX, maxY);
+        // console.log(
+        //     // Math.ceil(Math.max.apply(dataset.map(el => el.y))),
+        //     Math.max.apply(dataset.map(el => el.y)),
+        //     dataset.map(el => el.y)
+        // );
+        // console.log("----------------");
         // console.log(dataset, dataset0);
 
         // 5. X scale will use the index of our data
@@ -116,36 +110,45 @@ export default class D3Controller {
             .call(d3.axisLeft(yScale) as any); // Create an axis component with d3.axisLeft
 
         // 9. Append the path, bind the data, and call the line generator
-        svg.append("path")
-            .datum(dataset) // 10. Binds data to the line
-            .attr("class", "line") // Assign a class for styling
-            .attr("d", line as any); // 11. Calls the line generator
-
+        datasets.forEach(
+            dataset =>
+                svg
+                    .append("path")
+                    .datum(dataset) // 10. Binds data to the line
+                    .attr("class", "line") // Assign a class for styling
+                    .attr("d", line as any) // 11. Calls the line generator
+        );
         // 12. Appends a circle for each datapoint
-        svg.selectAll(".dot")
-            .data(dataset)
-            .enter()
-            .append("circle") // Uses the enter().append() method
-            .attr("class", "dot") // Assign a class for styling
-            .attr("cx", function(d: any, i) {
-                // return xScale(i);
-                return xScale(d.x);
-            })
-            .attr("cy", function(d: any, i) {
-                return yScale(d.y);
-            })
-            .attr("r", 5)
-            .on("mouseover", function(a, b, c) {
-                // console.log(a, b, c);
-                const $this: HTMLElement | null = this as any;
-                if (!!$this) $this.classList.add("focus");
-            })
-            .on("mouseout", function(a, b) {
-                //
-                // console.log(a, b);
-                const $this: HTMLElement | null = this as any;
-                if (!!$this) $this.classList.remove("focus");
-            });
+        datasets.forEach((dataset, i) =>
+            svg
+                .selectAll(".dot")
+                // .data(dataset)
+                .data(dataset as any, function(d: any) {
+                    return i + "";
+                })
+                .enter()
+                .append("circle") // Uses the enter().append() method
+                .attr("class", "dot") // Assign a class for styling
+                .attr("cx", function(d: any, i) {
+                    // return xScale(i);
+                    return xScale(d.x);
+                })
+                .attr("cy", function(d: any, i) {
+                    return yScale(d.y);
+                })
+                .attr("r", 5)
+                .on("mouseover", function(a, b, c) {
+                    // console.log(a, b, c);
+                    const $this: HTMLElement | null = this as any;
+                    if (!!$this) $this.classList.add("focus");
+                })
+                .on("mouseout", function(a, b) {
+                    //
+                    // console.log(a, b);
+                    const $this: HTMLElement | null = this as any;
+                    if (!!$this) $this.classList.remove("focus");
+                })
+        );
     }
 
     resetSVG() {

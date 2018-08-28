@@ -6,6 +6,7 @@
 @import url("https://fonts.googleapis.com/css?family=Poiret+One");
 @import url("https://fonts.googleapis.com/css?family=Roboto");
 @import url("https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Taviraj:300,400");
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 html,
 body,
 #root {
@@ -13,7 +14,8 @@ body,
     width: 100%;
     margin: 0px;
     /* font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; */
-    font-family: "Dosis", sans-serif;
+    /* font-family: "Dosis", sans-serif; */
+    font-family: "Roboto", sans-serif;
     font-size: 16px;
 }
 
@@ -104,8 +106,8 @@ body,
     display: block;
 }
 
-.column+.column,
-.col+.col {
+.column + .column,
+.col + .col {
     margin-left: 1.6%;
 }
 
@@ -186,7 +188,7 @@ body,
         float: none;
         width: auto;
     }
-    .column+.column {
+    .column + .column {
         margin-left: 0;
     }
 }

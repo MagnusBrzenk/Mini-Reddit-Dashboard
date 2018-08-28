@@ -57,8 +57,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         box-shadow: ${PREZ.shadowString};
                     }
                 `}</style>
-                <h1> Mini-Reddit Dashboard</h1>
-                {/* XXX */}
+                Mini-Reddit Dashboard
             </div>
         );
     }

@@ -89,23 +89,27 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                         box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
                         background-color: ${PREZ.primaryColorDark};
                     }
+                    .form-wrapper {
+                    }
                     .subreddit-search-form {
                         width: 100%;
                     }
                     .search-subreddit-input-field {
                         box-sizing: border-box;
-                        background-color: ${PREZ.primaryColorDark};
-                        border: 0px solid rgba(0.5, 0, 0, 0.5);
+                        background-color: rgba(255, 255, 255, 0.01);
+                        border: 0px solid rgba(255, 255, 255, 0.25);
+                        // border-bottom: 1px solid rgba(255, 255, 255, 0.25);
                         margin: 1px 0px;
                         width: 100%;
-                        height: 40px;
+                        height: 50px;
                         text-indent: ${textIndentPxls}px;
                         color: white;
                     }
                     .search-subreddit-input-field::placeholder {
                         font-size: 120%;
+                        // font-style: italic;
                         transform: translateX(0px);
-                        color: white;
+                        color: rgba(255, 255, 255, 0.4);
                     }
                     .subreddit-menu-items-wrapper {
                         width: 100%;
@@ -131,21 +135,30 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     }
                     .subreddit-datum {
                         background-color: ${PREZ.primaryColorDark};
-                        // background-color: pink;
                         border: 2px solid ${itemBorderColor};
                         color: ${PREZ.displayWhite};
                     }
                 `}</style>
-                <form className={"subreddit-search-form"}>
-                    <input
-                        className="search-subreddit-input-field"
-                        onChange={e => this.handleInputChange(e)}
-                        id={this.searchSubredditInputFieldId}
-                        name="subreddit-search"
-                        placeholder="Search"
-                        required
-                    />
-                </form>
+
+                <div className="form-wrapper">
+                    <form
+                        className={"subreddit-search-form"}
+                        autoComplete="off"
+                        // style={{ backgroundColor: "rgba(255, 0, 255, 0.1)" }}
+                    >
+                        <input
+                            className="search-subreddit-input-field"
+                            onChange={e => this.handleInputChange(e)}
+                            id={this.searchSubredditInputFieldId}
+                            name="subreddit-search"
+                            // placeholder="Search Subreddits"
+                            // placeholder="SEARCH SUBREDDITS"
+                            placeholder="SEARCH"
+                            required
+                        />
+                    </form>
+                </div>
+
                 <div className="subreddit-menu-items-wrapper">
                     {!!bDisplayMatchedSubreddits ? (
                         <div className="">

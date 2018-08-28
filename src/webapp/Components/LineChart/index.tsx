@@ -23,8 +23,8 @@ export namespace LineChart {
         //
 
         // private d3RootElement: HTMLDivElement | null = null;
-        private D3Controller: D3Controller | undefined;
         readonly lineChartDivId: string = "line-chart-div-" + genUniqueId();
+        private D3Controller: D3Controller = new D3Controller(this.lineChartDivId);
 
         constructor(props: IProps) {
             super(props);
@@ -37,12 +37,18 @@ export namespace LineChart {
         /////////////////////////////////////
 
         componentDidMount() {
-            this.D3Controller = new D3Controller(this.lineChartDivId, this.props.plottingData);
+            console.log("^^^^^ &&& ^^^^^");
+            console.log(this.props.plottingData);
+            console.log("^^^^^^^ &&& ^^^^^^");
+            // this.D3Controller = ;
             window.addEventListener("resize", this.handleWindowResize);
+            this.D3Controller.drawD3Chart(this.props.plottingData);
         }
 
-        componentDidUpdate() {
+        componentDidUpdate(prevProps: IProps) {
             //
+            if (prevProps !== this.props)
+                if (!!this.D3Controller) this.D3Controller.drawD3Chart(this.props.plottingData);
         }
 
         componentWillUnmount() {
@@ -55,7 +61,7 @@ export namespace LineChart {
 
         handleWindowResize() {
             console.log("XXX");
-            if (!!this.D3Controller) this.D3Controller.drawD3Chart();
+            if (!!this.D3Controller) this.D3Controller.drawD3Chart(this.props.plottingData);
         }
 
         render() {
