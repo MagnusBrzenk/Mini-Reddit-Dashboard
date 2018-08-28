@@ -9,7 +9,9 @@ import { AppActions } from "__REDUX/actions";
 import { getRedditDatum } from "__FUNCTIONS/redditFunctions/getRedditDatum";
 import PREZ from "__UTILS/frontendPresentation";
 
-interface IParentProps {}
+interface IParentProps {
+    bShadowed?: boolean;
+}
 
 interface IState {
     searchWord: string;
@@ -32,11 +34,11 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
     async componentDidMount() {
         //////////////////////////////////////
         // Spin off async fetch of reddit data
-        console.log("///////////////////");
-        this.props.cbSearchForSubbreddit(this.state.searchWord);
-        console.log("///////////////////");
+        // console.log("///////////////////");
+        // this.props.cbSearchForSubbreddit(this.state.searchWord);
+        // console.log("//////////////// ///");
         //////////////////////
-        getRedditDatum("all");
+        // getRedditDatum("all");
     }
 
     handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -84,22 +86,26 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     .subreddit-menu {
                         width: 100%;
                         height: 100%;
+                        box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
+                        background-color: ${PREZ.primaryColorDark};
                     }
                     .subreddit-search-form {
                         width: 100%;
                     }
                     .search-subreddit-input-field {
                         box-sizing: border-box;
-                        background-color: ${PREZ.primaryColorLight};
+                        background-color: ${PREZ.primaryColorDark};
                         border: 0px solid rgba(0.5, 0, 0, 0.5);
                         margin: 1px 0px;
                         width: 100%;
                         height: 40px;
                         text-indent: ${textIndentPxls}px;
+                        color: white;
                     }
                     .search-subreddit-input-field::placeholder {
                         font-size: 120%;
                         transform: translateX(0px);
+                        color: white;
                     }
                     .subreddit-menu-items-wrapper {
                         width: 100%;
@@ -124,8 +130,8 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                         border-top: 0px solid ${itemBorderColor};
                     }
                     .subreddit-datum {
-                        // background-color: ${PREZ.primaryColorDark};
-                        background-color: pink;
+                        background-color: ${PREZ.primaryColorDark};
+                        // background-color: pink;
                         border: 2px solid ${itemBorderColor};
                         color: ${PREZ.displayWhite};
                     }
@@ -161,7 +167,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                                     onClick={e => this.handleClickOnSubredditDatumItem(ind!)}
                                     key={ind}
                                 >
-                                    {JSON.stringify(el.get("name"))}
+                                    {el.get("name")}
                                 </div>
                             ))}
                         </div>

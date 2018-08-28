@@ -1,6 +1,7 @@
 import * as React from "react";
 import D3Controller from "./D3Controller";
 import { genUniqueId } from "__UTILS/genUniqueId";
+import PREZ from "__UTILS/frontendPresentation";
 
 interface IProps {
     plottingData: any;
@@ -74,7 +75,8 @@ export namespace LineChart {
 
                         .line-chart :global(.line) {
                             fill: none;
-                            stroke: #ffab00;
+                            // stroke: #ffab;
+                            stroke: ${PREZ.secondaryColor};
                             stroke-width: 3;
                         }
 
@@ -84,8 +86,12 @@ export namespace LineChart {
                         }
 
                         .line-chart :global(.dot) {
+                            /*
                             fill: #ffab00;
                             stroke: #fff;
+                            */
+                            fill: ${PREZ.secondaryColor};
+                            stroke: ${PREZ.secondaryColor};
                         }
 
                         .line-chart :global(.focus) {

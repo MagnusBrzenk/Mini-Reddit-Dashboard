@@ -1,6 +1,7 @@
 // import rp from "request-promise";
 import parse from "url-parse";
 import { REDDIT } from "__MODELS";
+import demo from "./demo.json";
 const bDebug: boolean = false;
 
 //Cache topRedditPosts
@@ -13,7 +14,13 @@ let topRedditPosts: undefined | REDDIT.IPost[];
  * @param sortType
  */
 export async function getTopRedditPosts(sortType: "hot" | "top" = "top"): Promise<REDDIT.IPost[]> {
-    if (!topRedditPosts) topRedditPosts = await getTopRedditPostsWrapped(sortType);
+    // if (!topRedditPosts) topRedditPosts = await getTopRedditPostsWrapped(sortType);
+    // return topRedditPosts;
+
+    console.log("***************>>>> ", topRedditPosts);
+    // if (!topRedditPosts) topRedditPosts = JSON.parse(demo) as REDDIT.IPost[];
+    if (!topRedditPosts) topRedditPosts = demo as REDDIT.IPost[];
+    console.log("***************>>>> ", topRedditPosts);
     return topRedditPosts;
 }
 
@@ -51,9 +58,6 @@ export async function getTopRedditPostsWrapped(sortType: "hot" | "top" = "top"):
             "&t=all&count=" +
             redditCount +
             (!!afterCode ? afterCode : "");
-
-        console.log(redditUrl);
-
         //
         // Try pinging reddit
         //

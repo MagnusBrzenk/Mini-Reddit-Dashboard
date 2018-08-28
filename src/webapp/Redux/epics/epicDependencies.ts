@@ -16,13 +16,13 @@ export const epicDependencies = {
 
             //Handle reddit-api response
             const redditResponse: string[] = await fetch(subredditNameSearchUrl).then(async res => {
-                const networkResponsePackage: REDDIT.ISubredditSearchResult = await res.json();
+                const subredditSearchResult: REDDIT.ISubredditSearchResult = await res.json();
 
-                console.log("+++++++++++++++++++++++");
-                console.log("networkResponsePackage", networkResponsePackage);
-                console.log("+++++++++++++++++++++++");
+                // console.log("+++++++++++++++++++++++");
+                // console.log("networkResponsePackage", networkResponsePackage);
+                // console.log("+++++++++++++++++++++++");
 
-                const matchedNames: string[] = parseSubredditSearch(networkResponsePackage);
+                const matchedNames: string[] = parseSubredditSearch(subredditSearchResult);
                 if (res.status >= 200 && res.status < 300) {
                     return matchedNames;
                 } else {

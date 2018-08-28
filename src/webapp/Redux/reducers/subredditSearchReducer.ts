@@ -1,5 +1,4 @@
 import { SUBREDDITSEARCH } from "__MODELS";
-import { parseSubredditSearch } from "__FUNCTIONS/redditFunctions/parseSubredditSearch";
 import { AnyAction, Reducer } from "redux";
 import { AppActions } from "__REDUX/actions";
 

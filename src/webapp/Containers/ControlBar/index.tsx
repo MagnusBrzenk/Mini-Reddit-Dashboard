@@ -15,7 +15,6 @@ import PREZ from "__UTILS/frontendPresentation";
 
 interface IParentProps {
     bShadowed?: boolean;
-    maxX: number;
 }
 
 interface IState {}
@@ -23,7 +22,7 @@ interface IState {}
 //Never change IProps for containers; it will always be determined by the intersection of these 3 interfaces:
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
-class Graph2DComponent extends React.Component<IProps, IState> {
+class ControlBarComponent extends React.Component<IProps, IState> {
     //
 
     constructor(props: IProps) {
@@ -44,28 +43,22 @@ class Graph2DComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const allPlottingData = this.props.subredditDatums.toJS().map((el, ind) =>
-            el.binWidth100.map((el2, ind2, arr) => ({
-                x: (ind2! * this.props.maxX) / arr.length,
-                y: el2
-            }))
-        );
-
-        // console.log("%%%%%%%%%%%");
-        // console.log(allPlottingData);
-        // console.log("%%%%%%%%%%%");
-
         return (
             <div className="graph-2d">
                 <style jsx>{`
                     .graph-2d {
                         width: 100%;
                         height: 100%;
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         background-color: ${PREZ.primaryColorDark};
-                        box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
+                        box-shadow: ${PREZ.shadowString};
                     }
                 `}</style>
-                <LineChart.Component plottingData={allPlottingData} />
+                <h1> Mini-Reddit Dashboard</h1>
+                {/* XXX */}
             </div>
         );
     }
@@ -100,7 +93,7 @@ const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     };
 };
 
-export const Graph2D = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
+export const ControlBar = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
     mapStateToProps,
     mapDispatchToProps
-)(Graph2DComponent);
+)(ControlBarComponent);
