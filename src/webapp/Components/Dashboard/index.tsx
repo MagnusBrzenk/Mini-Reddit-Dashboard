@@ -81,7 +81,7 @@ export class Dashboard extends React.Component<IProps, IState> {
                         <SubredditMenu />
                     </div>
                     <div className="graph-2d-wrapper">
-                        <Graph2D />
+                        <Graph2D maxX={1000} />
                     </div>
                 </div>
             </div>

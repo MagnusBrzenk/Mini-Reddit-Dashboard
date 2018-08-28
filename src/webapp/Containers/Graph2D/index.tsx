@@ -3,10 +3,19 @@ import { connect } from "react-redux";
 import { getAllSubredditDatums } from "__REDUX/selectors";
 import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 
+import { LineChart } from "__COMPONENTS/LineChart";
+
+type IDataPoint = LineChart.IDataPoint;
+
 import { AppActions } from "__REDUX/actions";
 import PREZ from "__UTILS/frontendPresentation";
 
-interface IParentProps {}
+// import D3Line from ''
+// import D3LineGraph from "./D3LineGraph";
+
+interface IParentProps {
+    maxX: number;
+}
 
 interface IState {}
 
@@ -14,24 +23,68 @@ interface IState {}
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
 class Graph2DComponent extends React.Component<IProps, IState> {
+    //
+
     constructor(props: IProps) {
         super(props);
         this.state = {};
     }
 
+    componentDidMount() {
+        //Create d3 chart
+    }
+
+    componentDidUpdate() {
+        //
+    }
+
+    componentWillUnmount() {
+        //
+    }
+
     render() {
-        const dashboardBackgroundColor = PREZ.primaryColor;
+        console.log("DebugA");
+
+        // const plottingData: LineChart.IDataPoint[] = this.props.subredditDatums.map((el, ind) => {
+        const plottingData = this.props.subredditDatums.map((el, ind) => {
+            console.log("--------------->", el.get("binWidth10").get(ind!));
+
+            return el.get("binWidth10").map((el, ind) => ({
+                x: (ind! * 1000) / 10,
+                y: el
+            }));
+
+            // return {
+            //     x: (ind! * 1000) / 10,
+            //     // y: el.get("binWidth10").get(ind!)
+            //     y: 0
+            // };
+        });
+
+        // const allPlottingData = this.props.subredditDatums.toJS().map((el, ind) =>
+        //     el.binWidth10.map((el2, ind2, arr) => ({
+        //         x: (ind2! * this.props.maxX) / arr.length,
+        //         y: el2
+        //     }))
+        // );
+
+        const allPlottingData = this.props.subredditDatums.toJS().map((el, ind) =>
+            el.binWidth100.map((el2, ind2, arr) => ({
+                x: (ind2! * this.props.maxX) / arr.length,
+                y: el2
+            }))
+        );
+
+        console.log("%%%%%%%%%%%");
+        console.log(plottingData);
+        console.log((plottingData as any).toJS());
+        console.log(allPlottingData);
+        console.log("%%%%%%%%%%%");
+
         return (
-            <div className="graph-2d">
-                <style jsx>{`
-                    .graph-2d {
-                        width: 100%;
-                        height: 100%;
-                        background-color: ${dashboardBackgroundColor};
-                        overflow: hidden;
-                    }
-                `}</style>
-            </div>
+            // <div>
+            <LineChart.Component plottingData={allPlottingData} />
+            // </div>
         );
     }
 }
