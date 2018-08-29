@@ -44,6 +44,8 @@ declare module "*.svg";
 
 declare module "open-browser-webpack-plugin";
 
+declare module "google-palette";
+
 // declare var marvellous: any;
 
 //Advanced type expressions:

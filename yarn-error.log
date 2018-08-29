@@ -1,30 +1,30 @@
 Arguments: 
-  /usr/local/bin/node /Users/wingate/.yarn/bin/yarn.js add fs -D @types/fs
+  /usr/local/bin/node /usr/local/bin/yarn add -D @types/google-palette
 
 PATH: 
   /Users/wingate/anaconda3/bin:/Users/wingate/.yarn/bin:/Users/wingate/.config/yarn/global/node_modules/.bin:/usr/local/bin:/usr/local/sbin:/Users/wingate/Library/Python/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/go/bin:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/wingate/work/goProgramming/bin:/Users/wingate/work/Java/_apache-maven-3.5.4/bin
 
 Yarn version: 
-  1.9.2
+  1.9.4
 
 Node version: 
-  8.11.1
+  10.9.0
 
 Platform: 
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2ffs: Not found
-      at Request.params.callback [as _callback] (/Users/wingate/.yarn/lib/cli.js:64150:18)
-      at Request.self.callback (/Users/wingate/.yarn/lib/cli.js:137416:22)
-      at emitTwo (events.js:126:13)
-      at Request.emit (events.js:214:7)
-      at Request.<anonymous> (/Users/wingate/.yarn/lib/cli.js:138388:10)
-      at emitOne (events.js:116:13)
-      at Request.emit (events.js:211:7)
-      at IncomingMessage.<anonymous> (/Users/wingate/.yarn/lib/cli.js:138310:12)
-      at Object.onceWrapper (events.js:313:30)
-      at emitNone (events.js:111:20)
+  Error: https://registry.yarnpkg.com/@types%2fgoogle-palette: Not found
+      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:64202:18)
+      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:137468:22)
+      at Request.emit (events.js:182:13)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:138440:10)
+      at Request.emit (events.js:182:13)
+      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:138362:12)
+      at Object.onceWrapper (events.js:273:13)
+      at IncomingMessage.emit (events.js:187:15)
+      at endReadableNT (_stream_readable.js:1085:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
@@ -58,17 +58,23 @@ npm manifest:
           "compression": "^1.7.3",
           "cookie-parser": "^1.4.3",
           "cors": "^2.8.4",
+          "csv-parse": "^2.5.0",
+          "csvtojson": "^2.0.8",
           "d3": "^5.7.0",
           "debug": "^3.1.0",
           "dotenv": "^6.0.0",
           "express": "^4.16.3",
           "express-fileupload": "^0.4.0",
+          "fs": "^0.0.1-security",
           "immutable": "4.0.0-rc.9",
           "mongodb": "3.1.3",
           "path": "^0.12.7",
+          "request-promise": "^4.2.2",
           "s3-upload-stream": "^1.0.7",
           "serve-favicon": "^2.5.0",
           "stream": "^0.0.2",
+          "url": "^0.11.0",
+          "url-parse": "^1.4.3",
           "uuid": "^3.3.2"
       },
       "devDependencies": {
@@ -103,11 +109,13 @@ npm manifest:
           "@types/react-router-redux": "^5.0.13",
           "@types/redux-actions": "^2.3.0",
           "@types/redux-immutable": "^3.0.38",
+          "@types/request-promise": "^4.1.42",
           "@types/s3-upload-stream": "^1.0.2",
           "@types/scriptjs": "^0.0.2",
           "@types/serve-favicon": "^2.2.30",
           "@types/styled-jsx": "^2.2.4",
           "@types/uglifyjs-webpack-plugin": "^1.1.0",
+          "@types/url-parse": "^1.4.1",
           "@types/uuid": "^3.4.3",
           "@types/webpack-bundle-analyzer": "^2.9.2",
           "@types/webpack-dev-server": "^2.9.6",
@@ -130,6 +138,7 @@ npm manifest:
           "enzyme": "^3.4.4",
           "enzyme-adapter-react-16": "^1.2.0",
           "file-loader": "^2.0.0",
+          "google-palette": "^1.1.0",
           "html-loader": "^0.5.5",
           "html-webpack-plugin": "^3.0.7",
           "ignore-styles": "^5.0.1",
@@ -227,6 +236,10 @@ Lockfile:
       humps "^2.0.1"
       prop-types "^15.5.10"
   
+  "@types/bluebird@*":
+    version "3.5.23"
+    resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.23.tgz#e805da976b76892b2b2e50eec29e84914c730670"
+  
   "@types/body-parser@*":
     version "1.17.0"
     resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"
@@ -239,6 +252,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/bson/-/bson-1.0.11.tgz#c95ad69bb0b3f5c33b4bb6cc86d86cafb273335c"
     dependencies:
       "@types/node" "*"
+  
+  "@types/caseless@*":
+    version "0.12.1"
+    resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
   
   "@types/chai@^4.1.4":
     version "4.1.4"
@@ -509,6 +526,12 @@ Lockfile:
       "@types/express-serve-static-core" "*"
       "@types/serve-static" "*"
   
+  "@types/form-data@*":
+    version "2.2.1"
+    resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-2.2.1.tgz#ee2b3b8eaa11c0938289953606b745b738c54b1e"
+    dependencies:
+      "@types/node" "*"
+  
   "@types/geojson@*":
     version "7946.0.4"
     resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.4.tgz#4e049756383c3f055dd8f3d24e63fb543e98eb07"
@@ -667,6 +690,22 @@ Lockfile:
     version "0.2.28"
     resolved "https://registry.yarnpkg.com/@types/relateurl/-/relateurl-0.2.28.tgz#6bda7db8653fa62643f5ee69e9f69c11a392e3a6"
   
+  "@types/request-promise@^4.1.42":
+    version "4.1.42"
+    resolved "https://registry.yarnpkg.com/@types/request-promise/-/request-promise-4.1.42.tgz#a70a6777429531e60ed09faa077ead9b995204cd"
+    dependencies:
+      "@types/bluebird" "*"
+      "@types/request" "*"
+  
+  "@types/request@*":
+    version "2.47.1"
+    resolved "https://registry.yarnpkg.com/@types/request/-/request-2.47.1.tgz#25410d3afbdac04c91a94ad9efc9824100735824"
+    dependencies:
+      "@types/caseless" "*"
+      "@types/form-data" "*"
+      "@types/node" "*"
+      "@types/tough-cookie" "*"
+  
   "@types/s3-upload-stream@^1.0.2":
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/@types/s3-upload-stream/-/s3-upload-stream-1.0.2.tgz#e14e8968b23e0540d0d9a22491a544e58599df16"
@@ -701,6 +740,10 @@ Lockfile:
     version "1.0.4"
     resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.4.tgz#b4ffc7dc97b498c969b360a41eee247f82616370"
   
+  "@types/tough-cookie@*":
+    version "2.3.3"
+    resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.3.tgz#7f226d67d654ec9070e755f46daebf014628e9d9"
+  
   "@types/uglify-js@*":
     version "3.0.3"
     resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.0.3.tgz#801a5ca1dc642861f47c46d14b700ed2d610840b"
@@ -712,6 +755,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-1.1.0.tgz#94647396472e1d3e3586e3e2a5c7d1ab41509d20"
     dependencies:
       "@types/webpack" "*"
+  
+  "@types/url-parse@^1.4.1":
+    version "1.4.1"
+    resolved "https://registry.yarnpkg.com/@types/url-parse/-/url-parse-1.4.1.tgz#c7ad9eb4f409fc14b93ea5d0d3c3dd812ac5b372"
   
   "@types/uuid@^3.4.3":
     version "3.4.3"
@@ -1822,7 +1869,7 @@ Lockfile:
     dependencies:
       inherits "~2.0.0"
   
-  bluebird@^3.5.1:
+  bluebird@^3.5.0, bluebird@^3.5.1:
     version "3.5.1"
     resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
   
@@ -2697,6 +2744,18 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/csv-loader/-/csv-loader-3.0.2.tgz#2af224a0582c47b761b4eee70576bd0e15af34b3"
     dependencies:
       loader-utils "^1.1.0"
+  
+  csv-parse@^2.5.0:
+    version "2.5.0"
+    resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-2.5.0.tgz#65748997ecc3719c594622db1b9ea0e2eb7d56bb"
+  
+  csvtojson@^2.0.8:
+    version "2.0.8"
+    resolved "https://registry.yarnpkg.com/csvtojson/-/csvtojson-2.0.8.tgz#d889f19576b2b33ead235490d2e5c9791481e8d3"
+    dependencies:
+      bluebird "^3.5.1"
+      lodash "^4.17.3"
+      strip-bom "^2.0.0"
   
   currently-unhandled@^0.4.1:
     version "0.4.1"
@@ -3811,6 +3870,10 @@ Lockfile:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   
+  fs@^0.0.1-security:
+    version "0.0.1-security"
+    resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  
   fsevents@^1.2.2:
     version "1.2.4"
     resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-1.2.4.tgz#f41dcb1af2582af3692da36fc55cbd8e1041c426"
@@ -3955,6 +4018,10 @@ Lockfile:
       glob "~7.1.1"
       lodash "~4.17.10"
       minimatch "~3.0.2"
+  
+  google-palette@^1.1.0:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/google-palette/-/google-palette-1.1.0.tgz#37e508568b8ca904e57976dfe28d92f701624a9a"
   
   graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
     version "4.1.11"
@@ -6713,6 +6780,15 @@ Lockfile:
     version "1.0.5"
     resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.5.tgz#5281770f68e0c9719e5163fd3fab482215f4fda5"
     dependencies:
+      request-promise-core "1.1.1"
+      stealthy-require "^1.1.0"
+      tough-cookie ">=2.3.3"
+  
+  request-promise@^4.2.2:
+    version "4.2.2"
+    resolved "https://registry.yarnpkg.com/request-promise/-/request-promise-4.2.2.tgz#d1ea46d654a6ee4f8ee6a4fea1018c22911904b4"
+    dependencies:
+      bluebird "^3.5.0"
       request-promise-core "1.1.1"
       stealthy-require "^1.1.0"
       tough-cookie ">=2.3.3"

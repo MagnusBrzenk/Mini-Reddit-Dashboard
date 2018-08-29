@@ -1,70 +1,57 @@
 import * as React from "react";
-import D3Controller from "./D3Controller";
+import { drawD3Chart } from "./drawD3Chart";
 import { genUniqueId } from "__UTILS/genUniqueId";
 import PREZ from "__UTILS/frontendPresentation";
 
-interface IProps {
-    plottingData: any;
-}
-
-interface IState {
-    //
-}
-
 export namespace LineChart {
-    //
-
     export interface IDataPoint {
         x: number;
         y: number;
     }
 
-    export class Component extends React.Component<IProps, IState> {
-        //
+    export interface IChartParams {
+        bCurvedLine: boolean;
+        bBinCentering: boolean;
+        axesColor: string;
+    }
 
-        // private d3RootElement: HTMLDivElement | null = null;
+    interface IProps {
+        plottingData: IDataPoint[][];
+        params?: IChartParams;
+    }
+
+    const defaultParams: IChartParams = {
+        bCurvedLine: true,
+        bBinCentering: false,
+        axesColor: PREZ.displayWhite
+    };
+
+    export class Component extends React.Component<IProps, {}> {
         readonly lineChartDivId: string = "line-chart-div-" + genUniqueId();
-        private D3Controller: D3Controller = new D3Controller(this.lineChartDivId);
 
         constructor(props: IProps) {
             super(props);
-            this.state = {};
-            this.handleWindowResize = this.handleWindowResize.bind(this);
+            this.drawChart = this.drawChart.bind(this);
         }
-
-        /////////////////////////////////////
-        // Life-Cycle Methods
-        /////////////////////////////////////
 
         componentDidMount() {
-            console.log("^^^^^ &&& ^^^^^");
-            console.log(this.props.plottingData);
-            console.log("^^^^^^^ &&& ^^^^^^");
-            // this.D3Controller = ;
-            window.addEventListener("resize", this.handleWindowResize);
-            this.D3Controller.drawD3Chart(this.props.plottingData);
+            window.addEventListener("resize", this.drawChart);
+            this.drawChart();
         }
-
-        componentDidUpdate(prevProps: IProps) {
-            //
-            if (prevProps !== this.props)
-                if (!!this.D3Controller) this.D3Controller.drawD3Chart(this.props.plottingData);
-        }
-
         componentWillUnmount() {
-            window.removeEventListener("resize", this.handleWindowResize);
+            window.removeEventListener("resize", this.drawChart);
         }
-
-        /////////////////////////////////////
-        // Custom Methods
-        /////////////////////////////////////
-
-        handleWindowResize() {
-            console.log("XXX");
-            if (!!this.D3Controller) this.D3Controller.drawD3Chart(this.props.plottingData);
+        componentDidUpdate(prevProps: IProps) {
+            if (prevProps !== this.props) this.drawChart();
+        }
+        drawChart() {
+            const plottingData: IDataPoint[][] = this.props.plottingData;
+            const params: IChartParams = { ...defaultParams, ...this.props.params };
+            drawD3Chart(this.lineChartDivId, plottingData, params);
         }
 
         render() {
+            const params: IChartParams = { ...this.props.params, ...defaultParams };
             return (
                 <div
                     className={"line-chart"}
@@ -92,10 +79,6 @@ export namespace LineChart {
                         }
 
                         .line-chart :global(.dot) {
-                            /*
-                            fill: #ffab00;
-                            stroke: #fff;
-                            */
                             fill: ${PREZ.secondaryColor};
                             stroke: ${PREZ.secondaryColor};
                         }
@@ -103,6 +86,15 @@ export namespace LineChart {
                         .line-chart :global(.focus) {
                             fill: rgba(0, 0, 0, 0);
                             stroke: steelblue;
+                        }
+
+                        .line-chart :global(.axis),
+                        .line-chart :global(.axis path),
+                        .line-chart :global(.axis line),
+                        .line-chart :global(.axis text) {
+                            stroke: ${params.axesColor};
+                            // fill: steelblue;
+                            // font-size: 100%;
                         }
                     `}</style>
                 </div>

@@ -44,7 +44,7 @@ class Graph2DComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const allPlottingData = this.props.subredditDatums.toJS().map((el, ind) =>
+        const allPlottingData: IDataPoint[][] = this.props.subredditDatums.toJS().map((el, ind) =>
             el.binWidth100.map((el2, ind2, arr) => ({
                 x: (ind2! * this.props.maxX) / arr.length,
                 y: el2
