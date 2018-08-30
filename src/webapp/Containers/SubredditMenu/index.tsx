@@ -74,11 +74,15 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
         const textIndentPxls: number = 10;
         const subredditItemHeightPxls: number = 30;
         // State params
-        const { matchedSubreddits } = this.props;
+        const { matchedSubreddits, subredditDatums } = this.props;
         const { searchWord } = this.state;
         //Derived params
         const bDisplayMatchedSubreddits = searchWord.length >= 3;
         // console.log(">>>>>>>>", matchedSubreddits);
+
+        const colorPallete = PREZ.qualitativeColorPalette;
+
+        console.log(JSON.stringify(colorPallete));
 
         return (
             <div className="subreddit-menu">
@@ -98,7 +102,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                         box-sizing: border-box;
                         background-color: rgba(255, 255, 255, 0.01);
                         border: 0px solid rgba(255, 255, 255, 0.25);
-                        // border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
                         margin: 1px 0px;
                         width: 100%;
                         height: 50px;
@@ -118,7 +122,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     }
                     .subreddit-menu-item {
                         width: 100%;
-                        height: 40px;
+                        height: ${subredditItemHeightPxls}px;
                         background-color: ${PREZ.primaryColor};
                         border: 2px solid ${itemBorderColor};
                         color: ${PREZ.displayWhite};
@@ -136,24 +140,17 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     .subreddit-datum {
                         background-color: ${PREZ.primaryColorDark};
                         border: 2px solid ${itemBorderColor};
-                        color: ${PREZ.displayWhite};
                     }
                 `}</style>
 
                 <div className="form-wrapper">
-                    <form
-                        className={"subreddit-search-form"}
-                        autoComplete="off"
-                        // style={{ backgroundColor: "rgba(255, 0, 255, 0.1)" }}
-                    >
+                    <form className={"subreddit-search-form"} autoComplete="off">
                         <input
                             className="search-subreddit-input-field"
                             onChange={e => this.handleInputChange(e)}
                             id={this.searchSubredditInputFieldId}
                             name="subreddit-search"
-                            // placeholder="Search Subreddits"
-                            // placeholder="SEARCH SUBREDDITS"
-                            placeholder="SEARCH"
+                            placeholder="ADD SUBREDDIT"
                             required
                         />
                     </form>
@@ -162,7 +159,7 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                 <div className="subreddit-menu-items-wrapper">
                     {!!bDisplayMatchedSubreddits ? (
                         <div className="">
-                            {this.props.matchedSubreddits.map((el, ind) => (
+                            {matchedSubreddits.map((el, ind) => (
                                 <div
                                     className="subreddit-menu-item"
                                     onClick={e => this.handleClickOnMatchedSubredditItem(ind!)}
@@ -174,11 +171,14 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                         </div>
                     ) : (
                         <div className="">
-                            {this.props.subredditDatums.map((el, ind) => (
+                            {subredditDatums.map((el, ind) => (
                                 <div //
                                     className="subreddit-menu-item subreddit-datum"
                                     onClick={e => this.handleClickOnSubredditDatumItem(ind!)}
                                     key={ind}
+                                    style={{
+                                        color: "#" + colorPallete[ind!]
+                                    }}
                                 >
                                     {el.get("name")}
                                 </div>

@@ -33,10 +33,8 @@ export class Dashboard extends React.Component<IProps, IState> {
                         width: 100%;
                         height: 20%;
                         display: flex;
-                        // background-color: ${PREZ.primaryColorDark};
-                        // background-color: pink;
                     }
-                    .header-wrapper{
+                    .header-wrapper {
                         color: white;
                         padding: 40px;
                         padding-bottom: 0px;
@@ -50,7 +48,6 @@ export class Dashboard extends React.Component<IProps, IState> {
                         height: 80%;
                         max-height: ${window.innerWidth}px;
                         display: flex;
-                        // background-color: ${PREZ.primaryColorDark};
                     }
                     .subreddit-menu-wrapper {
                         flex: 1;
@@ -94,7 +91,7 @@ export class Dashboard extends React.Component<IProps, IState> {
                         <SubredditMenu bShadowed />
                     </div>
                     <div className="graph-2d-wrapper shadowed">
-                        <Graph2D bShadowed maxX={1000} />
+                        <Graph2D bShadowed xRangeMax={1000} />
                     </div>
                 </div>
             </div>

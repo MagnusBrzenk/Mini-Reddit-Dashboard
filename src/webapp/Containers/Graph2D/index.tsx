@@ -2,23 +2,21 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { getAllSubredditDatums } from "__REDUX/selectors";
 import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
-
 import { LineChart } from "__COMPONENTS/LineChart";
+import { AppActions } from "__REDUX/actions";
+import PREZ from "__UTILS/frontendPresentation";
+import { reshapePlottingData } from "./reshapePlottingData";
 
 type IDataPoint = LineChart.IDataPoint;
 
-import { AppActions } from "__REDUX/actions";
-import PREZ from "__UTILS/frontendPresentation";
-
-// import D3Line from ''
-// import D3LineGraph from "./D3LineGraph";
-
 interface IParentProps {
     bShadowed?: boolean;
-    maxX: number;
+    xRangeMax: number;
 }
 
-interface IState {}
+interface IState {
+    responsiveNumXTicks: number;
+}
 
 //Never change IProps for containers; it will always be determined by the intersection of these 3 interfaces:
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
@@ -28,31 +26,39 @@ class Graph2DComponent extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            responsiveNumXTicks: -1
+        };
+        this.handleWindowResize = this.handleWindowResize.bind(this);
+    }
+
+    handleWindowResize() {
+        const allPlottingData = reshapePlottingData(this.props.subredditDatums, this.props.xRangeMax);
+        const nBins: number = allPlottingData[0].length;
+        const responsiveNumXTicks = window.innerWidth < 600 ? -1 : nBins;
+        this.setState({ responsiveNumXTicks });
     }
 
     componentDidMount() {
-        //Create d3 chart
-    }
-
-    componentDidUpdate() {
-        //
+        window.addEventListener("resize", this.handleWindowResize);
+        this.handleWindowResize();
     }
 
     componentWillUnmount() {
-        //
+        window.removeEventListener("resize", this.handleWindowResize);
     }
 
     render() {
         const allPlottingData: IDataPoint[][] = this.props.subredditDatums.toJS().map((el, ind) =>
             el.binWidth100.map((el2, ind2, arr) => ({
-                x: (ind2! * this.props.maxX) / arr.length,
+                x: (ind2! * this.props.xRangeMax) / arr.length,
                 y: el2
             }))
         );
 
         console.log("%%%%%%%%%%%");
-        console.log(allPlottingData);
+        console.log(window.outerWidth, window.innerWidth, PREZ.lowerScreenSize);
+        console.log(window.outerWidth < PREZ.lowerScreenSize);
         console.log("%%%%%%%%%%%");
 
         return (
@@ -65,7 +71,18 @@ class Graph2DComponent extends React.Component<IProps, IState> {
                         box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
                     }
                 `}</style>
-                <LineChart.Component plottingData={allPlottingData} />
+                <LineChart.Component
+                    plottingData={allPlottingData}
+                    params={{
+                        //
+                        xAxisLabel: "All Time Rankings",
+                        yAxisLabel: "Bin-Width-100 Count",
+                        axisLabelFontSizePrcnt: "",
+                        numXTicks: this.state.responsiveNumXTicks,
+                        numYTicks: -1, // -1 => pure function of window size
+                        bBinCentering: true
+                    }}
+                />
             </div>
         );
     }

@@ -13,17 +13,27 @@ export namespace LineChart {
         bCurvedLine: boolean;
         bBinCentering: boolean;
         axesColor: string;
+        xAxisLabel: string;
+        yAxisLabel: string;
+        numXTicks: number | undefined;
+        numYTicks: number | undefined;
+        axisLabelFontSizePrcnt: string;
     }
 
     interface IProps {
         plottingData: IDataPoint[][];
-        params?: IChartParams;
+        params?: Partial<IChartParams>;
     }
 
-    const defaultParams: IChartParams = {
+    const defaultParams: Readonly<IChartParams> = {
         bCurvedLine: true,
         bBinCentering: false,
-        axesColor: PREZ.displayWhite
+        axesColor: PREZ.displayWhite,
+        xAxisLabel: "X-AXIS",
+        yAxisLabel: "Y-AXIS",
+        numXTicks: undefined, // undefined => let d3 decide; -1 => let window size decide
+        numYTicks: undefined,
+        axisLabelFontSizePrcnt: "100%"
     };
 
     export class Component extends React.Component<IProps, {}> {
@@ -44,6 +54,16 @@ export namespace LineChart {
         componentDidUpdate(prevProps: IProps) {
             if (prevProps !== this.props) this.drawChart();
         }
+
+        /**
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         *        Component's Interface with D3 Functionality - DO NOT EDIT!
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         * This is the sole gateway through which we pass through the unique id for
+         * the svg-wrapper div, data to-be-plotted, and presentation parameters.
+         * Default presentation parameters are supplied if not specified in the
+         * component's props
+         */
         drawChart() {
             const plottingData: IDataPoint[][] = this.props.plottingData;
             const params: IChartParams = { ...defaultParams, ...this.props.params };
@@ -52,6 +72,7 @@ export namespace LineChart {
 
         render() {
             const params: IChartParams = { ...this.props.params, ...defaultParams };
+            const axisLabelFontSizePrcnt = !!params.axisLabelFontSizePrcnt ? "" : "";
             return (
                 <div
                     className={"line-chart"}
@@ -68,7 +89,6 @@ export namespace LineChart {
 
                         .line-chart :global(.line) {
                             fill: none;
-                            // stroke: #ffab;
                             stroke: ${PREZ.secondaryColor};
                             stroke-width: 3;
                         }
@@ -88,13 +108,24 @@ export namespace LineChart {
                             stroke: steelblue;
                         }
 
-                        .line-chart :global(.axis),
                         .line-chart :global(.axis path),
-                        .line-chart :global(.axis line),
-                        .line-chart :global(.axis text) {
+                        .line-chart :global(.axis line) {
                             stroke: ${params.axesColor};
-                            // fill: steelblue;
-                            // font-size: 100%;
+                        }
+                        .line-chart :global(.axis text) {
+                            // font-family: "Courier", sans-serif;
+                            font-weight: normal;
+                            fill: ${params.axesColor};
+                        }
+
+                        .line-chart :global(.axes-label-text) {
+                            fill: ${params.axesColor};
+                            text-anchor: middle;
+                            font-size: ${axisLabelFontSizePrcnt};
+                            alignment-baseline: middle;
+                            // font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+                            // font-family: "Dosis", sans-serif;
+                            // font-family: "Courier", sans-serif;
                         }
                     `}</style>
                 </div>

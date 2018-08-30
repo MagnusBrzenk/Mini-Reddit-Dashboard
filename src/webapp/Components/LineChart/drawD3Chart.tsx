@@ -1,70 +1,71 @@
 import * as d3 from "d3";
-import { LineChart } from "__COMPONENTS/LineChart";
+import { LineChart } from "./";
 import PREZ from "__UTILS/frontendPresentation";
 type IDataPoint = LineChart.IDataPoint;
 type IChartParams = LineChart.IChartParams;
 type Id3Selection = d3.Selection<d3.BaseType, {}, HTMLElement, any>;
 
 /**
- * Draw d3 Simple Line Chart from scratch
+ * ~~~~~~~~~~~~~~~~~~~~~ Function to Draw a Simple Line Chart in D3 ~~~~~~~~~~~~~~~~~~~~~
+ *
+ * d3 code modifies DOM directly; to ensure robust separation from react, we make sure
+ * everything is contained within a single DIV referenced by a unique id. Styles for the
+ * chart are given in the parent component using styled-jsx to ensure they are kept local
+ * to this component. Only styles that concern line colors are applied here with d3
+ * operations because it's the easiest way to associate each dataset with a color.
+ *
+ * Types can be tricky with d3, so in places where it's unlikely to matter, we've had to
+ * resort to using 'any'
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * @param svgDivWrapperId
  * @param plottingData
  * @param params
  */
-export function drawD3Chart(svgDivWrapperId: string, plottingData: IDataPoint[][], params: IChartParams) {
-    //
-    //
-    //Reset SVG
+export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], params: IChartParams) {
+    // Reset SVG space
     const svgWrapperDiv = document.getElementById(svgDivWrapperId);
     if (!!svgWrapperDiv)
-        svgWrapperDiv.childNodes.forEach(function(thisChild, key, parent) {
-            svgWrapperDiv.removeChild(thisChild);
+        svgWrapperDiv.childNodes.forEach(function(thisChildNode, key, parent) {
+            svgWrapperDiv.removeChild(thisChildNode);
         });
 
-    const colorPallete = PREZ.qualitativeColorPalette;
+    //If bBinCentering, then shift graph over half a binWidth
+    if (!!params.bBinCentering) {
+        datasets = datasets.map(dataset => {
+            const binWidth = dataset[1].x - dataset[0].x;
+            return dataset.map(el => ({ x: el.x + binWidth / 2, y: el.y }));
+        });
+    }
 
+    // Dynamically parametrize size of chart based on container DIV
+    // Calc Height, Width & Margins
     const svgDivWrapper = document.getElementById(svgDivWrapperId);
     const wrapperWidth = !!svgDivWrapper ? svgDivWrapper!.offsetWidth : 20;
     const wrapperHeight = !!svgDivWrapper ? svgDivWrapper!.offsetHeight : 20;
-
-    console.log("~~~~~~~~~~~~~~~~~~~~");
-    console.log("wrapperWidth", wrapperWidth);
-    console.log("wrapperHeight", wrapperHeight);
-    console.log(plottingData);
-    console.log(colorPallete);
-    console.log("~~~~~~~~~~~~~~~~~~~~");
-
-    const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+    const margin = { top: 50, right: 50, bottom: !!params.xAxisLabel ? 70 : 50, left: !!params.yAxisLabel ? 70 : 50 };
     const width = wrapperWidth - margin.left - margin.right;
     const height = wrapperHeight - margin.top - margin.bottom;
 
-    //Parameterize graph appearance:
-    const axisLabelsColor: string = PREZ.displayWhite;
-
-    //Get/generate data:
-    // const totalPoints: number = 21;
-    // const dataset = d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
-
-    // const totalPoints: number = this.state.data.length;
-    // const dataset = this.state.data; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
-
-    const totalPoints: number = plottingData!.length;
-    const datasets: IDataPoint[][] = plottingData!; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
-    // const dataset: IDataPoint[] = this.plottingData![0]; //d3.range(totalPoints).map(() => ({ y: d3.randomUniform(1)() }));
-
-    console.log("<><><><><><><><>");
-    console.log(datasets);
-    // console.log(dataset.map(el => el.x));
-    console.log("<><><><><><><><>");
-
-    const maxXs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.x))));
-    const maxX = Math.ceil(Math.max.apply(null, maxXs.map(el => el)));
+    // Calc graph limits (i.e. maximum value from array of arrays of numbers)
+    // Calc maxY
     const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
     const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
+    // Calc maxX. Note: This logic also rounds x up to beginning of next binWidth
+    const binWidth: number = datasets[0][1].x - datasets[0][0].x;
+    const maxXs: number[] = datasets.map(dataset =>
+        Math.ceil(Math.max.apply(null, dataset.map(el => Math.ceil(el.x / binWidth) * binWidth)))
+    );
+    const maxX = Math.ceil(Math.max.apply(null, maxXs.map(el => el)));
 
-    /////////////////
-    // Begin d3-ing
-    /////////////////
+    // Get array of colors for lines in graph
+    const colorPallete = PREZ.qualitativeColorPalette;
+
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - \\
+    //                                                            \\
+    //                      Begin d3-ing !!!                      \\
+    //                                                            \\
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - \\
 
     // Create a linear-scale function mapping our data ranges to the plotting area
     // (Let's call these the 'data space' and 'physical space' respectively
@@ -88,18 +89,44 @@ export function drawD3Chart(svgDivWrapperId: string, plottingData: IDataPoint[][
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    //Create axis of axisBottom configuration
+    //Create X axis using axisBottom configuration
+    //If number of ticks isn't specified then let d3 decide; if it's <0, then determine based on wrapper width
+    let xAxisFunction: any = d3.axisBottom(xScale);
+    if (!!params.numXTicks) {
+        const numXTicks = params.numXTicks < 0 ? Math.ceil(width / 50) : params.numXTicks;
+        xAxisFunction = xAxisFunction.ticks(numXTicks); //override d3 ticks
+    }
     mainSvgGroup
         .append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale) as any);
+        .call(xAxisFunction);
+    //xAxis label
+    mainSvgGroup
+        .append("text")
+        .attr("class", "axes-label-text")
+        .attr("transform", "translate(" + width / 2 + " ," + (height + margin.bottom / 2) + ")")
+        .text(params.xAxisLabel);
 
-    //Create axis of axisLeft configuration
+    //Create Y axis using axisLeft configuration
+    //If number of ticks isn't specified then let d3 decide
+    let yAxisFunction: any = d3.axisLeft(yScale);
+    if (!!params.numYTicks) {
+        const numYTicks = params.numYTicks < 0 ? Math.ceil(width / 50) : params.numYTicks;
+        yAxisFunction = yAxisFunction.ticks(numYTicks); //override d3 ticks
+    }
     mainSvgGroup
         .append("g")
         .attr("class", "axis")
-        .call(d3.axisLeft(yScale) as any);
+        .call(yAxisFunction);
+    //yAxis label
+    mainSvgGroup
+        .append("text")
+        .attr("class", "axes-label-text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left / 2)
+        .attr("x", 0 - height / 2)
+        .text(params.yAxisLabel);
 
     //Create function that will map points in data space to a curved line in physical space
     let line = d3
@@ -112,44 +139,43 @@ export function drawD3Chart(svgDivWrapperId: string, plottingData: IDataPoint[][
         });
     if (!!params.bCurvedLine) line = line.curve(d3.curveMonotoneX); // apply smoothing to the line
 
-    //Loop through each data setAppend the path, bind the data, and call the line generator
+    //Loop through each dataset of type IDataPoint[] and, for each,
+    // append a path, bind the data, and call the line generator
     datasets.forEach((dataset, ind) =>
         mainSvgGroup
             .append("path")
-            .datum(dataset) // 10. Binds data to the line
-            .attr("class", "line") // Assign a class for styling
-            .attr("d", line as any) // 11. Calls the line generator
+            .datum(dataset)
+            .attr("class", "line")
+            .attr("d", line)
             .style("stroke", colorPallete[ind])
     );
-    // 12. Appends a circle for each datapoint
+    //Likewise, loop through and add a circle for each data point
     datasets.forEach((dataset, ind) =>
         mainSvgGroup
             .selectAll(".dot")
-            //enter data AND supply key function (use index of dataset as key)
-            .data(dataset as any, function(d: any) {
-                return ind + "";
+            .data(dataset, function(d: any, i: number) {
+                //This is a 'key' function associating the unique index for each dataset;
+                //Each time you 'selectAll', it will look for .dot elements with this key
+                //if none are found, they'll get created by .enter() next
+                return "key-" + ind;
             })
             .enter()
-            .append("circle") // Uses the enter().append() method
-            .attr("class", "dot") // Assign a class for styling
-            .attr("cx", function(d: any, i) {
-                // return xScale(i);
+            .append("circle")
+            .attr("class", "dot")
+            .attr("cx", function(d: IDataPoint, i) {
                 return xScale(d.x);
             })
-            .attr("cy", function(d: any, i) {
+            .attr("cy", function(d: IDataPoint, i) {
                 return yScale(d.y);
             })
             .attr("r", 5)
             .style("fill", colorPallete[ind])
             .style("stroke", colorPallete[ind])
             .on("mouseover", function(a, b, c) {
-                // console.log(a, b, c);
                 const $this: HTMLElement | null = this as any;
                 if (!!$this) $this.classList.add("focus");
             })
-            .on("mouseout", function(a, b) {
-                //
-                // console.log(a, b);
+            .on("mouseout", function(a, b, c) {
                 const $this: HTMLElement | null = this as any;
                 if (!!$this) $this.classList.remove("focus");
             })
