@@ -5,6 +5,8 @@ import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 
 import { LineChart } from "__COMPONENTS/LineChart";
 
+import { TrendySwitch } from "__COMPONENTS/TrendySwitch";
+
 type IDataPoint = LineChart.IDataPoint;
 
 import { AppActions } from "__REDUX/actions";
@@ -58,6 +60,8 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                     }
                 `}</style>
                 Mini-Reddit Dashboard
+                <br /> <br />
+                <TrendySwitch />
             </div>
         );
     }
