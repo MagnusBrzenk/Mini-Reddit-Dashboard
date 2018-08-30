@@ -21,14 +21,14 @@ export namespace SUBREDDITDATUM {
         retrievalDate: new Date().toDateString()
     };
 
-    export const Defaults: Interface[] = [{ ...Default }];
+    export const Defaults: Interface[] = [];
 
     export const Demo: Interface = {
-        name: "news",
+        name: "funny",
         binWidth10: [...Array(100)].map(() => Math.round(Math.random() * 50)),
         binWidth100: [17, 21, 22, 17, 27, 18, 24, 14, 22, 2],
         images: [],
-        bDisplayed: false,
+        bDisplayed: true,
         retrievalDate: new Date().toDateString()
     };
 

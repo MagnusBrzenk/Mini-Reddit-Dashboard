@@ -11,6 +11,7 @@ export const AppRoutes = hot(module)(() => (
     <div className="routes-container" style={{ height: `100%`, width: `100%` }}>
         <Switch>
             <Route exact path="/" component={HomePage} />
+            <Route exact path="/templates" component={Templates} />
             <Route exact path="*" component={NoMatchPage} />
         </Switch>
     </div>

@@ -97,9 +97,11 @@ export function getImmutableGenerator<T>(defaultPOJO: T): (params?: Partial<T>) 
  * because we used fromJS() in the class constructor to convert everything to immutable Maps and Lists.
  */
 type TPrimitives = string | number | boolean | null;
-export type getImType<T> = ImMethodsInterface<T> & // //
-    (T extends any[] ? L : M) &
-    // T;
-    Exclude<T, "map" | "concat" | TCommonKeynames>; //
+export type getImType<T> = [T] extends [TPrimitives]
+    ? T
+    : ImMethodsInterface<T> & // //
+          (T extends any[] ? L : M) &
+          // T;
+          Exclude<T, "map" | "concat" | TCommonKeynames>; //
 
 //   getImType<Exclude<V3, TCommonKeynames>>;

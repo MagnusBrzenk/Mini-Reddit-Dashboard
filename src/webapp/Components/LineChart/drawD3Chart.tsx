@@ -51,6 +51,9 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
     // Calc maxY
     const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
     const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
+
+    console.log("maxY", maxY);
+
     // Calc maxX. Note: This logic also rounds x up to beginning of next binWidth
     const binWidth: number = datasets[0][1].x - datasets[0][0].x;
     const maxXs: number[] = datasets.map(dataset =>

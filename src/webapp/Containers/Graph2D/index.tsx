@@ -33,8 +33,9 @@ class Graph2DComponent extends React.Component<IProps, IState> {
     }
 
     handleWindowResize() {
-        const allPlottingData = reshapePlottingData(this.props.subredditDatums, this.props.xRangeMax);
-        const nBins: number = allPlottingData[0].length;
+        const allPlottingData: IDataPoint[][] = reshapePlottingData(this.props.subredditDatums, this.props.xRangeMax);
+
+        const nBins: number = !!allPlottingData.length ? allPlottingData[0].length : 1;
         const responsiveNumXTicks = window.innerWidth < 600 ? -1 : nBins;
         this.setState({ responsiveNumXTicks });
     }
@@ -49,16 +50,20 @@ class Graph2DComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const allPlottingData: IDataPoint[][] = this.props.subredditDatums.toJS().map((el, ind) =>
-            el.binWidth100.map((el2, ind2, arr) => ({
-                x: (ind2! * this.props.xRangeMax) / arr.length,
-                y: el2
-            }))
-        );
+        // const allPlottingData: IDataPoint[][] = this.props.subredditDatums.toJS().map((el, ind) =>
+        //     el.binWidth100.map((el2, ind2, arr) => ({
+        //         x: (ind2! * this.props.xRangeMax) / arr.length,
+        //         y: el2
+        //     }))
+        // );
+
+        const allPlottingData: IDataPoint[][] = reshapePlottingData(this.props.subredditDatums, this.props.xRangeMax);
 
         console.log("%%%%%%%%%%%");
-        console.log(window.outerWidth, window.innerWidth, PREZ.lowerScreenSize);
-        console.log(window.outerWidth < PREZ.lowerScreenSize);
+        // console.log(window.outerWidth, window.innerWidth, PREZ.lowerScreenSize);
+        // console.log(window.outerWidth < PREZ.lowerScreenSize);
+        // console.log(allPlottingData);
+        console.log(this.props.subredditDatums.toJS());
         console.log("%%%%%%%%%%%");
 
         return (

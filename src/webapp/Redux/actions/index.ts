@@ -16,7 +16,8 @@ export namespace AppActions {
 
         // DATA ACTIONS
         FETCH_SUBREDDIT_DATUM = "FETCH_SUBREDDIT_DATUM",
-        FETCH_SUBREDDIT_DATUM_FULFILLED = "FETCH_SUBREDDIT_DATUM_FULFILLED"
+        FETCH_SUBREDDIT_DATUM_FULFILLED = "FETCH_SUBREDDIT_DATUM_FULFILLED",
+        HIDE_SUBREDDIT_DATUM = "HIDE_SUBREDDIT_DATUM"
     }
 
     /* ACTION CREATORS */
@@ -32,6 +33,7 @@ export namespace AppActions {
     export const fetchSubredditDatumFulfilled = CreateAction<SUBREDDITDATUM.Interface>(
         Types.FETCH_SUBREDDIT_DATUM_FULFILLED
     );
+    export const hideSubredditDatum = CreateAction<number>(Types.HIDE_SUBREDDIT_DATUM);
 }
 
 /*-------------------------------------- DO NOT EDIT --------------------------------------*/

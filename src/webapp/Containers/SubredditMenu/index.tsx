@@ -64,6 +64,8 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
 
     handleClickOnSubredditDatumItem(index: number) {
         //
+        console.log("INDEX", index);
+        this.props.cbHideSubredditDatum(index);
     }
 
     render() {
@@ -212,12 +214,14 @@ interface IReduxCallbacks {
     cbClearSubredditSearch: typeof AppActions.clearSubredditSearch;
     cbSearchForSubbreddit: typeof AppActions.searchForSubreddit;
     cbAddSubredditDatumToFeed: typeof AppActions.fetchSubredditDatum;
+    cbHideSubredditDatum: typeof AppActions.hideSubredditDatum;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbClearSubredditSearch: () => dispatch(AppActions.clearSubredditSearch()),
         cbSearchForSubbreddit: (searchWord: string) => dispatch(AppActions.searchForSubreddit(searchWord)),
-        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName))
+        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName)),
+        cbHideSubredditDatum: (index: number) => dispatch(AppActions.hideSubredditDatum(index))
     };
 };
 

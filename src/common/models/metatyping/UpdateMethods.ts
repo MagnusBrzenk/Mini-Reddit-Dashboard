@@ -19,7 +19,7 @@ export interface UpdateMethods<T> {
         K1 extends T extends any[] ? number : keyof T
     >(
         key: T extends any[] ? number : K1,
-        cb: (nested: V1 | getImType<V1>) => V1 | getImType<V1>
+        cb: (nested: getImType<V1>) => getImType<V1>
     ): getImType<Exclude<T, TCommonKeynames>>;
     //1 ARG
     updateIn<
@@ -48,7 +48,7 @@ export interface UpdateMethods<T> {
                 ? (T[number] extends any[] ? number : keyof T[number])
                 : (T[K1] extends any[] ? number : keyof T[K1]))
         ],
-        cb: (nested: V2 extends TPrimitives ? V2 : getImType<V2>) => V2 extends TPrimitives ? V2 : getImType<V2>
+        cb: (nested: [V2] extends [TPrimitives] ? V2 : getImType<V2>) => [V2] extends [TPrimitives] ? V2 : getImType<V2>
     ): getImType<Exclude<T, TCommonKeynames>>;
 
     //3 ARGS
@@ -69,8 +69,9 @@ export interface UpdateMethods<T> {
             Exclude<C2, TCommonKeynames>,
             Exclude<C3, TCommonKeynames>
         ],
-        cb: (nested: getImType<V3>) => getImType<V3>
+        cb: (nested: getImType<Exclude<V3, TCommonKeynames>>) => V3 | getImType<Exclude<V3, TCommonKeynames>>
     ): getImType<Exclude<T, TCommonKeynames>>;
+
     //4 ARGS
     updateIn<
         //Values
