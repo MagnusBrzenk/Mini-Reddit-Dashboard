@@ -17,12 +17,21 @@ type Id3Selection = d3.Selection<d3.BaseType, {}, HTMLElement, any>;
  * Types can be tricky with d3, so in places where it's unlikely to matter, we've had to
  * resort to using 'any'
  *
+ * NOTE: this interface !!REQUIRES!! that there be at least one non
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * @param svgDivWrapperId
  * @param plottingData
  * @param params
  */
 export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], params: IChartParams) {
+    //Check that datasets has at least one non-empty array of valid type IDataPoint[]
+    const bValidDataInput = datasets.find(el => !!el.length);
+    if (!bValidDataInput)
+        throw new Error(
+            "A totally empty set of data points got through -- that is not permitted with this d3-plotting interface interface!"
+        );
+
     // Reset SVG space
     const svgWrapperDiv = document.getElementById(svgDivWrapperId);
     if (!!svgWrapperDiv)
@@ -33,6 +42,7 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
     //If bBinCentering, then shift graph over half a binWidth
     if (!!params.bBinCentering) {
         datasets = datasets.map(dataset => {
+            if (!dataset.length) return [];
             const binWidth = dataset[1].x - dataset[0].x;
             return dataset.map(el => ({ x: el.x + binWidth / 2, y: el.y }));
         });
@@ -52,10 +62,8 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
     const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
     const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
 
-    console.log("maxY", maxY);
-
     // Calc maxX. Note: This logic also rounds x up to beginning of next binWidth
-    const binWidth: number = datasets[0][1].x - datasets[0][0].x;
+    const binWidth: number = (arr => arr![1].x - arr![0].x)(datasets.find(el => !!el.length)); //Find a non-empty dataset (supposed to be guaranteed by earlier logic)
     const maxXs: number[] = datasets.map(dataset =>
         Math.ceil(Math.max.apply(null, dataset.map(el => Math.ceil(el.x / binWidth) * binWidth)))
     );
@@ -156,12 +164,18 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
     datasets.forEach((dataset, ind) =>
         mainSvgGroup
             .selectAll(".dot")
-            .data(dataset, function(d: any, i: number) {
-                //This is a 'key' function associating the unique index for each dataset;
-                //Each time you 'selectAll', it will look for .dot elements with this key
-                //if none are found, they'll get created by .enter() next
-                return "key-" + ind;
-            })
+            .data(
+                dataset,
+
+                function key(d: any, i: number) {
+                    //This is a 'key' function associating a unique index for each dataset;
+                    //Each time you 'selectAll', it will look for .dot elements with this key
+                    //if none are found, they'll get created by .enter() next
+                    if (i === 0) console.log("--------");
+                    console.log("d:", d);
+                    return "key-" + ind + "-";
+                }
+            )
             .enter()
             .append("circle")
             .attr("class", "dot")

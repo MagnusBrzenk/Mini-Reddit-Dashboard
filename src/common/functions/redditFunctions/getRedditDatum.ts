@@ -31,11 +31,6 @@ export async function getRedditDatum(subredditName: string): Promise<SUBREDDITDA
         }
     });
 
-    console.log(">>>>>>>>>>>>>>>>>");
-    console.log("Histo Data for ", subredditName);
-    console.log(binWidth100);
-    console.log(">>>>>>>>>>>>>>>>>");
-
     const subredditDataum: SUBREDDITDATUM.Interface = {
         name: subredditName,
         bDisplayed: true,

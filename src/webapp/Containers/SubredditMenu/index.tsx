@@ -7,6 +7,7 @@ import { genUniqueId } from "__UTILS/genUniqueId";
 import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 import { AppActions } from "__REDUX/actions";
 import { getRedditDatum } from "__FUNCTIONS/redditFunctions/getRedditDatum";
+import { CloseWindowIcon } from "__COMPONENTS/@FortawesomeWrappers/CloseWindowIcon";
 import PREZ from "__UTILS/frontendPresentation";
 
 interface IParentProps {
@@ -19,7 +20,7 @@ interface IState {
 
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
-class SubredditMenuComponent extends React.Component<IProps, IState> {
+class SubredditsMenuComponent extends React.Component<IProps, IState> {
     private searchSubredditInputFieldId: string = "search-subreddit-input-field-" + genUniqueId();
 
     constructor(props: IProps) {
@@ -51,104 +52,126 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
     }
 
     handleClickOnMatchedSubredditItem(index: number) {
-        //
-        const subredditName: string = this.props.matchedSubreddits.get(index); //index;
-        console.log("subredditName >>>", subredditName);
+        //Add name of subreddit to datums
+        const subredditName: string = this.props.matchedSubreddits.get(index);
         this.props.cbAddSubredditDatumToFeed(subredditName);
-        //
-        //
+        //Reset input field
         const inputField: HTMLElement | null = document.getElementById(this.searchSubredditInputFieldId);
         if (!!inputField) (inputField as HTMLInputElement).value = "";
         this.setState({ searchWord: "" });
     }
 
-    handleClickOnSubredditDatumItem(index: number) {
-        //
-        console.log("INDEX", index);
+    handleClickOnDatumItem(index: number) {
         this.props.cbHideSubredditDatum(index);
+    }
+
+    handleClickOnDatumCloseIcon(event: React.MouseEvent<HTMLElement>, index: number) {
+        event.stopPropagation();
+        this.props.cbRemoveSubredditDatum(index);
     }
 
     render() {
         //Presentation params
-        // const itemBorderColor = PREZ.primaryColorDark;
-        // const itemBorderColor = PREZ.secondaryColor;
-        const itemBorderColor = "rgba(0,0,0,0)";
+        const itemBorderColor = "rgba(255,255,255,0.05)";
         const textIndentPxls: number = 10;
-        const subredditItemHeightPxls: number = 30;
+        const searchFieldHeightPxls: number = 50;
+        const datumHeightPxls: number = 40;
         // State params
         const { matchedSubreddits, subredditDatums } = this.props;
         const { searchWord } = this.state;
         //Derived params
         const bDisplayMatchedSubreddits = searchWord.length >= 3;
-        // console.log(">>>>>>>>", matchedSubreddits);
-
         const colorPallete = PREZ.qualitativeColorPalette;
 
-        console.log(JSON.stringify(colorPallete));
-
         return (
-            <div className="subreddit-menu">
+            <div className="subreddits-menu">
                 <style jsx>{`
-                    .subreddit-menu {
+                    .subreddits-menu {
                         width: 100%;
                         height: 100%;
                         box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
                         background-color: ${PREZ.primaryColorDark};
                     }
+                    /* FORM */
                     .form-wrapper {
                     }
-                    .subreddit-search-form {
+                    .subreddits-search-form {
                         width: 100%;
                     }
-                    .search-subreddit-input-field {
+                    .search-subreddits-input-field {
                         box-sizing: border-box;
                         background-color: rgba(255, 255, 255, 0.01);
                         border: 0px solid rgba(255, 255, 255, 0.25);
-                        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+                        border-bottom: 0px solid rgba(255, 255, 255, 0.25);
                         margin: 1px 0px;
                         width: 100%;
-                        height: 50px;
+                        height: ${searchFieldHeightPxls}px;
                         text-indent: ${textIndentPxls}px;
                         color: white;
                     }
-                    .search-subreddit-input-field::placeholder {
+                    .search-subreddits-input-field::placeholder {
                         font-size: 120%;
-                        // font-style: italic;
                         transform: translateX(0px);
                         color: rgba(255, 255, 255, 0.4);
                     }
-                    .subreddit-menu-items-wrapper {
+
+                    /* MENU BODY */
+                    .subreddits-menu-items-wrapper {
                         width: 100%;
-                        height: calc(100% - 40px);
+                        height: calc(100% - ${searchFieldHeightPxls}px);
                         overflow: scroll;
                     }
-                    .subreddit-menu-item {
+
+                    /* SEARCH-RESULTS BRANCH */
+                    .subreddit-search-results-wrapper {
+                    }
+                    .subreddit-search-result {
                         width: 100%;
-                        height: ${subredditItemHeightPxls}px;
                         background-color: ${PREZ.primaryColor};
                         border: 2px solid ${itemBorderColor};
                         color: ${PREZ.displayWhite};
                         display: flex;
                         align-items: center;
-                        justify-content: left;
                         box-sizing: border-box;
                         padding-left: ${textIndentPxls}px;
                         margin-top: 1px;
                         cursor: pointer;
                     }
-                    .subreddit-menu-item + .subreddit-menu-item {
-                        border-top: 0px solid ${itemBorderColor};
+
+                    /* SELECTED-SUBREDDIT-DATUMS BRANCH */
+                    .subreddit-datums-wrapper {
                     }
                     .subreddit-datum {
-                        background-color: ${PREZ.primaryColorDark};
-                        border: 2px solid ${itemBorderColor};
+                        width: 100%;
+                        height: ${datumHeightPxls}px;
+                        border-bottom: 0px solid ${itemBorderColor};
+                        box-sizing: border-box;
+                        margin-top: 1px;
+                        cursor: pointer;
+                        clear: both;
+                    }
+                    .subreddit-datum-label {
+                        height: 100%;
+                        float: left;
+                        padding-left: ${textIndentPxls}px;
+                    }
+                    .subreddit-datum-cross {
+                        height: 100%;
+                        float: right;
+                        padding-right: ${textIndentPxls}px;
+                    }
+
+                    /* MISC */
+                    .center-contents-vertically {
+                        display: flex;
+                        align-items: center;
                     }
                 `}</style>
 
                 <div className="form-wrapper">
-                    <form className={"subreddit-search-form"} autoComplete="off">
+                    <form className={"subreddits-search-form"} autoComplete="off">
                         <input
-                            className="search-subreddit-input-field"
+                            className="search-subreddits-input-field"
                             onChange={e => this.handleInputChange(e)}
                             id={this.searchSubredditInputFieldId}
                             name="subreddit-search"
@@ -158,12 +181,12 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                     </form>
                 </div>
 
-                <div className="subreddit-menu-items-wrapper">
+                <div className="subreddits-menu-items-wrapper">
                     {!!bDisplayMatchedSubreddits ? (
-                        <div className="">
+                        <div className="subreddit-search-results-wrapper">
                             {matchedSubreddits.map((el, ind) => (
                                 <div
-                                    className="subreddit-menu-item"
+                                    className="subreddit-search-result"
                                     onClick={e => this.handleClickOnMatchedSubredditItem(ind!)}
                                     key={ind}
                                 >
@@ -172,17 +195,26 @@ class SubredditMenuComponent extends React.Component<IProps, IState> {
                             ))}
                         </div>
                     ) : (
-                        <div className="">
+                        <div className="subreddit-datums-wrapper">
                             {subredditDatums.map((el, ind) => (
-                                <div //
-                                    className="subreddit-menu-item subreddit-datum"
-                                    onClick={e => this.handleClickOnSubredditDatumItem(ind!)}
+                                <div
+                                    className="subreddit-datum"
+                                    onClick={e => this.handleClickOnDatumItem(ind!)}
                                     key={ind}
                                     style={{
-                                        color: "#" + colorPallete[ind!]
+                                        color: !!el.get("bDisplayed") ? colorPallete[ind!] : "grey",
+                                        backgroundColor: ind! % 2 === 0 ? "rgba(255,255,255,0.03)" : "none"
                                     }}
                                 >
-                                    {el.get("name")}
+                                    <div className="subreddit-datum-label center-contents-vertically">
+                                        {el.get("name")}
+                                    </div>
+                                    <div
+                                        className="subreddit-datum-cross center-contents-vertically"
+                                        onClick={e => this.handleClickOnDatumCloseIcon(e, ind!)}
+                                    >
+                                        <CloseWindowIcon color={"grey"} />
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -215,17 +247,19 @@ interface IReduxCallbacks {
     cbSearchForSubbreddit: typeof AppActions.searchForSubreddit;
     cbAddSubredditDatumToFeed: typeof AppActions.fetchSubredditDatum;
     cbHideSubredditDatum: typeof AppActions.hideSubredditDatum;
+    cbRemoveSubredditDatum: typeof AppActions.removeSubredditDatum;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbClearSubredditSearch: () => dispatch(AppActions.clearSubredditSearch()),
         cbSearchForSubbreddit: (searchWord: string) => dispatch(AppActions.searchForSubreddit(searchWord)),
         cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName)),
-        cbHideSubredditDatum: (index: number) => dispatch(AppActions.hideSubredditDatum(index))
+        cbHideSubredditDatum: (index: number) => dispatch(AppActions.hideSubredditDatum(index)),
+        cbRemoveSubredditDatum: (index: number) => dispatch(AppActions.removeSubredditDatum(index))
     };
 };
 
 export const SubredditMenu = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
     mapStateToProps,
     mapDispatchToProps
-)(SubredditMenuComponent);
+)(SubredditsMenuComponent);

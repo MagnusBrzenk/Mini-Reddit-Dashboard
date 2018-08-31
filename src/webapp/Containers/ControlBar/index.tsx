@@ -60,8 +60,6 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                     }
                 `}</style>
                 Mini-Reddit Dashboard
-                <br /> <br />
-                <TrendySwitch />
             </div>
         );
     }
