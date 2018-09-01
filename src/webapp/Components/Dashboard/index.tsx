@@ -1,16 +1,12 @@
 import * as React from "react";
 import { ControlBar } from "__CONTAINERS/ControlBar";
-import { Graph2D } from "__CONTAINERS/Graph2D";
+import { DatumVisualizations } from "__CONTAINERS/DatumVisualizations";
 import { SubredditMenu } from "__CONTAINERS/SubredditMenu";
 import PREZ from "__UTILS/frontendPresentation";
 
-interface IProps {
-    id?: string;
-}
+interface IProps {}
 
-interface IState {
-    id?: string;
-}
+interface IState {}
 
 export class Dashboard extends React.Component<IProps, IState> {
     constructor(props: IProps) {
@@ -20,6 +16,7 @@ export class Dashboard extends React.Component<IProps, IState> {
 
     render() {
         const dashboardBackgroundColor = PREZ.secondaryColor;
+        const tabButtonHeightPxls: number = 50;
 
         return (
             <div className="dashboard">
@@ -90,10 +87,10 @@ export class Dashboard extends React.Component<IProps, IState> {
 
                 <div className="dashboard-body-row">
                     <div className="subreddit-menu-wrapper shadowed">
-                        <SubredditMenu bShadowed />
+                        <SubredditMenu bShadowed searchFieldHeightPxls={tabButtonHeightPxls} />
                     </div>
                     <div className="graph-2d-wrapper shadowed">
-                        <Graph2D bShadowed xRangeMax={1000} />
+                        <DatumVisualizations bShadowed tabButtonHeightPxls={tabButtonHeightPxls} />
                     </div>
                 </div>
             </div>

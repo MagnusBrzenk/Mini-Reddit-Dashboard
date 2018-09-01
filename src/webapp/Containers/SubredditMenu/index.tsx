@@ -12,6 +12,7 @@ import PREZ from "__UTILS/frontendPresentation";
 
 interface IParentProps {
     bShadowed?: boolean;
+    searchFieldHeightPxls: number;
 }
 
 interface IState {
@@ -74,7 +75,6 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
         //Presentation params
         const itemBorderColor = "rgba(255,255,255,0.05)";
         const textIndentPxls: number = 10;
-        const searchFieldHeightPxls: number = 50;
         const datumHeightPxls: number = 40;
         // State params
         const { matchedSubreddits, subredditDatums } = this.props;
@@ -105,7 +105,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                         border-bottom: 0px solid rgba(255, 255, 255, 0.25);
                         margin: 1px 0px;
                         width: 100%;
-                        height: ${searchFieldHeightPxls}px;
+                        height: ${this.props.searchFieldHeightPxls}px;
                         text-indent: ${textIndentPxls}px;
                         color: white;
                     }
@@ -118,7 +118,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                     /* MENU BODY */
                     .subreddits-menu-items-wrapper {
                         width: 100%;
-                        height: calc(100% - ${searchFieldHeightPxls}px);
+                        height: calc(100% - ${this.props.searchFieldHeightPxls}px);
                         overflow: scroll;
                     }
 

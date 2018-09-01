@@ -10,7 +10,9 @@ Under development
 
 -   Deploy to Firebase
 -   Deploy to AWS Lambda
--   Histogram Tab
--   Pie Chart Tab
--   3D Histogram
--
+-   Data Representations
+    -   Simple Versions
+        -   Histogram Tab
+        -   Pie Chart Tab
+        -   3D Histogram
+    -   Smooth-Transition Versions

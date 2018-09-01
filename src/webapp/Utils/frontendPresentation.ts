@@ -80,6 +80,7 @@ namespace FrontendPresentation {
     export const secondaryColor: string = "#20E0B0";
     export const displayWhite: string = "#f5fffa";
     export const unhighlightedTextColor: string = "#ACADC2";
+    export const unhighlightedIconColor: string = "#373853";
 
     //
     const rawPalette = _palette.default("sol-accent", 8).map((el: string) => "#" + el);
