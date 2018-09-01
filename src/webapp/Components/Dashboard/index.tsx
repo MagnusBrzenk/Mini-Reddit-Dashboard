@@ -26,12 +26,13 @@ export class Dashboard extends React.Component<IProps, IState> {
                 <style jsx>{`
                     .dashboard {
                         width: 100%;
-                        height: 100%;
+                        // height: 100%;
+                        min-height: 100%;
                         background-color: ${PREZ.primaryColorDarkest};
                     }
                     .dashboard-header-row {
                         width: 100%;
-                        height: 20%;
+                        // height: 20%;
                         display: flex;
                     }
                     .header-wrapper {
@@ -45,7 +46,8 @@ export class Dashboard extends React.Component<IProps, IState> {
                     }
                     .dashboard-body-row {
                         width: 100%;
-                        height: 80%;
+                        // height: 80%;
+                        min-height: 500px;
                         max-height: ${window.innerWidth}px;
                         display: flex;
                     }

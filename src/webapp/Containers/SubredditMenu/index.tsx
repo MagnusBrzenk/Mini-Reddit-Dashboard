@@ -112,7 +112,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                     .search-subreddits-input-field::placeholder {
                         font-size: 120%;
                         transform: translateX(0px);
-                        color: rgba(255, 255, 255, 0.4);
+                        color: ${PREZ.unhighlightedTextColor};
                     }
 
                     /* MENU BODY */

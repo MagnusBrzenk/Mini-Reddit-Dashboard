@@ -12,6 +12,7 @@ import lessStyless from "__COMPONENTS/Templates/styles.less";
 
 // import { localJsFunction } from "__COMPONENTS/Templates/localJsFunction";
 import { localJsFunction } from "__COMPONENTS/Templates/localJsFunction.js";
+import { TrendyHamburger } from "__COMPONENTS/TrendyHamburger";
 
 ////////////////////////////////////////////////////////
 export class Templates extends React.Component<{}, {}> {
@@ -129,6 +130,10 @@ export class Templates extends React.Component<{}, {}> {
                     This div is styled using locally imported LESS Modules
                 </div>
 
+                <div className={lessStyless.myLocalLessClass}>
+                    {""}
+                    This div is styled using locally imported LESS Modules
+                </div>
                 <div>
                     Some image sprites imported using global css import:
                     <img
@@ -144,6 +149,15 @@ export class Templates extends React.Component<{}, {}> {
                     <img src="/images/blank.gif" className="flag flag-gr" alt="Czech Republic" />
                     <img src="/images/blank.gif" className="flag flag-de" alt="Czech Republic" />
                     <img src="/images/blank.gif" className="flag flag-ar" alt="Czech Republic" />
+                </div>
+
+                <div
+                    style={{
+                        backgroundColor: "pink",
+                        height: 300
+                    }}
+                >
+                    <TrendyHamburger bChecked />
                 </div>
 
                 <div

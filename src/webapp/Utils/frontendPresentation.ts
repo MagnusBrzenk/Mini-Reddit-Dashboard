@@ -79,6 +79,8 @@ namespace FrontendPresentation {
     export const primaryColorLight: string = "#D5C5FF";
     export const secondaryColor: string = "#20E0B0";
     export const displayWhite: string = "#f5fffa";
+    export const unhighlightedTextColor: string = "#ACADC2";
+
     //
     const rawPalette = _palette.default("sol-accent", 8).map((el: string) => "#" + el);
     [rawPalette[2], rawPalette[6]] = [rawPalette[6], rawPalette[2]]; //Swaps elements 2 <--> 6
