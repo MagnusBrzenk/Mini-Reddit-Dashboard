@@ -15,3 +15,11 @@ An attempt was made to make the react component nothing more than a single-eleme
 ## d3
 
 The d3 is separated into its own function. Each time it is called, it removes an already-existing SVG if present, and just draws everything from scratch. The d3 logic is fairly well annotated because, frankly, it's got a bit of a learning curve (and is easy to forget).
+
+### d3 Gotchas
+
+#### Key Functions
+
+Lost some time with the d3 key function because I figured you could just use the Array.forEach() indices to compute unique keys. However, this doesnt work because of the problem shown in the following example. Suppose you have two lines to draw, A and B, with data points in two separate arrays within our array of type `IDataPoint[][]`. Suppose we use a key of the form `'key-' + i1 + '-' + i2` where `i1` and `i2` are indices for the outer and inner array respectively.
+
+When we loop through the items in the outer array, we first generate dots for line A. No problem. But when we come to the second array and we do `selactAll(.dot)` items, d3 _first_ goes through existing `.dot` elements (i.e. items from first array) and have keys applied to them of the form `key-1-0`, etc. Having gone through the existing keys, it will go through the second array as part of a new key-function process and apply keys that are also of the form `key-1-0`, etc. It will then use these two sets of keys, compare them, and come to the conclusion that the keys are the same in both sets, and so it wont create new dots. Lesson: you can't use the array forEach indices to add dots to your data points in this set up. However, stringifiying the coordinates of the points works finr for these purposes.

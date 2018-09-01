@@ -164,18 +164,11 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
     datasets.forEach((dataset, ind) =>
         mainSvgGroup
             .selectAll(".dot")
-            .data(
-                dataset,
-
-                function key(d: any, i: number) {
-                    //This is a 'key' function associating a unique index for each dataset;
-                    //Each time you 'selectAll', it will look for .dot elements with this key
-                    //if none are found, they'll get created by .enter() next
-                    if (i === 0) console.log("--------");
-                    console.log("d:", d);
-                    return "key-" + ind + "-";
-                }
-            )
+            .data(dataset, function key(d: any, i: number) {
+                //This is a 'key' function associating a unique index for each data point
+                //See note in this dir's _README.md
+                return JSON.stringify(d);
+            })
             .enter()
             .append("circle")
             .attr("class", "dot")
@@ -189,12 +182,19 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
             .style("fill", colorPallete[ind])
             .style("stroke", colorPallete[ind])
             .on("mouseover", function(a, b, c) {
-                const $this: HTMLElement | null = this as any;
-                if (!!$this) $this.classList.add("focus");
+                console.log("XXX");
+                d3.select(this!).style("fill", "rgba(0,0,0,0)");
+                // const $this: HTMLElement | null = this as any;
+                // if (!!$this) $this.classList.add("focus");
             })
             .on("mouseout", function(a, b, c) {
-                const $this: HTMLElement | null = this as any;
-                if (!!$this) $this.classList.remove("focus");
+                d3.select(this!).style("fill", colorPallete[ind]);
+                // const $this: HTMLElement | null = this as any;
+                // if (!!$this) $this.classList.remove("focus");
             })
     );
+
+    // mainSvgGroup.selectAll(".dot").each(function() {
+    //     d3.select(this!).style("fill", "green");
+    // });
 }

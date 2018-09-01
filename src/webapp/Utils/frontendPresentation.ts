@@ -80,7 +80,9 @@ namespace FrontendPresentation {
     export const secondaryColor: string = "#20E0B0";
     export const displayWhite: string = "#f5fffa";
     //
-    export const qualitativeColorPalette: string[] = _palette.default("sol-accent", 8).map((el: string) => "#" + el);
+    const rawPalette = _palette.default("sol-accent", 8).map((el: string) => "#" + el);
+    [rawPalette[2], rawPalette[6]] = [rawPalette[6], rawPalette[2]]; //Swaps elements 2 <--> 6
+    export const qualitativeColorPalette: string[] = rawPalette;
     //
     export const shadowString: string = "0 0 10px rgba(0,0,0,0.5)";
 }
