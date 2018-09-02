@@ -23,9 +23,12 @@ export class Dashboard extends React.Component<IProps, IState> {
                 <style jsx>{`
                     .dashboard {
                         width: 100%;
-                        // height: 100%;
                         min-height: 100%;
                         background-color: ${PREZ.primaryColorDarkest};
+                    }
+                    .dash-board-column-container {
+                        max-width: 750px;
+                        margin: auto auto;
                     }
                     .dashboard-header-row {
                         width: 100%;
@@ -56,7 +59,7 @@ export class Dashboard extends React.Component<IProps, IState> {
                     .graph-2d-wrapper {
                         box-sizing: border-box;
                         padding: 40px;
-                        flex: 2;
+                        flex: 3;
                     }
                     @media only screen and (min-width: ${PREZ.lowerScreenSize}px) {
                         .graph-2d-wrapper {
@@ -79,18 +82,20 @@ export class Dashboard extends React.Component<IProps, IState> {
                     }
                 `}</style>
 
-                <div className="dashboard-header-row">
-                    <div className="header-wrapper">
-                        <ControlBar bShadowed />
+                <div className="dash-board-column-container">
+                    <div className="dashboard-header-row">
+                        <div className="header-wrapper">
+                            <ControlBar bShadowed />
+                        </div>
                     </div>
-                </div>
 
-                <div className="dashboard-body-row">
-                    <div className="subreddit-menu-wrapper shadowed">
-                        <SubredditMenu bShadowed searchFieldHeightPxls={tabButtonHeightPxls} />
-                    </div>
-                    <div className="graph-2d-wrapper shadowed">
-                        <DatumVisualizations bShadowed tabButtonHeightPxls={tabButtonHeightPxls} />
+                    <div className="dashboard-body-row">
+                        <div className="subreddit-menu-wrapper shadowed">
+                            <SubredditMenu bShadowed searchFieldHeightPxls={tabButtonHeightPxls} />
+                        </div>
+                        <div className="graph-2d-wrapper shadowed">
+                            <DatumVisualizations bShadowed tabButtonHeightPxls={tabButtonHeightPxls} />
+                        </div>
                     </div>
                 </div>
             </div>

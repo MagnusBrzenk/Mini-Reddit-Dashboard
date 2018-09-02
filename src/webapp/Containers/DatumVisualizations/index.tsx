@@ -156,7 +156,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                                 axisLabelFontSizePrcnt: "",
                                 numXTicks: this.state.responsiveNumXTicks,
                                 numYTicks: -1, // -1 => pure function of window size
-                                bBinCentering: true
+                                binWidth: this.props.binWidth
                             }}
                         />
                     )}

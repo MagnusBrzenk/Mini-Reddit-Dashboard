@@ -13,13 +13,13 @@ export namespace LineChart {
 
     export interface IChartParams {
         bCurvedLine: boolean;
-        bBinCentering: boolean;
         axesColor: string;
         xAxisLabel: string;
         yAxisLabel: string;
         numXTicks: number | undefined;
         numYTicks: number | undefined;
         axisLabelFontSizePrcnt: string;
+        binWidth?: number;
     }
 
     interface IProps {
@@ -33,13 +33,13 @@ export namespace LineChart {
 
     const defaultParams: Readonly<IChartParams> = {
         bCurvedLine: true,
-        bBinCentering: false,
         axesColor: PREZ.displayWhite,
         xAxisLabel: "X-AXIS",
         yAxisLabel: "Y-AXIS",
         numXTicks: undefined, // undefined => let d3 decide; -1 => let window size decide
         numYTicks: undefined,
-        axisLabelFontSizePrcnt: "100%"
+        axisLabelFontSizePrcnt: "100%",
+        binWidth: undefined
     };
 
     export class Component extends React.Component<IProps, IState> {

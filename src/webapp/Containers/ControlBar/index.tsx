@@ -27,7 +27,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
     //control params
     readonly deltaBinWidth: number = 25;
     readonly deltaXRange: number = 100;
-    readonly maxMaxXRange: number = 10000;
+    readonly maxMaxXRange: number = 5000;
 
     constructor(props: IProps) {
         super(props);
@@ -44,32 +44,30 @@ class ControlBarComponent extends React.Component<IProps, IState> {
 
     //Specify ±1 to increment binWidth by ±this.deltaBinWidth
     incrementBinWidth(dirn: -1 | 1) {
-        const tempBinWidthInput: HTMLElement | null = document.getElementById(this.binWidthInputId);
-        if (!!tempBinWidthInput) {
-            //Cast as HTMLInputElement and adjust displayed text
-            const binWidthInput: HTMLInputElement = tempBinWidthInput as any;
-            const previousBinWidth = parseInt(binWidthInput.value, 10);
-            let newBinWidth = previousBinWidth + dirn * this.deltaBinWidth;
-            if (newBinWidth <= this.deltaBinWidth) newBinWidth = this.deltaBinWidth;
-            if (newBinWidth >= this.maxMaxXRange - this.deltaXRange) newBinWidth = this.maxMaxXRange - this.deltaXRange;
-            binWidthInput.value = Math.round(newBinWidth) + "";
-            //Set new value to redux state
+        const binWidthInput: HTMLElement | null = document.getElementById(this.binWidthInputId);
+        if (!!binWidthInput) {
+            //Test whether this change would keep the new binWidth within sensible bounds and update binWidth accordingly
+            const provisionalNewBinWidth = this.props.binWidth + dirn * this.deltaBinWidth;
+            const bLowerBoundTest = provisionalNewBinWidth >= this.deltaBinWidth;
+            const bUpperBoundTest = provisionalNewBinWidth <= this.props.maxXRange;
+            const newBinWidth = bLowerBoundTest && bUpperBoundTest ? provisionalNewBinWidth : this.props.binWidth;
+            //Set new value to input field and redux state
+            (binWidthInput as HTMLInputElement).value = Math.round(newBinWidth) + "";
             this.props.cbSetBinWidth(newBinWidth);
         }
     }
 
     //Specify ±1 to increment maxXRange by ±this.deltaXRange
     incrementMaxXRange(dirn: -1 | 1) {
-        const tempMaxXRangeInput: HTMLElement | null = document.getElementById(this.maxRangeInputId);
-        if (!!tempMaxXRangeInput) {
-            //Cast as HTMLInputElement and adjust displayed text
-            const maxXRangeInput: HTMLInputElement = tempMaxXRangeInput as any;
-            const previousMaxXRange = parseInt(maxXRangeInput.value, 10);
-            let newMaxXRange = previousMaxXRange + dirn * this.deltaXRange;
-            if (newMaxXRange < this.deltaXRange) newMaxXRange = this.deltaXRange;
-            if (newMaxXRange > this.maxMaxXRange) newMaxXRange = this.maxMaxXRange;
-            maxXRangeInput.value = Math.round(newMaxXRange) + "";
-            //Set new value to redux state
+        const maxXRangeInput: HTMLElement | null = document.getElementById(this.maxRangeInputId);
+        if (!!maxXRangeInput) {
+            //Test whether this change would keep the new maxXRange within sensible bounds and update maxXRange accordingly
+            const provisionalNewMaxXRange = this.props.maxXRange + dirn * this.deltaXRange;
+            const bLowerBoundTest = provisionalNewMaxXRange >= this.props.binWidth;
+            const bUpperBoundTest = provisionalNewMaxXRange <= this.maxMaxXRange;
+            const newMaxXRange = bLowerBoundTest && bUpperBoundTest ? provisionalNewMaxXRange : this.props.maxXRange;
+            //Set new value to input field and redux state
+            (maxXRangeInput as HTMLInputElement).value = Math.round(newMaxXRange) + "";
             this.props.cbSetMaxXRange(newMaxXRange);
         }
     }
@@ -268,10 +266,14 @@ class ControlBarComponent extends React.Component<IProps, IState> {
  */
 interface IReduxStateToProps {
     subredditDatums: SUBREDDITDATUM.ImTypes;
+    binWidth: number;
+    maxXRange: number;
 }
 function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
     return {
-        subredditDatums: getAllSubredditDatums(state)
+        subredditDatums: getAllSubredditDatums(state),
+        binWidth: state.get("subredditData").get("binWidth"),
+        maxXRange: state.get("subredditData").get("maxXRange")
     };
 }
 

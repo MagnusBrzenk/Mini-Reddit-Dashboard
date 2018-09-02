@@ -24,9 +24,9 @@ type Id3Selection = d3.Selection<d3.BaseType, {}, HTMLElement, any>;
  * @param plottingData
  * @param params
  */
-export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], params: IChartParams) {
+export function drawD3Chart(svgDivWrapperId: string, datasetsInput: IDataPoint[][], params: IChartParams) {
     //Check that datasets has at least one non-empty array of valid type IDataPoint[]
-    const bValidDataInput = datasets.find(el => !!el.length);
+    const bValidDataInput = datasetsInput.find(el => !!el.length);
     if (!bValidDataInput)
         throw new Error(
             "A totally empty set of data points got through -- that is not permitted with this d3-plotting interface interface!"
@@ -39,14 +39,25 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
             svgWrapperDiv.removeChild(thisChildNode);
         });
 
-    //If bBinCentering, then shift graph over half a binWidth
-    if (!!params.bBinCentering) {
-        datasets = datasets.map(dataset => {
-            if (!dataset.length) return [];
-            const binWidth = dataset[1].x - dataset[0].x;
-            return dataset.map(el => ({ x: el.x + binWidth / 2, y: el.y }));
-        });
-    }
+    const bBinWidthSpecified: boolean = !!params.binWidth && params.binWidth > 0;
+
+    //If binWidth is specified, then shift graph over half a binWidth
+    const datasets: IDataPoint[][] = !!bBinWidthSpecified
+        ? datasetsInput.map(dataset => {
+              if (!dataset.length) return [];
+              return dataset.map(el => ({ x: el.x + params.binWidth! / 2, y: el.y }));
+          })
+        : datasetsInput;
+
+    // Calc graph limits (i.e. maximum value from array of arrays of numbers)
+    // Calc maxY
+    const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
+    const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
+    // Calc maxX
+    const maxXs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.x))));
+    const provisionalMaxX = Math.ceil(Math.max.apply(null, maxXs.map(el => el)));
+    // If binWidth specified, then add that to maxX
+    const maxX = bBinWidthSpecified ? Math.ceil(provisionalMaxX + params.binWidth! / 2) : provisionalMaxX;
 
     // Dynamically parametrize size of chart based on container DIV
     // Calc Height, Width & Margins
@@ -56,18 +67,6 @@ export function drawD3Chart(svgDivWrapperId: string, datasets: IDataPoint[][], p
     const margin = { top: 50, right: 50, bottom: !!params.xAxisLabel ? 70 : 50, left: !!params.yAxisLabel ? 70 : 50 };
     const width = wrapperWidth - margin.left - margin.right;
     const height = wrapperHeight - margin.top - margin.bottom;
-
-    // Calc graph limits (i.e. maximum value from array of arrays of numbers)
-    // Calc maxY
-    const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
-    const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
-
-    // Calc maxX. Note: This logic also rounds x up to beginning of next binWidth
-    const binWidth: number = (arr => arr![1].x - arr![0].x)(datasets.find(el => !!el.length)); //Find a non-empty dataset (supposed to be guaranteed by earlier logic)
-    const maxXs: number[] = datasets.map(dataset =>
-        Math.ceil(Math.max.apply(null, dataset.map(el => Math.ceil(el.x / binWidth) * binWidth)))
-    );
-    const maxX = Math.ceil(Math.max.apply(null, maxXs.map(el => el)));
 
     // Get array of colors for lines in graph
     const colorPallete = PREZ.qualitativeColorPalette;

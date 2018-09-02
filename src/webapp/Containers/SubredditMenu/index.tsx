@@ -170,7 +170,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                             onChange={e => this.handleInputChange(e)}
                             id={this.searchSubredditInputFieldId}
                             name="subreddit-search"
-                            placeholder="ADD SUBREDDIT (e.g. news)"
+                            placeholder="ADD SUBREDDIT"
                             required
                         />
                     </form>
