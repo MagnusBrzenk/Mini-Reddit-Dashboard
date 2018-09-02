@@ -7,20 +7,30 @@ const bDebug: boolean = false;
 //Cache topRedditPosts
 let topRedditPosts: undefined | REDDIT.IPost[];
 
+interface IArgs {
+    sortType?: "hot" | "top";
+    targetCount?: number;
+}
+
 /**
- * Pings reddit multiple times (in general) to get posts from feed
+ * Pings the Reddit API multiple times (in general) to get all posts from the main 'all' feed upto the targetCount-th post
  * To query more than 100 posts, you need to work with reddit-API's pagination sysem
  * See: https://www.reddit.com/dev/api/#fullnames
+ *
+ * Note: at the moment, this query must always start at rank=0 and work upto rank=targetCount. A better/more efficient
+ * system would let you specify the starting rank as well; however, that will over complicate things for this demo code
+ *
  * @param sortType
  */
-export async function getTopRedditPosts(sortType: "hot" | "top" = "top"): Promise<REDDIT.IPost[]> {
-    // if (!topRedditPosts) topRedditPosts = await getTopRedditPostsWrapped(sortType);
+export async function getTopRedditPosts({ sortType = "top", targetCount = 1000 }: IArgs): Promise<REDDIT.IPost[]> {
+    //
+    // if (!topRedditPosts) topRedditPosts = await getTopRedditPostsWrapped(sortType, targetCount);
     // return topRedditPosts;
 
-    console.log("***************>>>> ", topRedditPosts);
+    // console.log("***************>>>> ", topRedditPosts);
     // if (!topRedditPosts) topRedditPosts = JSON.parse(demo) as REDDIT.IPost[];
     if (!topRedditPosts) topRedditPosts = demo as REDDIT.IPost[];
-    console.log("***************>>>> ", topRedditPosts);
+    // console.log("***************>>>> ", topRedditPosts);
     return topRedditPosts;
 }
 
@@ -28,9 +38,11 @@ export async function getTopRedditPosts(sortType: "hot" | "top" = "top"): Promis
  * Main reddit logic wrapped away to enable cache-ing
  * @param sortType
  */
-export async function getTopRedditPostsWrapped(sortType: "hot" | "top" = "top"): Promise<REDDIT.IPost[]> {
+export async function getTopRedditPostsWrapped({
+    sortType = "top",
+    targetCount = 1000
+}: IArgs): Promise<REDDIT.IPost[]> {
     const subredditName = "all";
-    const targetCount: number = parseInt(process.env.REDDIT_RANGE || "1000", 10) || 1000;
     const steps: number = Math.ceil(targetCount / 100); //required number of reddit API calls
     let redditCount: number = 0; //number of posts received from reddit API so far
     let redditLimit: number = 100; //number of posts to-be-requested on next api call

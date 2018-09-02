@@ -25,7 +25,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
     readonly controlFormName: string = "control-bar-form-" + genUniqueId();
 
     //control params
-    readonly deltaBinWidth: number = 20;
+    readonly deltaBinWidth: number = 25;
     readonly deltaXRange: number = 100;
     readonly maxMaxXRange: number = 10000;
 
@@ -49,9 +49,9 @@ class ControlBarComponent extends React.Component<IProps, IState> {
             //Cast as HTMLInputElement and adjust displayed text
             const binWidthInput: HTMLInputElement = tempBinWidthInput as any;
             const previousBinWidth = parseInt(binWidthInput.value, 10);
-            let newBinWidth = previousBinWidth + this.deltaBinWidth;
-            if (newBinWidth < this.deltaBinWidth) newBinWidth = this.deltaBinWidth;
-            if (newBinWidth > this.maxMaxXRange) newBinWidth = this.maxMaxXRange;
+            let newBinWidth = previousBinWidth + dirn * this.deltaBinWidth;
+            if (newBinWidth <= this.deltaBinWidth) newBinWidth = this.deltaBinWidth;
+            if (newBinWidth >= this.maxMaxXRange - this.deltaXRange) newBinWidth = this.maxMaxXRange - this.deltaXRange;
             binWidthInput.value = Math.round(newBinWidth) + "";
             //Set new value to redux state
             this.props.cbSetBinWidth(newBinWidth);
@@ -70,20 +70,20 @@ class ControlBarComponent extends React.Component<IProps, IState> {
             if (newMaxXRange > this.maxMaxXRange) newMaxXRange = this.maxMaxXRange;
             maxXRangeInput.value = Math.round(newMaxXRange) + "";
             //Set new value to redux state
-            this.props.cbSetBinWidth(newMaxXRange);
+            this.props.cbSetMaxXRange(newMaxXRange);
         }
     }
 
     handleFormSubmission(e: React.FormEvent) {
-        //
+        //Didnt end up using; might be worth removing form altogether
     }
 
     render() {
-        const inputFieldWrapperLabelHeightPxls = 12;
-        const inputFieldWrapperInputHeightPxls = 20;
+        const inputFieldWrapperLabelHeightPxls = 10;
+        const inputFieldWrapperInputHeightPxls = 30;
         const inputFieldWrapperHeightPxls = inputFieldWrapperLabelHeightPxls + inputFieldWrapperInputHeightPxls;
         const animationDurationSecs = 0.5;
-        const bufferSideBorderString = "10px solid rgba(255, 0, 0, 1)";
+        const bufferSideBorderString = "10px solid rgba(255, 0, 0, 0)";
         return (
             <div className="control-bar">
                 <style jsx>{`
@@ -98,6 +98,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         background-color: ${PREZ.primaryColorDark};
                         box-shadow: ${PREZ.shadowString};
                         padding: 10px 0px;
+                        cursor: pointer;
                     }
 
                     .title-wrapper {
@@ -110,7 +111,6 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         padding: 20px 0px;
                         font-size: 20px;
                         box-sizing: border-box;
-                        background-color: green;
                     }
                     .hamburger-icon-wrapper {
                         position: absolute;
@@ -118,12 +118,12 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         right: 0px;
                         height: 100%;
                         transform: scale(0.4);
-                        background-color: rgba(255, 0, 0, 0.99);
+                        background-color: rgba(255, 0, 0, 0);
                     }
 
                     .controls-form {
                         width: 100%;
-                        background-color: rgba(0, 0, 255, 0.05);
+                        background-color: rgba(0, 0, 255, 0);
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -148,15 +148,16 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         align-content: center;
                         text-align: center;
                         font-size: ${inputFieldWrapperLabelHeightPxls}px;
+                        color: ${PREZ.unhighlightedTextColor};
                     }
                     .input-field-wrapper {
                         flex: 1;
                         height: ${inputFieldWrapperInputHeightPxls}px;
                         font-size: 100%;
-                        color: ${PREZ.displayWhite};
+                        // color: ${PREZ.displayWhite};
+                        color: ${PREZ.unhighlightedTextColor};
                         text-align: center;
                         background-color: rgba(255, 255, 255, 0.05);
-                        background-color: rgba(0, 255, 0, 1);
                         border: none;
                         border-bottom: 0px solid ${PREZ.displayWhite};
                         display: flex;
@@ -167,19 +168,24 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                     .tri-button {
                         flex: 1;
                         height: 100%;
-                        background-color: rgba(0, 0, 255, 1);
+                        background-color: rgba(0, 0, 255, 0);
                         cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                     .input-field {
                         flex: 3;
                         min-width: 1px;
                         height: ${inputFieldWrapperInputHeightPxls}px;
                         background-color: rgba(255, 255, 255, 0);
-                        color: ${PREZ.displayWhite};
+                        // color: ${PREZ.displayWhite};
+                        color: ${PREZ.unhighlightedTextColor};
                         text-align: center;
                         border: none;
                         box-sizing: border-box;
                         border-bottom: 0px solid ${PREZ.displayWhite};
+                        font-size: ${Math.round(0.7 * inputFieldWrapperInputHeightPxls)}px;
                     }
                     .input-field::placeholder {
                         color: ${PREZ.unhighlightedTextColor};
@@ -275,11 +281,13 @@ function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
 interface IReduxCallbacks {
     cbSetBinWidth: typeof AppActions.setBinWidth;
     cbSetMaxXRange: typeof AppActions.setMaxXRange;
+    cbAddSubredditDatumToFeed: typeof AppActions.fetchSubredditDatum;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbSetBinWidth: (newWidth: number) => dispatch(AppActions.setBinWidth(newWidth)),
-        cbSetMaxXRange: (newMaxXRange: number) => dispatch(AppActions.setMaxXRange(newMaxXRange))
+        cbSetMaxXRange: (newMaxXRange: number) => dispatch(AppActions.setMaxXRange(newMaxXRange)),
+        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName))
     };
 };
 

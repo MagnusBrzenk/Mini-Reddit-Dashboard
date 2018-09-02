@@ -42,7 +42,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             xRangeMax: 1000,
-            responsiveNumXTicks: -1,
+            responsiveNumXTicks: -1, //
             selectedTab: 0,
             bDisplaySettings: false
         };
@@ -50,8 +50,13 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
     }
 
     handleWindowResize() {
-        const allPlottingData: IDataPoint[][] = reshapePlottingData(this.props.subredditDatums, this.state.xRangeMax);
-        const nBins: number = !!allPlottingData.length ? allPlottingData[0].length : 1;
+        const allPlottingData: IDataPoint[][] = reshapePlottingData(
+            this.props.subredditDatums,
+            this.props.binWidth,
+            this.props.maxXRange
+        );
+        // const nBins: number = !!allPlottingData.length ? allPlottingData[0].length : 1;
+        const nBins: number = Math.ceil(this.props.maxXRange / this.props.binWidth);
         const responsiveNumXTicks = window.innerWidth < 700 ? -1 : nBins;
         this.setState({ responsiveNumXTicks });
     }
@@ -66,8 +71,16 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const allPlottingData: IDataPoint[][] = reshapePlottingData(this.props.subredditDatums, this.state.xRangeMax);
+        const allPlottingData: IDataPoint[][] = reshapePlottingData(
+            this.props.subredditDatums,
+            this.props.binWidth,
+            this.props.maxXRange
+        );
         const tab = this.state.selectedTab;
+        // // console.log("++++++++++++++++++++");
+        // console.log(this.props.binWidth, this.props.maxXRange);
+        // console.log(allPlottingData);
+        // console.log("++++++++++++++++++++");
         return (
             <div className="datum-visualizations">
                 <style jsx>{`
@@ -81,6 +94,10 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                         height: calc(100% - ${this.props.tabButtonHeightPxls}px);
                         background-color: ${PREZ.primaryColorDark};
                         position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: ${PREZ.displayWhite};
                     }
                     .tabs-wrapper {
                         width: 100%;
@@ -135,7 +152,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                             params={{
                                 //
                                 xAxisLabel: "All Time Rankings",
-                                yAxisLabel: "Bin-Width-100 Count",
+                                yAxisLabel: "Bin Count",
                                 axisLabelFontSizePrcnt: "",
                                 numXTicks: this.state.responsiveNumXTicks,
                                 numYTicks: -1, // -1 => pure function of window size
@@ -161,10 +178,14 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
  */
 interface IReduxStateToProps {
     subredditDatums: SUBREDDITDATUM.ImTypes;
+    binWidth: number;
+    maxXRange: number;
 }
 function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
     return {
-        subredditDatums: getAllSubredditDatums(state)
+        subredditDatums: getAllSubredditDatums(state),
+        binWidth: state.get("subredditData").get("binWidth"),
+        maxXRange: state.get("subredditData").get("maxXRange")
     };
 }
 

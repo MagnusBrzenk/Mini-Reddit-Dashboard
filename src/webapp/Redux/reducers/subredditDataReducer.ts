@@ -2,17 +2,13 @@ import { SUBREDDITDATUM, SUBREDDITDATA } from "__MODELS";
 import { AnyAction, Reducer } from "redux";
 import { AppActions } from "__REDUX/actions";
 
-//When in development, use the "demo" feed:
-const bDev: boolean = process.env.NODE_ENV !== "production";
-const localDefault: SUBREDDITDATA.Interface = !!bDev ? SUBREDDITDATA.Demo : SUBREDDITDATA.Default;
-
 /**
  * Reducer governing the data for the subreddits selectively added to the menu by the user
  * @param substate0
  * @param action
  */
 export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = function(
-    substate0: SUBREDDITDATA.ImType = SUBREDDITDATA.genIm(localDefault),
+    substate0: SUBREDDITDATA.ImType = SUBREDDITDATA.genIm(),
     action: AnyAction
 ): SUBREDDITDATA.ImType {
     //////////////////////
@@ -56,6 +52,16 @@ export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = fu
             if (totalLoadedSubredditDatums <= 1) return substate0;
             //Otherwise, remove this datum
             return substate0.deleteIn(["subredditDatums", removalIndex]);
+
+        case AppActions.Types.SET_BIN_WIDTH:
+            //Cast action as corresponding type
+            const matchedAction4: ReturnType<typeof AppActions.setBinWidth> = action as any;
+            return substate0.set("binWidth", matchedAction4.payload);
+
+        case AppActions.Types.SET_MAX_X_RANGE:
+            //Cast action as corresponding type
+            const matchedAction5: ReturnType<typeof AppActions.setBinWidth> = action as any;
+            return substate0.set("maxXRange", matchedAction5.payload);
         /////////////////////
         default:
             return substate0;

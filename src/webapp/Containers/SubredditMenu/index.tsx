@@ -33,14 +33,9 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
         this.handleClickOnMatchedSubredditItem = this.handleClickOnMatchedSubredditItem.bind(this);
     }
 
-    async componentDidMount() {
-        //////////////////////////////////////
-        // Spin off async fetch of reddit data
-        // console.log("///////////////////");
-        // this.props.cbSearchForSubbreddit(this.state.searchWord);
-        // console.log("//////////////// ///");
-        //////////////////////
-        // getRedditDatum("all");
+    componentDidMount() {
+        //Add some of the top subreddits
+        ["pics", "funny", "videos", "worldnews", "aww"].forEach(el => this.props.cbAddSubredditDatumToFeed(el));
     }
 
     handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -175,7 +170,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                             onChange={e => this.handleInputChange(e)}
                             id={this.searchSubredditInputFieldId}
                             name="subreddit-search"
-                            placeholder="ADD SUBREDDIT"
+                            placeholder="ADD SUBREDDIT (e.g. news)"
                             required
                         />
                     </form>

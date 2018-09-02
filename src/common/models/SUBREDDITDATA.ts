@@ -14,8 +14,8 @@ export namespace SUBREDDITDATA {
 
     export const Default: Readonly<Interface> = {
         subredditDatums: [...SUBREDDITDATUM.Defaults],
-        maxXRange: 1000,
-        binWidth: 100
+        binWidth: 100,
+        maxXRange: 1000
     };
 
     export const Demo: Interface = {
