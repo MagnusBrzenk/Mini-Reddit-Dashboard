@@ -12,6 +12,8 @@ import { BarChart as BarChartIcon } from "__COMPONENTS/@FortawesomeWrappers/BarC
 import { LineChart as LineChartIcon } from "__COMPONENTS/@FortawesomeWrappers/LineChart";
 import { StreetView as StreetViewIcon } from "__COMPONENTS/@FortawesomeWrappers/StreetView";
 
+import { TrendyHamburger } from "__COMPONENTS/TrendyHamburger";
+
 type IDataPoint = LineChart.IDataPoint;
 
 interface IParentProps {
@@ -21,6 +23,7 @@ interface IParentProps {
 
 interface IState {
     xRangeMax: number;
+    bDisplaySettings: boolean;
     responsiveNumXTicks: number;
     selectedTab: 0 | 1 | 2 | 3;
 }
@@ -40,7 +43,8 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
         this.state = {
             xRangeMax: 1000,
             responsiveNumXTicks: -1,
-            selectedTab: 0
+            selectedTab: 0,
+            bDisplaySettings: false
         };
         this.handleWindowResize = this.handleWindowResize.bind(this);
     }
@@ -76,6 +80,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                         width: 100%;
                         height: calc(100% - ${this.props.tabButtonHeightPxls}px);
                         background-color: ${PREZ.primaryColorDark};
+                        position: relative;
                     }
                     .tabs-wrapper {
                         width: 100%;
@@ -83,7 +88,6 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        // background-color: ${PREZ.primaryColorDark};
                     }
                     .tab {
                         height: 100%;
@@ -125,18 +129,23 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                     </div>
                 </div>
                 <div className="visualizations-wrapper">
-                    <LineChart.Component
-                        plottingData={allPlottingData}
-                        params={{
-                            //
-                            xAxisLabel: "All Time Rankings",
-                            yAxisLabel: "Bin-Width-100 Count",
-                            axisLabelFontSizePrcnt: "",
-                            numXTicks: this.state.responsiveNumXTicks,
-                            numYTicks: -1, // -1 => pure function of window size
-                            bBinCentering: true
-                        }}
-                    />
+                    {tab === 0 && (
+                        <LineChart.Component
+                            plottingData={allPlottingData}
+                            params={{
+                                //
+                                xAxisLabel: "All Time Rankings",
+                                yAxisLabel: "Bin-Width-100 Count",
+                                axisLabelFontSizePrcnt: "",
+                                numXTicks: this.state.responsiveNumXTicks,
+                                numYTicks: -1, // -1 => pure function of window size
+                                bBinCentering: true
+                            }}
+                        />
+                    )}
+                    {tab === 1 && <div>COMING SOON!</div>}
+                    {tab === 2 && <div>COMING SOON!</div>}
+                    {tab === 3 && <div>COMING SOON!</div>}
                 </div>
             </div>
         );

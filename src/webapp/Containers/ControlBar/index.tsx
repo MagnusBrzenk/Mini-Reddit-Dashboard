@@ -7,9 +7,6 @@ import { AppActions } from "__REDUX/actions";
 import PREZ from "__UTILS/frontendPresentation";
 import { genUniqueId } from "__UTILS/genUniqueId";
 
-// import D3Line from ''
-// import D3LineGraph from "./D3LineGraph";
-
 interface IParentProps {
     bShadowed?: boolean;
 }
@@ -22,19 +19,71 @@ interface IState {
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
 class ControlBarComponent extends React.Component<IProps, IState> {
+    //unique-id references
     readonly binWidthInputId: string = "bin-width-input-" + genUniqueId();
+    readonly maxRangeInputId: string = "max-range-input-" + genUniqueId();
+    readonly controlFormName: string = "control-bar-form-" + genUniqueId();
+
+    //control params
+    readonly deltaBinWidth: number = 20;
+    readonly deltaXRange: number = 100;
+    readonly maxMaxXRange: number = 10000;
 
     constructor(props: IProps) {
         super(props);
-        this.state = { bHamburgerChecked: true };
+        this.state = { bHamburgerChecked: !false };
         this.toggleHamburger = this.toggleHamburger.bind(this);
+        this.handleFormSubmission = this.handleFormSubmission.bind(this);
+        this.incrementBinWidth = this.incrementBinWidth.bind(this);
+        this.incrementMaxXRange = this.incrementMaxXRange.bind(this);
     }
 
     toggleHamburger() {
         this.setState(oldState => ({ bHamburgerChecked: !oldState.bHamburgerChecked }));
     }
 
+    //Specify ±1 to increment binWidth by ±this.deltaBinWidth
+    incrementBinWidth(dirn: -1 | 1) {
+        const tempBinWidthInput: HTMLElement | null = document.getElementById(this.binWidthInputId);
+        if (!!tempBinWidthInput) {
+            //Cast as HTMLInputElement and adjust displayed text
+            const binWidthInput: HTMLInputElement = tempBinWidthInput as any;
+            const previousBinWidth = parseInt(binWidthInput.value, 10);
+            let newBinWidth = previousBinWidth + this.deltaBinWidth;
+            if (newBinWidth < this.deltaBinWidth) newBinWidth = this.deltaBinWidth;
+            if (newBinWidth > this.maxMaxXRange) newBinWidth = this.maxMaxXRange;
+            binWidthInput.value = Math.round(newBinWidth) + "";
+            //Set new value to redux state
+            this.props.cbSetBinWidth(newBinWidth);
+        }
+    }
+
+    //Specify ±1 to increment maxXRange by ±this.deltaXRange
+    incrementMaxXRange(dirn: -1 | 1) {
+        const tempMaxXRangeInput: HTMLElement | null = document.getElementById(this.maxRangeInputId);
+        if (!!tempMaxXRangeInput) {
+            //Cast as HTMLInputElement and adjust displayed text
+            const maxXRangeInput: HTMLInputElement = tempMaxXRangeInput as any;
+            const previousMaxXRange = parseInt(maxXRangeInput.value, 10);
+            let newMaxXRange = previousMaxXRange + dirn * this.deltaXRange;
+            if (newMaxXRange < this.deltaXRange) newMaxXRange = this.deltaXRange;
+            if (newMaxXRange > this.maxMaxXRange) newMaxXRange = this.maxMaxXRange;
+            maxXRangeInput.value = Math.round(newMaxXRange) + "";
+            //Set new value to redux state
+            this.props.cbSetBinWidth(newMaxXRange);
+        }
+    }
+
+    handleFormSubmission(e: React.FormEvent) {
+        //
+    }
+
     render() {
+        const inputFieldWrapperLabelHeightPxls = 12;
+        const inputFieldWrapperInputHeightPxls = 20;
+        const inputFieldWrapperHeightPxls = inputFieldWrapperLabelHeightPxls + inputFieldWrapperInputHeightPxls;
+        const animationDurationSecs = 0.5;
+        const bufferSideBorderString = "10px solid rgba(255, 0, 0, 1)";
         return (
             <div className="control-bar">
                 <style jsx>{`
@@ -50,69 +99,155 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         box-shadow: ${PREZ.shadowString};
                         padding: 10px 0px;
                     }
+
+                    .title-wrapper {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        height: 20px;
+                        padding: 20px 0px;
+                        font-size: 20px;
+                        box-sizing: border-box;
+                        background-color: green;
+                    }
+                    .hamburger-icon-wrapper {
+                        position: absolute;
+                        top: 0px;
+                        right: 0px;
+                        height: 100%;
+                        transform: scale(0.4);
+                        background-color: rgba(255, 0, 0, 0.99);
+                    }
+
                     .controls-form {
+                        width: 100%;
                         background-color: rgba(0, 0, 255, 0.05);
                         display: flex;
-                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
                     }
-                    .input-wrapper {
-                        flex: 1 1 50%;
+                    .control-wrapper {
+                        max-width: 150px;
+                        flex: 1;
+                        height: ${this.state.bHamburgerChecked ? inputFieldWrapperHeightPxls : 0}px;
+                        transition: height ${animationDurationSecs}s ease-in-out;
+                        box-sizing: border-box;
+                        border-left: ${bufferSideBorderString};
                         display: flex;
                         flex-direction: column;
-                        // height: 60px;
+                        overflow: hidden;
                     }
-                    .input-field {
-                        width: 100px;
-                        height: 25px
-                        flex: 1 1 100px;
+                    .control-wrapper:last-of-type {
+                        border-right: ${bufferSideBorderString};
+                    }
+                    .control-wrapper label {
+                        width: 100%;
+                        height: ${inputFieldWrapperLabelHeightPxls}px;
+                        align-content: center;
+                        text-align: center;
+                        font-size: ${inputFieldWrapperLabelHeightPxls}px;
+                    }
+                    .input-field-wrapper {
+                        flex: 1;
+                        height: ${inputFieldWrapperInputHeightPxls}px;
                         font-size: 100%;
                         color: ${PREZ.displayWhite};
                         text-align: center;
                         background-color: rgba(255, 255, 255, 0.05);
+                        background-color: rgba(0, 255, 0, 1);
                         border: none;
+                        border-bottom: 0px solid ${PREZ.displayWhite};
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .tri-button {
+                        flex: 1;
+                        height: 100%;
+                        background-color: rgba(0, 0, 255, 1);
+                        cursor: pointer;
+                    }
+                    .input-field {
+                        flex: 3;
+                        min-width: 1px;
+                        height: ${inputFieldWrapperInputHeightPxls}px;
+                        background-color: rgba(255, 255, 255, 0);
+                        color: ${PREZ.displayWhite};
+                        text-align: center;
+                        border: none;
+                        box-sizing: border-box;
                         border-bottom: 0px solid ${PREZ.displayWhite};
                     }
                     .input-field::placeholder {
                         color: ${PREZ.unhighlightedTextColor};
                     }
-                    label {
-                        align-content: center;
-                        text-align: center;
-                        font-size: 50%;
-                    }
                 `}</style>
-                <h3> Mini-Reddit Dashboard</h3>
 
-                <div className="controls-form-wrapper">
-                    <form className="controls-form" autoComplete="off">
-                        <div className="input-wrapper">
-                            <label htmlFor={this.binWidthInputId}>{"BIN WIDTH"}</label>
+                <div className="title-wrapper">
+                    {"Mini-Reddit Dashboard"}
+                    <div
+                        className={`hamburger-icon-wrapper`}
+                        onClick={() => this.setState(oldState => ({ bHamburgerChecked: !oldState.bHamburgerChecked }))}
+                    >
+                        <TrendyHamburger
+                            bChecked={this.state.bHamburgerChecked}
+                            color={PREZ.displayWhite}
+                            durationSecs={animationDurationSecs}
+                        />
+                    </div>
+                </div>
+
+                <form //
+                    className="controls-form"
+                    autoComplete="off"
+                    onSubmit={e => this.handleFormSubmission(e)}
+                    name={this.controlFormName}
+                >
+                    <div className="control-wrapper">
+                        <label htmlFor={this.binWidthInputId}>{"BIN WIDTH"}</label>
+                        <div className="input-field-wrapper">
+                            <div className="tri-button" onClick={() => this.incrementBinWidth(1)}>
+                                ▲
+                            </div>
                             <input
-                                className="input-field bin-width-input"
+                                className="input-field"
                                 id={this.binWidthInputId}
                                 onChange={e => null}
-                                name="bin-width-input"
-                                placeholder="BIN WIDTH"
+                                name="bin-width-input-field"
+                                placeholder="100"
+                                defaultValue="100"
                                 required
                             />
+                            <div className="tri-button" onClick={() => this.incrementBinWidth(-1)}>
+                                ▼
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="input-wrapper">
-                            <label htmlFor={this.binWidthInputId}>{"MAX RANK"}</label>
+                    <div className="control-wrapper">
+                        <label htmlFor={this.maxRangeInputId}>{"MAX RANGE"}</label>
+                        <div className="input-field-wrapper">
+                            <div className="tri-button" onClick={() => this.incrementMaxXRange(1)}>
+                                ▲
+                            </div>
                             <input
-                                className="input-field max-rank-input"
+                                className="input-field"
+                                id={this.maxRangeInputId}
                                 onChange={e => null}
-                                name="max-rank-input"
-                                placeholder="MAX RANK"
+                                name="max-range-input-field"
+                                placeholder="1000"
+                                defaultValue="1000"
                                 required
                             />
+                            <div className="tri-button" onClick={() => this.incrementMaxXRange(-1)}>
+                                ▼
+                            </div>
                         </div>
-                    </form>
-                </div>
-
-                <div className="trendy-hamburger-wrapper" onClick={() => this.toggleHamburger()}>
-                    <TrendyHamburger bChecked={this.state.bHamburgerChecked} />
-                </div>
+                    </div>
+                </form>
             </div>
         );
     }
@@ -138,12 +273,13 @@ function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
  * Callbacks to trigger actions to manipulate redux state
  */
 interface IReduxCallbacks {
-    // cbShowExpandedContact: typeof AppActions.showExpandedContact;
+    cbSetBinWidth: typeof AppActions.setBinWidth;
+    cbSetMaxXRange: typeof AppActions.setMaxXRange;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
-        //     cbShowExpandedContact: ({ bOpen, bEditing }: { bOpen: boolean; bEditing?: boolean }) =>
-        //         dispatch(AppActions.showExpandedContact({ bOpen, bEditing }))
+        cbSetBinWidth: (newWidth: number) => dispatch(AppActions.setBinWidth(newWidth)),
+        cbSetMaxXRange: (newMaxXRange: number) => dispatch(AppActions.setMaxXRange(newMaxXRange))
     };
 };
 

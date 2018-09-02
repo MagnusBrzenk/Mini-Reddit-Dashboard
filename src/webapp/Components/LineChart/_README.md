@@ -4,7 +4,7 @@ This is a component for drawing a set of simple line graphs using d3. The react 
 
 ## Approach
 
-This component uses the super-simple approach of simply redrawing from scratch the entire SVG whenever the props and/or window size get updated. As such, all of the d3 logic is placed in a single separate function that gets recalled on updated events. If you want to preserve existing lines and have a new line added to the graph in an animated manner, then you'd probably want to migrate the d3 logic from the simple function to its own class (with vars for state preservation, update methods, etc.)
+This component uses the super-simple approach of simply redrawing from scratch the entire SVG whenever the props and/or window size get updated. As such, all of the d3 logic is placed in a single separate function that gets recalled on updated events. If you want to preserve existing lines and have a new line added to the graph in an animated manner, then you'd probably want to migrate the d3 logic from a single simple function to its own class (with vars for state preservation and update methods).
 
 ## React
 

@@ -5,6 +5,7 @@ interface IProps {
     color?: string;
     backgroundColor?: string;
     bChecked: boolean;
+    durationSecs?: number;
 }
 
 interface IState {
@@ -39,11 +40,13 @@ export class TrendyHamburger extends React.Component<IProps, IState> {
     }
 
     render() {
+        const durationSecs = this.props.durationSecs || 0.2;
+
         return (
             <div className="trendy-hamburger">
                 <style jsx>{`
                     .trendy-hamburger {
-                        background-color: ${this.props.backgroundColor || "rgba(255,0,0,0.5)"};
+                        background-color: ${this.props.backgroundColor || "rgba(255,0,0,0.0)"};
                         height: 40px;
                         width: 40px;
                     }
@@ -84,9 +87,9 @@ export class TrendyHamburger extends React.Component<IProps, IState> {
                         top: 0px;
                         position: absolute;
                         background: #fff;
-                        transition: 0.2s ease all;
-                        -moz-transition: 0.2s ease all;
-                        -webkit-transition: 0.2s ease all;
+                        transition: ${durationSecs}s ease all;
+                        -moz-transition: ${durationSecs}s ease all;
+                        -webkit-transition: ${durationSecs}s ease all;
                     }
 
                     input[type="checkbox"]#${this.checkId} + label:before {
@@ -125,9 +128,7 @@ export class TrendyHamburger extends React.Component<IProps, IState> {
                     }
 
                     .wrapper {
-                        // width: 12.25%;
                         width: 40px;
-                        // height: auto;
                         float: left;
                         position: relative;
                         padding: 0px 0;

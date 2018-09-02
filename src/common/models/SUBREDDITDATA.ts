@@ -2,19 +2,26 @@ import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
 import { SUBREDDITDATUM } from "./SUBREDDITDATUM";
 
 /**
- * All the data structures pulled from reddit required to generate dashboard
+ * SUBREDDITDATA houses all the data structures pulled from reddit required to generate dashboard
+ * plus parameters for display (binWidths, etc.)
  */
 export namespace SUBREDDITDATA {
     export interface Interface {
         readonly subredditDatums: SUBREDDITDATUM.Interface[];
+        readonly binWidth: number;
+        readonly maxXRange: number;
     }
 
     export const Default: Readonly<Interface> = {
-        subredditDatums: [...SUBREDDITDATUM.Defaults]
+        subredditDatums: [...SUBREDDITDATUM.Defaults],
+        maxXRange: 1000,
+        binWidth: 100
     };
 
     export const Demo: Interface = {
-        subredditDatums: SUBREDDITDATUM.Demos
+        subredditDatums: SUBREDDITDATUM.Demos,
+        maxXRange: 1000,
+        binWidth: 100
     };
 
     /* DO NOT EDIT/REMOVE */

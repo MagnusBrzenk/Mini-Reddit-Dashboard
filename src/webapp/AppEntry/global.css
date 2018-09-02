@@ -106,8 +106,8 @@ body,
     display: block;
 }
 
-.column + .column,
-.col + .col {
+.column+.column,
+.col+.col {
     margin-left: 1.6%;
 }
 
@@ -188,7 +188,7 @@ body,
         float: none;
         width: auto;
     }
-    .column + .column {
+    .column+.column {
         margin-left: 0;
     }
 }

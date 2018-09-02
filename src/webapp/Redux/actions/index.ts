@@ -18,7 +18,9 @@ export namespace AppActions {
         FETCH_SUBREDDIT_DATUM = "FETCH_SUBREDDIT_DATUM",
         FETCH_SUBREDDIT_DATUM_FULFILLED = "FETCH_SUBREDDIT_DATUM_FULFILLED",
         HIDE_SUBREDDIT_DATUM = "HIDE_SUBREDDIT_DATUM",
-        REMOVE_SUBREDDIT_DATUM = "REMOVE_SUBREDDIT_DATUM"
+        REMOVE_SUBREDDIT_DATUM = "REMOVE_SUBREDDIT_DATUM",
+        SET_BIN_WIDTH = "SET_BIN_WIDTH",
+        SET_MAX_X_RANGE = "SET_MAX_X_RANGE"
     }
 
     /* ACTION CREATORS */
@@ -36,6 +38,8 @@ export namespace AppActions {
     );
     export const hideSubredditDatum = CreateAction<number>(Types.HIDE_SUBREDDIT_DATUM);
     export const removeSubredditDatum = CreateAction<number>(Types.REMOVE_SUBREDDIT_DATUM);
+    export const setBinWidth = CreateAction<number>(Types.SET_BIN_WIDTH);
+    export const setMaxXRange = CreateAction<number>(Types.SET_MAX_X_RANGE);
 }
 
 /*-------------------------------------- DO NOT EDIT --------------------------------------*/
