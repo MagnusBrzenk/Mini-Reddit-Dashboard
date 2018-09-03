@@ -6,7 +6,6 @@ import { getAllSubredditDatums } from "__REDUX/selectors";
 import { genUniqueId } from "__UTILS/genUniqueId";
 import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 import { AppActions } from "__REDUX/actions";
-import { getRedditDatum } from "__FUNCTIONS/redditFunctions/getRedditDatum";
 import { CloseWindowIcon } from "__COMPONENTS/@FortawesomeWrappers/CloseWindowIcon";
 import PREZ from "__UTILS/frontendPresentation";
 
@@ -240,7 +239,7 @@ function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
 interface IReduxCallbacks {
     cbClearSubredditSearch: typeof AppActions.clearSubredditSearch;
     cbSearchForSubbreddit: typeof AppActions.searchForSubreddit;
-    cbAddSubredditDatumToFeed: typeof AppActions.fetchSubredditDatum;
+    cbAddSubredditDatumToFeed: typeof AppActions.updateSubredditDatum;
     cbHideSubredditDatum: typeof AppActions.hideSubredditDatum;
     cbRemoveSubredditDatum: typeof AppActions.removeSubredditDatum;
 }
@@ -248,7 +247,7 @@ const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbClearSubredditSearch: () => dispatch(AppActions.clearSubredditSearch()),
         cbSearchForSubbreddit: (searchWord: string) => dispatch(AppActions.searchForSubreddit(searchWord)),
-        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName)),
+        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.updateSubredditDatum(subredditName)),
         cbHideSubredditDatum: (index: number) => dispatch(AppActions.hideSubredditDatum(index)),
         cbRemoveSubredditDatum: (index: number) => dispatch(AppActions.removeSubredditDatum(index))
     };

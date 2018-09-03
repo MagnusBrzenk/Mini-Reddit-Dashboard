@@ -15,15 +15,43 @@ export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = fu
     switch (action.type) {
         //////////////////
 
-        case AppActions.Types.FETCH_SUBREDDIT_DATUM_FULFILLED:
+        case AppActions.Types.UPDATE_SUBREDDIT_DATUM:
             //Cast action as corresponding type
-            const matchedAction1: ReturnType<typeof AppActions.fetchSubredditDatumFulfilled> = action as any;
-            if (!matchedAction1.payload!) {
-                return substate0;
+            const matchedAction0: ReturnType<typeof AppActions.updateSubredditDatum> = action as any;
+            if (!matchedAction0.payload!) return substate0;
+            //If datum doesn't exist for this subreddit, then create a bare-bones version
+            const subredditName: string = matchedAction0.payload;
+            const existingDatum: SUBREDDITDATUM.ImType | undefined = substate0
+                .get("subredditDatums")
+                .find(el => el.get("name") === subredditName);
+            if (!existingDatum) {
+                return substate0.update("subredditDatums", el =>
+                    el.push(
+                        SUBREDDITDATUM.genIm({
+                            name: subredditName,
+                            bDisplayed: true,
+                            images: [],
+                            rawRankings: [],
+                            maxRankingFetched: 0
+                        })
+                    )
+                );
             }
-            //Add fetched datum to collection
+
+        case AppActions.Types.UPDATE_SUBREDDIT_DATUM_FULFILLED:
+            //Cast action as corresponding type
+            const matchedAction1: ReturnType<typeof AppActions.updateSubredditDatumFulfilled> = action as any;
+            if (!matchedAction1.payload!) return substate0;
+            //Find existing datum and replace it with new updated datum for same subreddit
             const newDatum = SUBREDDITDATUM.genIm(matchedAction1.payload);
-            const newSubstate1 = substate0.update("subredditDatums", (el: any) => el.push(newDatum));
+
+            console.log("newDatum", matchedAction1.payload);
+
+            const datumIndex = substate0
+                .get("subredditDatums")
+                .findIndex(el => el.get("name") === newDatum.get("name"));
+            if (datumIndex === -1) throw new Error("Returned datum doesnt match with an existing datum!!!");
+            const newSubstate1 = substate0.setIn(["subredditDatums", datumIndex], newDatum);
             return newSubstate1;
 
         case AppActions.Types.HIDE_SUBREDDIT_DATUM:

@@ -283,13 +283,13 @@ function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
 interface IReduxCallbacks {
     cbSetBinWidth: typeof AppActions.setBinWidth;
     cbSetMaxXRange: typeof AppActions.setMaxXRange;
-    cbAddSubredditDatumToFeed: typeof AppActions.fetchSubredditDatum;
+    cbAddSubredditDatumToFeed: typeof AppActions.updateSubredditDatum;
 }
 const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {
         cbSetBinWidth: (newWidth: number) => dispatch(AppActions.setBinWidth(newWidth)),
         cbSetMaxXRange: (newMaxXRange: number) => dispatch(AppActions.setMaxXRange(newMaxXRange)),
-        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.fetchSubredditDatum(subredditName))
+        cbAddSubredditDatumToFeed: (subredditName: string) => dispatch(AppActions.updateSubredditDatum(subredditName))
     };
 };
 

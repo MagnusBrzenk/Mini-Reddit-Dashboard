@@ -1,6 +1,6 @@
 import { SUBREDDITDATUM, SUBREDDITDATA, REDDIT, NETWORK } from "__MODELS";
 import { parseSubredditSearch } from "__FUNCTIONS/redditFunctions/parseSubredditSearch";
-import { getRedditDatum } from "__FUNCTIONS/redditFunctions/getRedditDatum";
+import { updateSubredditDatum } from "__FUNCTIONS/redditFunctions/updateSubredditDatum";
 import { __debug } from "__FUNCTIONS/__debug";
 const debug = __debug("EPIC-DEP");
 
@@ -36,9 +36,12 @@ export const epicDependencies = {
         }
     },
 
-    fetchSubredditDatum: async (subredditName: string): Promise<SUBREDDITDATUM.Interface> => {
+    fetchUpdatedSubredditDatum: async (
+        subredditDatum: SUBREDDITDATUM.Interface,
+        maxXRange: number
+    ): Promise<SUBREDDITDATUM.Interface> => {
         //Prepare reddit-api request
-        console.log("EPIC: Fetching Datum for: ", subredditName);
-        return getRedditDatum(subredditName);
+        console.log("EPIC: Fetching Datum for: ", subredditDatum.name);
+        return updateSubredditDatum(subredditDatum, maxXRange);
     }
 };

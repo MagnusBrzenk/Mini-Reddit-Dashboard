@@ -15,8 +15,8 @@ export namespace AppActions {
         SEARCH_FOR_SUBREDDIT_FULFILLED = "SEARCH_FOR_SUBREDDIT_FULFILLED",
 
         // DATA ACTIONS
-        FETCH_SUBREDDIT_DATUM = "FETCH_SUBREDDIT_DATUM",
-        FETCH_SUBREDDIT_DATUM_FULFILLED = "FETCH_SUBREDDIT_DATUM_FULFILLED",
+        UPDATE_SUBREDDIT_DATUM = "UPDATE_SUBREDDIT_DATUM",
+        UPDATE_SUBREDDIT_DATUM_FULFILLED = "UPDATE_SUBREDDIT_DATUM_FULFILLED",
         HIDE_SUBREDDIT_DATUM = "HIDE_SUBREDDIT_DATUM",
         REMOVE_SUBREDDIT_DATUM = "REMOVE_SUBREDDIT_DATUM",
         SET_BIN_WIDTH = "SET_BIN_WIDTH",
@@ -32,9 +32,9 @@ export namespace AppActions {
     export const searchForSubredditFulfilled = CreateAction<string[]>(Types.SEARCH_FOR_SUBREDDIT_FULFILLED);
 
     // DATA ACTIONS
-    export const fetchSubredditDatum = CreateAction<string>(Types.FETCH_SUBREDDIT_DATUM);
-    export const fetchSubredditDatumFulfilled = CreateAction<SUBREDDITDATUM.Interface>(
-        Types.FETCH_SUBREDDIT_DATUM_FULFILLED
+    export const updateSubredditDatum = CreateAction<string>(Types.UPDATE_SUBREDDIT_DATUM);
+    export const updateSubredditDatumFulfilled = CreateAction<SUBREDDITDATUM.Interface>(
+        Types.UPDATE_SUBREDDIT_DATUM_FULFILLED
     );
     export const hideSubredditDatum = CreateAction<number>(Types.HIDE_SUBREDDIT_DATUM);
     export const removeSubredditDatum = CreateAction<number>(Types.REMOVE_SUBREDDIT_DATUM);

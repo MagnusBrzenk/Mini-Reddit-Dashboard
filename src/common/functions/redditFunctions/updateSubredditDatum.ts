@@ -1,7 +1,7 @@
 import { REDDIT, SUBREDDITDATUM } from "__MODELS";
-import { getTopRedditPosts } from "./getTopRedditPosts";
+import { getTopRedditPosts } from "__FUNCTIONS/redditFunctions/getTopRedditPosts";
 
-export async function addMoreRawRankingsToDatum(
+export async function updateSubredditDatum(
     oldSubredditDatum: SUBREDDITDATUM.Interface,
     maxRanking: number
 ): Promise<SUBREDDITDATUM.Interface> {
@@ -16,7 +16,7 @@ export async function addMoreRawRankingsToDatum(
         .map(el => el.imageUrl)
         .filter(Boolean);
 
-    //Get rawrankings
+    //Get raw rankings
     const rawRankings: number[] = [];
     posts.forEach((el, ind) => {
         if (oldSubredditDatum.name === el.subredditName) {

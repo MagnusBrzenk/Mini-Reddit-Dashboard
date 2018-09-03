@@ -22,17 +22,26 @@ const allEpics: TEpic[] = [
         );
     },
 
-    function fetchSubredditDatum(
+    function updateSubredditDatum(
         action$: Observable<AnyAction>,
         rootState: { value: ROOTSTATE.ImType },
         dependencies: typeof epicDependencies
     ) {
         return action$.pipe(
-            ofType(AppActions.Types.FETCH_SUBREDDIT_DATUM),
-            mergeMap((action: ReturnType<typeof AppActions.fetchSubredditDatum>) =>
-                from(dependencies.fetchSubredditDatum(action.payload)).pipe(
-                    map((response: SUBREDDITDATUM.Interface) => AppActions.fetchSubredditDatumFulfilled(response))
-                )
+            ofType(AppActions.Types.UPDATE_SUBREDDIT_DATUM),
+            mergeMap((action: ReturnType<typeof AppActions.updateSubredditDatum>) =>
+                from(
+                    dependencies.fetchUpdatedSubredditDatum(
+                        //1st Arg: subredditDatum (existence just verified/established by this action)
+                        rootState.value
+                            .get("subredditData")
+                            .get("subredditDatums")
+                            .find(el => el.get("name") === action.payload)
+                            .toJS(),
+                        //2nd Arg: maxXRange
+                        rootState.value.get("subredditData").get("maxXRange")
+                    )
+                ).pipe(map((response: SUBREDDITDATUM.Interface) => AppActions.updateSubredditDatumFulfilled(response)))
             )
         );
     }
