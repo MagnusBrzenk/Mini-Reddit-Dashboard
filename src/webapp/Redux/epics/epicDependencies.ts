@@ -40,8 +40,6 @@ export const epicDependencies = {
         subredditDatum: SUBREDDITDATUM.Interface,
         maxXRange: number
     ): Promise<SUBREDDITDATUM.Interface> => {
-        //Prepare reddit-api request
-        console.log("EPIC: Fetching Datum for: ", subredditDatum.name);
         return updateSubredditDatum(subredditDatum, maxXRange);
     }
 };

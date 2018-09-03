@@ -24,6 +24,9 @@ export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = fu
             const existingDatum: SUBREDDITDATUM.ImType | undefined = substate0
                 .get("subredditDatums")
                 .find(el => el.get("name") === subredditName);
+
+            console.log("existingDatum", !!existingDatum && existingDatum!.toJS());
+
             if (!existingDatum) {
                 return substate0.update("subredditDatums", el =>
                     el.push(
@@ -37,6 +40,7 @@ export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = fu
                     )
                 );
             }
+            return substate0;
 
         case AppActions.Types.UPDATE_SUBREDDIT_DATUM_FULFILLED:
             //Cast action as corresponding type
@@ -44,9 +48,6 @@ export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = fu
             if (!matchedAction1.payload!) return substate0;
             //Find existing datum and replace it with new updated datum for same subreddit
             const newDatum = SUBREDDITDATUM.genIm(matchedAction1.payload);
-
-            console.log("newDatum", matchedAction1.payload);
-
             const datumIndex = substate0
                 .get("subredditDatums")
                 .findIndex(el => el.get("name") === newDatum.get("name"));
