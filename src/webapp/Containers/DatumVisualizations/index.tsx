@@ -3,9 +3,10 @@ import { connect } from "react-redux";
 import { getAllSubredditDatums } from "__REDUX/selectors";
 import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
 import { LineChart } from "__COMPONENTS/LineChart";
+import { PieChart } from "__COMPONENTS/PieChart";
 import { AppActions } from "__REDUX/actions";
 import PREZ from "__UTILS/frontendPresentation";
-import { reshapePlottingData } from "./reshapePlottingData";
+import { reshapeSimpleLineChartData, reshapePieChartData } from "./reshapePlottingData";
 
 import { PieChart as PieChartIcon } from "__COMPONENTS/@FortawesomeWrappers/PieChart";
 import { BarChart as BarChartIcon } from "__COMPONENTS/@FortawesomeWrappers/BarChart";
@@ -43,14 +44,14 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
         this.state = {
             xRangeMax: 1000,
             responsiveNumXTicks: -1, //
-            selectedTab: 0,
+            selectedTab: 1,
             bDisplaySettings: false
         };
         this.handleWindowResize = this.handleWindowResize.bind(this);
     }
 
     handleWindowResize() {
-        const allPlottingData: IDataPoint[][] = reshapePlottingData(
+        const allPlottingData: IDataPoint[][] = reshapeSimpleLineChartData(
             this.props.subredditDatums,
             this.props.binWidth,
             this.props.maxXRange
@@ -71,16 +72,23 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const allPlottingData: IDataPoint[][] = reshapePlottingData(
+        //Local Convenience Vars
+        const tab = this.state.selectedTab;
+
+        // Get data for Simple Line Chart
+        const simpleLineChartPlottingData: IDataPoint[][] = reshapeSimpleLineChartData(
             this.props.subredditDatums,
             this.props.binWidth,
             this.props.maxXRange
         );
-        const tab = this.state.selectedTab;
-        // // console.log("++++++++++++++++++++");
-        // console.log(this.props.binWidth, this.props.maxXRange);
-        // console.log(allPlottingData);
-        // console.log("++++++++++++++++++++");
+
+        // Get data for Pie Chart
+        // const pieChartArcData: number[] = [1, 2, 3, 4, 5];
+        const pieChartArcData = reshapePieChartData(this.props.subredditDatums);
+
+        console.log("++++++++++++++++++++");
+        console.log(pieChartArcData);
+        console.log("++++++++++++++++++++");
         return (
             <div className="datum-visualizations">
                 <style jsx>{`
@@ -148,7 +156,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                 <div className="visualizations-wrapper">
                     {tab === 0 && (
                         <LineChart.Component
-                            plottingData={allPlottingData}
+                            plottingData={simpleLineChartPlottingData}
                             params={{
                                 //
                                 xAxisLabel: "All Time Rankings",
@@ -160,7 +168,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                             }}
                         />
                     )}
-                    {tab === 1 && <div>COMING SOON!</div>}
+                    {tab === 1 && <PieChart.Component arcData={pieChartArcData} />}
                     {tab === 2 && <div>COMING SOON!</div>}
                     {tab === 3 && <div>COMING SOON!</div>}
                 </div>

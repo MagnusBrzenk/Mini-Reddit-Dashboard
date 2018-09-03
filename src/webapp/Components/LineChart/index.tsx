@@ -102,8 +102,8 @@ export namespace LineChart {
                             width: 100%;
                             height: 100%;
                             display: flex;
-                            alignitems: center;
-                            justifycontent: center;
+                            align-items: center;
+                            justify-content: center;
                             color: ${PREZ.displayWhite};
                         }
 

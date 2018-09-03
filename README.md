@@ -16,7 +16,7 @@ This project is still under development. You can see the latest demo deployed to
 
 ## Project RoadMap
 
--   ~~ Deploy first version to Firebase ~~
+-   ~Deploy first version to Firebase~
     -   Put scraping logic into Firebase function
 -   Deploy second version to AWS Lambda
 -   Make it a PWA
@@ -46,4 +46,10 @@ At the moment the app has no dependencies on the provided express server so, to 
 
 ## Project Architecture
 
+### Code organization
+
 Much of this architecture is carried over from [this demo](https://github.com/MagnusBrzenk/typescript-immutable-MERN-stack-demo).
+
+### Data Formatting
+
+Along the way I invented some data structures with names that will sound generic ('subredditData' and 'subredditsDatum'). TODO: create notes so that these structures are easy to pick up by others and your future self.

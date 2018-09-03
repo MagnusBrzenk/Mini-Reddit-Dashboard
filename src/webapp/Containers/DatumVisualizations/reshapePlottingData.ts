@@ -7,11 +7,13 @@ import { LineChart } from "__COMPONENTS/LineChart";
  * @param subredditDatums
  * @param xRangeMax
  */
-export function reshapePlottingData(
+export function reshapeSimpleLineChartData(
     subredditDatums: SUBREDDITDATUM.ImTypes,
     binWidth: number,
     xRangeMax: number
 ): LineChart.IDataPoint[][] {
+    //
+    //N.b.: using toJS() here is crude/inefficient, but this frontent is exemplary and not especially data intensive
     const allPlottingData: LineChart.IDataPoint[][] = subredditDatums.toJS().map((el, ind) => {
         //
 
@@ -37,4 +39,28 @@ export function reshapePlottingData(
         return result;
     });
     return allPlottingData;
+}
+
+/**
+ * Maps immutable list of subredditDatums to POJ array of numbers (number of rankings featured in the specified range)
+ * as required by the interface of our PieChart component
+ * @param subredditDatums
+ * @param xRangeMax
+ */
+export function reshapePieChartData(subredditDatums: SUBREDDITDATUM.ImTypes): number[] {
+    //
+    const pieChartData: number[] = subredditDatums
+        .map((el, ind) => {
+            const result = !!el.get("bDisplayed")
+                ? el.get("rawRankings").filter((el2, ind2) => {
+                      //
+                      return ind2! < el.get("maxRankingFetched");
+                  }).size
+                : 0;
+
+            return result;
+        })
+        .toJS();
+
+    return pieChartData;
 }

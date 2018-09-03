@@ -61,9 +61,8 @@ export function drawD3Chart(svgDivWrapperId: string, datasetsInput: IDataPoint[]
 
     // Dynamically parametrize size of chart based on container DIV
     // Calc Height, Width & Margins
-    const svgDivWrapper = document.getElementById(svgDivWrapperId);
-    const wrapperWidth = !!svgDivWrapper ? svgDivWrapper!.offsetWidth : 20;
-    const wrapperHeight = !!svgDivWrapper ? svgDivWrapper!.offsetHeight : 20;
+    const wrapperWidth = !!svgWrapperDiv ? svgWrapperDiv!.offsetWidth : 20;
+    const wrapperHeight = !!svgWrapperDiv ? svgWrapperDiv!.offsetHeight : 20;
     const margin = { top: 50, right: 50, bottom: !!params.xAxisLabel ? 70 : 50, left: !!params.yAxisLabel ? 70 : 50 };
     const width = wrapperWidth - margin.left - margin.right;
     const height = wrapperHeight - margin.top - margin.bottom;
@@ -88,7 +87,7 @@ export function drawD3Chart(svgDivWrapperId: string, datasetsInput: IDataPoint[]
         .domain([0, maxY]) //Data space
         .range([height, 0]); //Physical space
 
-    //Select the SVG wrapper div
+    //Select the SVG wrapper  div
     const svgWrapper: Id3Selection = d3.select("#" + svgDivWrapperId);
 
     //Create our main svg, and append a group positioned within the defined margins
