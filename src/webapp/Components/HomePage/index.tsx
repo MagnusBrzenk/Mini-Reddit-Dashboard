@@ -19,6 +19,7 @@ export class HomePage extends React.Component<IProps, IState> {
                     .home-page {
                         width: 100%;
                         height: 100%;
+                        background-color: ${PREZ.primaryColorDarkest};
                     }
                     .dashboard-wrapper {
                         width: 100%;

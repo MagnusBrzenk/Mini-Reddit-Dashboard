@@ -31,7 +31,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = { bHamburgerChecked: !false };
+        this.state = { bHamburgerChecked: false };
         this.toggleHamburger = this.toggleHamburger.bind(this);
         this.handleFormSubmission = this.handleFormSubmission.bind(this);
         this.incrementBinWidth = this.incrementBinWidth.bind(this);
