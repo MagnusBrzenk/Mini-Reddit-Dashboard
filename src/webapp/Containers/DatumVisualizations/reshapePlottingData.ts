@@ -16,6 +16,7 @@ export function reshapePlottingData(
         //
 
         //Create array to tore bin counts
+        // const binCounts: number[] = [...Array(Math.ceil(xRangeMax / binWidth))].map(el => 0);
         const binCounts: number[] = [...Array(Math.ceil(xRangeMax / binWidth))].map(el => 0);
 
         //Map raw data to counts in bins
@@ -27,8 +28,8 @@ export function reshapePlottingData(
 
         //Map bin counts to points of the form IDataPoint; add empty array if this datum is not being displayed
         const result: LineChart.IDataPoint[] = !!el.bDisplayed
-            ? binCounts.map((el2, ind2, arr) => ({
-                  x: (ind2! * xRangeMax) / arr.length,
+            ? binCounts.map((el2, ind2) => ({
+                  x: ind2 * binWidth,
                   y: el2
               }))
             : [];

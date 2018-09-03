@@ -51,13 +51,13 @@ export function drawD3Chart(svgDivWrapperId: string, datasetsInput: IDataPoint[]
 
     // Calc graph limits (i.e. maximum value from array of arrays of numbers)
     // Calc maxY
-    const maxYs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.y))));
+    const maxYs: number[] = datasets.map(dataset => Math.max.apply(null, dataset.map(el => el.y)));
     const maxY = Math.ceil(Math.max.apply(null, maxYs.map(el => el)));
     // Calc maxX
-    const maxXs: number[] = datasets.map(dataset => Math.ceil(Math.max.apply(null, dataset.map(el => el.x))));
+    const maxXs: number[] = datasets.map(dataset => Math.max.apply(null, dataset.map(el => el.x)));
     const provisionalMaxX = Math.ceil(Math.max.apply(null, maxXs.map(el => el)));
-    // If binWidth specified, then add that to maxX
-    const maxX = bBinWidthSpecified ? Math.ceil(provisionalMaxX + params.binWidth! / 2) : provisionalMaxX;
+    // If binWidth specified, then add half to maxX
+    const maxX = bBinWidthSpecified ? provisionalMaxX + params.binWidth! / 2 : provisionalMaxX;
 
     // Dynamically parametrize size of chart based on container DIV
     // Calc Height, Width & Margins
@@ -138,6 +138,31 @@ export function drawD3Chart(svgDivWrapperId: string, datasetsInput: IDataPoint[]
         .attr("x", 0 - height / 2)
         .text(params.yAxisLabel);
 
+    //If binWidth is specified, draw alternating background rectangles to indicate bins
+    if (!!params.binWidth) {
+        mainSvgGroup
+            .append("g")
+            .attr("class", "bars-group")
+            .attr("id", "bars-group-id");
+        const numBins = maxX / params.binWidth;
+        for (let i = 0; i < numBins; i++) {
+            const x = xScale(params.binWidth * i);
+            const y = xScale(0);
+            const barWidth = x + xScale(params.binWidth) <= xScale(maxX) ? xScale(params.binWidth) : xScale(maxX) - x;
+            const barHeight = height;
+            if (x < xScale(maxX)) {
+                mainSvgGroup
+                    .select("#bars-group-id")
+                    .append("rect")
+                    .attr("x", x)
+                    .attr("y", y)
+                    .attr("width", barWidth)
+                    .attr("height", barHeight)
+                    .style("fill", i % 2 === 0 ? "rgba(0,0,0,0)" : "rgba(255,255,255,0.03)");
+            }
+        }
+    }
+
     //Create function that will map points in data space to a curved line in physical space
     let line = d3
         .line<IDataPoint>()
@@ -181,19 +206,12 @@ export function drawD3Chart(svgDivWrapperId: string, datasetsInput: IDataPoint[]
             .style("fill", colorPallete[ind])
             .style("stroke", colorPallete[ind])
             .on("mouseover", function(a, b, c) {
-                console.log("XXX");
+                //Example mous-over effect: make dot hollow
                 d3.select(this!).style("fill", "rgba(0,0,0,0)");
-                // const $this: HTMLElement | null = this as any;
-                // if (!!$this) $this.classList.add("focus");
             })
             .on("mouseout", function(a, b, c) {
+                //Example mouse-out effect: restore dot fill
                 d3.select(this!).style("fill", colorPallete[ind]);
-                // const $this: HTMLElement | null = this as any;
-                // if (!!$this) $this.classList.remove("focus");
             })
     );
-
-    // mainSvgGroup.selectAll(".dot").each(function() {
-    //     d3.select(this!).style("fill", "green");
-    // });
 }
