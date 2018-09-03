@@ -3,6 +3,9 @@
 clear
 printf "\n======================================================\n"
 printf   "RUNNING PIPELINE TO DEPLOY TO FIREBASE"
+printf   " "
+printf   "(RUN WITH ANY ARG TO TRIGGER FB CLI)"
+printf   " "
 printf "\n======================================================\n"
 
 printf "\n=========================\n"
