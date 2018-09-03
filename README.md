@@ -16,11 +16,13 @@ This project is still under development. You can see the latest demo deployed to
 
 ## Project RoadMap
 
--   Deploy first version to Firebase
+-   ~~ Deploy first version to Firebase ~~
+    -   Put scraping logic into Firebase function
 -   Deploy second version to AWS Lambda
+-   Make it a PWA
 -   Data Representations
     -   Simple Versions
-        -   Line Graph
+        -   ~~ Line Graph ~~
         -   Histogram Tab
         -   Pie Chart Tab
         -   3D Histogram
