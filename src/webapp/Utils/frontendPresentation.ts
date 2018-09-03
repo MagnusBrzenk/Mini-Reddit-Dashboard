@@ -12,7 +12,7 @@ namespace FrontendPresentation {
     /**
      * Window-Size Params
      */
-    export const lowerScreenSize: number = 500;
+    export const lowerScreenSize: number = 600;
     export const upperScreenSize: number = 1000;
 
     /**

@@ -6,24 +6,41 @@ import PREZ from "__UTILS/frontendPresentation";
 
 interface IProps {}
 
-interface IState {}
+interface IState {
+    responsiveWidth: number;
+}
 
 export class Dashboard extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            responsiveWidth: window.innerWidth
+        };
+        this.handleWindowResize = this.handleWindowResize.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener("resize", this.handleWindowResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.handleWindowResize);
+    }
+
+    handleWindowResize() {
+        this.setState({ responsiveWidth: window.innerWidth });
     }
 
     render() {
         const dashboardBackgroundColor = PREZ.secondaryColor;
         const tabButtonHeightPxls: number = 50;
+        const padWidthPxls = window.innerWidth < PREZ.lowerScreenSize ? 10 : 30;
 
         return (
             <div className="dashboard">
                 <style jsx>{`
                     .dashboard {
                         width: 100%;
-                        min-height: 100%;
                         background-color: ${PREZ.primaryColorDarkest};
                     }
                     .dash-board-column-container {
@@ -32,12 +49,11 @@ export class Dashboard extends React.Component<IProps, IState> {
                     }
                     .dashboard-header-row {
                         width: 100%;
-                        // height: 20%;
                         display: flex;
                     }
                     .header-wrapper {
                         color: white;
-                        padding: 40px;
+                        padding: ${padWidthPxls}px;
                         padding-bottom: 0px;
                         box-sizing: border-box;
                         flex: 1;
@@ -46,38 +62,51 @@ export class Dashboard extends React.Component<IProps, IState> {
                     }
                     .dashboard-body-row {
                         width: 100%;
-                        // height: 80%;
-                        min-height: 500px;
-                        max-height: ${window.innerWidth}px;
+                        height: auto;
                         display: flex;
                     }
                     .subreddit-menu-wrapper {
                         flex: 1;
                         box-sizing: border-box;
-                        padding: 40px;
+                        padding: ${padWidthPxls}px;
+                        max-height: 500px;
                     }
-                    .graph-2d-wrapper {
+                    .datum-visualizations-wrapper {
+                        height: ${this.state.responsiveWidth * 0.7}px;
+                        max-height: 500px;
+                        min-height: 350px;
                         box-sizing: border-box;
-                        padding: 40px;
+                        padding: ${padWidthPxls}px;
                         flex: 3;
                     }
                     @media only screen and (min-width: ${PREZ.lowerScreenSize}px) {
-                        .graph-2d-wrapper {
+                        .datum-visualizations-wrapper {
                             padding-left: 0px;
                         }
                     }
                     @media only screen and (max-width: ${PREZ.lowerScreenSize}px) {
+                        .header-wrapper {
+                            padding: ${padWidthPxls}px;
+                            padding-bottom: ${padWidthPxls * 0}px;
+                            padding-left: ${padWidthPxls}px;
+                            padding-right: ${padWidthPxls}px;
+                        }
                         .dashboard-body-row {
                             flex-wrap: wrap-reverse;
                         }
-                        .graph-2d-wrapper {
+                        .datum-visualizations-wrapper {
                             flex: 1 1 ${PREZ.lowerScreenSize / 2}px;
-                            height: 50%;
-                            padding-bottom: 0px;
+                            min-height: 350px;
+                            padding-bottom: ${padWidthPxls * 0}px;
+                            padding-left: ${padWidthPxls}px;
+                            padding-right: ${padWidthPxls}px;
                         }
                         .subreddit-menu-wrapper {
                             flex: 1 1 ${PREZ.lowerScreenSize / 2}px;
-                            height: 50%;
+                            min-height: 350px;
+                            padding-bottom: ${padWidthPxls}px;
+                            padding-left: ${padWidthPxls}px;
+                            padding-right: ${padWidthPxls}px;
                         }
                     }
                 `}</style>
@@ -93,7 +122,7 @@ export class Dashboard extends React.Component<IProps, IState> {
                         <div className="subreddit-menu-wrapper shadowed">
                             <SubredditMenu bShadowed searchFieldHeightPxls={tabButtonHeightPxls} />
                         </div>
-                        <div className="graph-2d-wrapper shadowed">
+                        <div className="datum-visualizations-wrapper shadowed">
                             <DatumVisualizations bShadowed tabButtonHeightPxls={tabButtonHeightPxls} />
                         </div>
                     </div>

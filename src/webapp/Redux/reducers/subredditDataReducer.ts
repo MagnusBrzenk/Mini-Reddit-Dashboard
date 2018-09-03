@@ -24,9 +24,6 @@ export const subredditDataReducer: Reducer<SUBREDDITDATA.ImType, AnyAction> = fu
             const existingDatum: SUBREDDITDATUM.ImType | undefined = substate0
                 .get("subredditDatums")
                 .find(el => el.get("name") === subredditName);
-
-            console.log("existingDatum", !!existingDatum && existingDatum!.toJS());
-
             if (!existingDatum) {
                 return substate0.update("subredditDatums", el =>
                     el.push(

@@ -96,6 +96,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                         background-color: ${PREZ.primaryColorDark};
                         box-shadow: ${PREZ.shadowString};
                         padding: 10px 0px;
+                        box-sizing: border-box;
                         cursor: pointer;
                     }
 
