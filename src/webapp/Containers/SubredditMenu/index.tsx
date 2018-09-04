@@ -16,25 +16,44 @@ interface IParentProps {
 
 interface IState {
     searchWord: string;
+    colMaxWidthPxls: number;
 }
 
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
 class SubredditsMenuComponent extends React.Component<IProps, IState> {
-    private searchSubredditInputFieldId: string = "search-subreddit-input-field-" + genUniqueId();
+    readonly searchSubredditInputFieldId: string = "search-subreddit-input-field-" + genUniqueId();
+    readonly subredditsMenuId: string = "subreddits-menu-" + genUniqueId();
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            searchWord: ""
+            searchWord: "",
+            colMaxWidthPxls: 10
         };
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleWindowResize = this.handleWindowResize.bind(this);
         this.handleClickOnMatchedSubredditItem = this.handleClickOnMatchedSubredditItem.bind(this);
     }
 
     componentDidMount() {
         //Add some of the top subreddits
         ["pics", "funny", "videos", "worldnews", "aww"].forEach(el => this.props.cbAddSubredditDatumToFeed(el));
+
+        //Pesky logic to dynamically determine absolute column width to prevent text overflow
+        window.addEventListener("resize", this.handleWindowResize);
+        this.handleWindowResize();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.handleWindowResize);
+    }
+
+    handleWindowResize() {
+        const subredditsMenuDiv = document.getElementById(this.subredditsMenuId);
+        if (!!subredditsMenuDiv) {
+            this.setState({ colMaxWidthPxls: (subredditsMenuDiv as HTMLDivElement).offsetWidth });
+        }
     }
 
     handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -78,7 +97,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
         const colorPallete = PREZ.qualitativeColorPalette;
 
         return (
-            <div className="subreddits-menu">
+            <div className="subreddits-menu" id={this.subredditsMenuId}>
                 <style jsx>{`
                     .subreddits-menu {
                         width: 100%;
@@ -112,12 +131,15 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                     /* MENU BODY */
                     .subreddits-menu-items-wrapper {
                         width: 100%;
+                        max-width: ${this.state.colMaxWidthPxls}px;
                         height: calc(100% - ${this.props.searchFieldHeightPxls}px);
-                        overflow: scroll;
+                        overflow-x: hidden;
+                        white-space: wrap;
                     }
 
                     /* SEARCH-RESULTS BRANCH */
                     .subreddit-search-results-wrapper {
+                        width: 100%;
                     }
                     .subreddit-search-result {
                         width: 100%;
@@ -130,6 +152,12 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                         padding-left: ${textIndentPxls}px;
                         margin-top: 1px;
                         cursor: pointer;
+                    }
+                    .xxx {
+                        display: block;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: clip;
                     }
 
                     /* SELECTED-SUBREDDIT-DATUMS BRANCH */
@@ -148,6 +176,8 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                         height: 100%;
                         float: left;
                         padding-left: ${textIndentPxls}px;
+                        overflow-x: scroll;
+                        white-space: wrap;
                     }
                     .subreddit-datum-cross {
                         height: 100%;
@@ -184,7 +214,9 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                                     onClick={e => this.handleClickOnMatchedSubredditItem(ind!)}
                                     key={ind}
                                 >
-                                    {el}
+                                    <span className="xxx" style={{ display: "inline-block" }}>
+                                        {el}
+                                    </span>
                                 </div>
                             ))}
                         </div>

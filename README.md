@@ -21,12 +21,15 @@ This project is still under development. You can see the latest demo deployed to
 -   Deploy second version to AWS Lambda
 -   Make it a PWA
 -   Data Representations
+
     -   Simple Versions
-        -   ~~ Line Graph ~~
-        -   Histogram Tab
+
+        -   ~Line Graph~
+            -   Add smooth transitions when axes change
         -   Pie Chart Tab
+
+        -   Histogram Tab
         -   3D Histogram
-    -   Smooth-Transition Versions
 
 ## Project Setup
 
