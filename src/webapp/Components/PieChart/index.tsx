@@ -89,7 +89,7 @@ export namespace PieChart {
                         /* --------------------------------------- */
 
                         .pie-chart :global(.chart-circle) {
-                            // fill: none;
+                            fill: ${PREZ.primaryColorDarkest};
                             // box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
                             // stroke: ${PREZ.secondaryColor};
                             // stroke-width: 3;
