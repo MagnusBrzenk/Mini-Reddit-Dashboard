@@ -43,3 +43,5 @@ For example:
     ...
 </svg>
 ```
+
+NOTE: unfortunately, Firefox seems to misalign shadows on this approach by a couple of pxls -- haven't investigated why yet.

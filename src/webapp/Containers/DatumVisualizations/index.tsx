@@ -168,7 +168,9 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                             }}
                         />
                     )}
-                    {tab === 1 && <PieChart.Component arcData={pieChartArcData} />}
+                    {tab === 1 && (
+                        <PieChart.Component arcData={pieChartArcData} params={{ pieChartShadowSizePxls: 5 }} />
+                    )}
                     {tab === 2 && <div>COMING SOON!</div>}
                     {tab === 3 && <div>COMING SOON!</div>}
                 </div>
