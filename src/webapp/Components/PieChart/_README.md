@@ -1,25 +1,47 @@
-# LineChart
+# PieChart
 
-This is a component for drawing a set of simple line graphs using d3. The react and d3 logic has been carefully separated; you just supply data and presentation parameters as specified by the types given in IProps.
+## What's This?
 
-## Approach
+This is a simple PieChart with smooth transitioning for d3 v5 adapted from [this basic demo](https://bl.ocks.org/adamjanes/5e53cfa2ef3d3f05828020315a3ba18c)
 
-This component uses the super-simple approach of simply redrawing from scratch the entire SVG whenever the props and/or window size get updated. As such, all of the d3 logic is placed in a single separate function that gets recalled on updated events. If you want to preserve existing lines and have a new line added to the graph in an animated manner, then you'd probably want to migrate the d3 logic from a single simple function to its own class (with vars for state preservation and update methods).
+## Design
 
-## React
+### Overview
 
-The react component returned always resizes to 100% width/height of its container. It receives props for data and presentation parameters with lots of options and nice defaults. The idea is to create an interface where you don't need to worry about the internal d3 logic.
+As with the `LineChart` component (and as ever), we've been very intentional about separating `react` from `d3`. Unlike `LineChart`, we've implemented d3 via a class so that we have continuity in the chart between updates to the data channeled in through `props`. This very slightly increases the complexity of the react-d3 ecosystem, but is really the way to go in general in order to faciliatate smooth transitions.
 
-An attempt was made to make the react component nothing more than a single-element DIV wherein d3 can weave its SVG magic (and so all of the serious work would be carried out in the d3 function). However, it felt a bit nicer to be able to break out the bulk of the dynamically determined CSS into a styled-JSX block, rather than add it all in-line with the d3 `.style()` method. As a result, the chart logic is somewhat spread between the two.
+### Data Format
 
-## d3
+The data is simply an array of numbers representing relative arc size.
 
-The d3 is separated into its own function. Each time it is called, it removes an already-existing SVG if present, and just draws everything from scratch. The d3 logic is fairly well annotated because, frankly, it's got a bit of a learning curve (and is easy to forget).
+## Misc Notes
 
-### d3 Gotchas
+### SVG Shadows
 
-#### Key Functions
+To add shadows to any of your SVG shapes, you need to follow this procedure:
 
-Lost some time with the d3 key function because I figured you could just use the Array.forEach() indices to compute unique keys. However, this doesnt work because of the problem shown in the following example. Suppose you have two lines to draw, A and B, with data points in two separate arrays within our array of type `IDataPoint[][]`. Suppose we use a key of the form `'key-' + i1 + '-' + i2` where `i1` and `i2` are indices for the outer and inner array respectively.
+1. Add a `defs` tag as a child of your SVG with a `filter` tag wherein you need to specify:
+    1. The various properties of your drop shadow
+    2. An `id` to be referenced by the element you wish to apply the shadow to
+2. Apply a `filter` attribute referencing the filter to-b-applied.
 
-When we loop through the items in the outer array, we first generate dots for line A. No problem. But when we come to the second array and we do `selactAll(.dot)` items, d3 _first_ goes through existing `.dot` elements (i.e. items from first array) and have keys applied to them of the form `key-1-0`, etc. Having gone through the existing keys, it will go through the second array as part of a new key-function process and apply keys that are also of the form `key-1-0`, etc. It will then use these two sets of keys, compare them, and come to the conclusion that the keys are the same in both sets, and so it wont create new dots. Lesson: you can't use the array forEach indices to add dots to your data points in this set up. However, stringifiying the coordinates of the points works finr for these purposes.
+For example:
+
+```xml
+<svg>
+    <defs>
+       <filter id="basic-shadow" x="0" y="0" width='100', height='100'>
+           <feOffset result="offOut" in="SourceAlpha" dx="-5" dy="-5" />
+           <feGaussianBlur result="blurOut" in="offOut" stdDeviation="3" />
+           <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+        </filter>
+    </defs>
+    ...
+    <circle filter="url(#basic-shadow)">
+        <!-- circle params -->
+    </circle>
+    ...
+</svg>
+```
+
+A working example the shadow can be found in this d3 PieChart code, with the size of the shadow parameterized to fit around the circle.

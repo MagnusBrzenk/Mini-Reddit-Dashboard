@@ -26,36 +26,47 @@ export namespace PieChart {
     };
 
     export class Component extends React.Component<IProps, IState> {
-        readonly picChartSvgContainerId: string = "pie-chart-svg-container-div-" + genUniqueId();
-        readonly pieChart: PieChartD3 = new PieChartD3(this.picChartSvgContainerId);
+        //
+
+        readonly pieChartSvgContainerId: string = "pie-chart-svg-container-div-" + genUniqueId();
+        readonly pieChart: PieChartD3 = new PieChartD3(this.pieChartSvgContainerId);
 
         constructor(props: IProps) {
             super(props);
             this.state = {
                 bPlottingDataFormatVerified: !false
             };
-            this.updatePieChart = this.updatePieChart.bind(this);
+            this.initD3PieChart = this.initD3PieChart.bind(this);
+            this.updateD3PieChart = this.updateD3PieChart.bind(this);
         }
 
         componentDidMount() {
-            this.pieChart.initPieChart(this.props.arcData, { ...defaultParams, ...this.props.params });
+            //Verify input data has right format:
+            this.setState({ bPlottingDataFormatVerified: verifyDataFormat(this.props.arcData) });
 
-            window.addEventListener("resize", this.updatePieChart);
-            this.updatePieChart();
+            //Update chart now and on resize events
+            window.addEventListener("resize", this.initD3PieChart);
+            this.initD3PieChart();
         }
+
         componentWillUnmount() {
-            window.removeEventListener("resize", this.updatePieChart);
-        }
-        componentDidUpdate(prevProps: IProps) {
-            if (prevProps !== this.props) this.updatePieChart();
+            window.removeEventListener("resize", this.initD3PieChart);
         }
 
-        updatePieChart() {
+        componentDidUpdate(prevProps: IProps) {
+            if (prevProps !== this.props) this.updateD3PieChart();
+        }
+
+        initD3PieChart() {
+            this.pieChart.resetPieChart({ ...defaultParams, ...this.props.params });
+            this.updateD3PieChart();
+        }
+
+        updateD3PieChart() {
             this.pieChart.updatePieChart(this.props.arcData, { ...defaultParams, ...this.props.params });
         }
 
         render() {
-            const params: IPieChartParams = { ...this.props.params, ...defaultParams };
             return (
                 <div className={"pie-chart"}>
                     <style jsx>{`
@@ -77,15 +88,16 @@ export namespace PieChart {
                         /* SVG Styles Localized Within .pie-chart */
                         /* --------------------------------------- */
 
-                        .pie-chart :global(.XXX) {
-                            fill: none;
-                            stroke: ${PREZ.secondaryColor};
-                            stroke-width: 3;
+                        .pie-chart :global(.chart-circle) {
+                            // fill: none;
+                            // box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
+                            // stroke: ${PREZ.secondaryColor};
+                            // stroke-width: 3;
                         }
                     `}</style>
 
                     {!!this.state.bPlottingDataFormatVerified ? (
-                        <div className="svg-container" id={this.picChartSvgContainerId} />
+                        <div className="svg-container" id={this.pieChartSvgContainerId} />
                     ) : (
                         "PLOTTING DATA NOT RECEIVED OR PROPERLY FORMATTED"
                     )}

@@ -4,7 +4,7 @@ import { PieChart } from "./index";
 type Id3Selection = d3.Selection<d3.BaseType, {}, HTMLElement, any>;
 
 /**
- *
+ * React component wrapping responsive DIV wherein well-separated d3 logic can perform its pie-charting magic
  */
 export class PieChartD3 {
     //
@@ -14,22 +14,21 @@ export class PieChartD3 {
     private plotWidth: number | undefined;
     private plotHeight: number | undefined;
 
-    //
     constructor(svgDivWrapperId: string) {
         this.svgDivWrapperId = svgDivWrapperId;
     }
 
-    //Method to reset SVG display
-    initPieChart(initialArcData: number[], params: PieChart.IPieChartParams) {
+    resetPieChart(params: PieChart.IPieChartParams) {
+        //
         // Reset SVG space
+        //
         const svgWrapperDiv = document.getElementById(this.svgDivWrapperId);
         if (!!svgWrapperDiv)
             svgWrapperDiv.childNodes.forEach(function(thisChildNode, key, parent) {
                 svgWrapperDiv.removeChild(thisChildNode);
             });
 
-        // Dynamically parametrize size of chart based on container DIV
-        // Calc Height, Width & Margins
+        // Dynamically parameterize size of chart based on container DIV
         const wrapperWidth = !!svgWrapperDiv ? svgWrapperDiv!.offsetWidth : 1;
         const wrapperHeight = !!svgWrapperDiv ? svgWrapperDiv!.offsetHeight : 1;
         const margin = {
@@ -38,26 +37,90 @@ export class PieChartD3 {
             bottom: 50,
             left: 50
         };
-        this.plotWidth = wrapperWidth - margin.left - margin.right;
-        this.plotHeight = wrapperHeight - margin.top - margin.bottom;
+
+        const width = wrapperWidth - margin.left - margin.right;
+        const height = wrapperHeight - margin.top - margin.bottom;
+        this.plotWidth = width;
+        this.plotHeight = height;
+
+        const radius = Math.min(this.plotWidth, this.plotHeight) / 2;
+
+        const shadowSizePxls = 5;
 
         //Create our main svg, and append a group positioned within the defined margins
         const svgWrapper: Id3Selection = d3.select("#" + this.svgDivWrapperId);
-        this.mainSvgGroup = svgWrapper
-            .append("svg")
+
+        const mainSVG = svgWrapper.append("svg").call(svgElement => {
+            svgElement
+                .append("defs")
+                .append("filter")
+                .attr("id", "filter1")
+                .attr("x", -shadowSizePxls)
+                .attr("y", -shadowSizePxls)
+                .attr("width", width + 2 * shadowSizePxls)
+                .attr("height", height + 2 * shadowSizePxls)
+                .call(filterElement => {
+                    filterElement
+                        .append("feOffset")
+                        .attr("result", "offOut")
+                        .attr("in", "SourceAlpha")
+                        .attr("dx", "0")
+                        .attr("dy", "0");
+                    filterElement
+                        .append("feGaussianBlur")
+                        .attr("result", "blurOut")
+                        .attr("in", "offOut")
+                        .attr("stdDeviation", shadowSizePxls);
+                    filterElement
+                        .append("feBlend")
+                        .attr("in", "SourceGraphic")
+                        .attr("in2", "blurOut")
+                        .attr("mode", "normal");
+                });
+            svgElement.append("g").call(group => {
+                group.attr("class", "XXX");
+                // group
+                //     .append("rect")
+                //     .attr("x", "0")
+                //     .attr("y", "0")
+                //     .attr("width", width)
+                //     .attr("height", height)
+                //     .attr("transform", `translate(${margin.left}, ${margin.top})`)
+                //     .style("fill", "rgba(255,0,0,0.1)");
+                group
+                    .append("circle")
+                    .attr("transform", `translate(${margin.left + width / 2}, ${margin.top + height / 2})`)
+                    .attr("class", "chart-circle")
+                    .attr("cx", "0")
+                    .attr("cy", "0")
+                    .attr("r", radius)
+                    .attr("filter", "url(#filter1)");
+            });
+        });
+
+        this.mainSvgGroup = mainSVG
             .attr("width", this.plotWidth + margin.left + margin.right)
             .attr("height", this.plotHeight + margin.top + margin.bottom)
+            // .append("g")
+            // .attr("transform", "translate(" + margin.left + "," + margin.top + ")") //Plotting zone
+            // .append("g")
+            // .attr("transform", `translate(${margin.left + this.plotWidth / 2}, ${margin.top + this.plotHeight / 2})`);
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .append("g")
-            .attr("transform", `translate(${this.plotWidth / 2}, ${this.plotHeight / 2})`);
+            .attr("transform", `translate(${margin.left + this.plotWidth / 2}, ${margin.top + this.plotHeight / 2})`);
+
+        /////
+
+        // this.mainSvgGroup
+        // .style("box-shadow", "0px 0px 10px rgba(0,0,0,0.5)");
+
+        ///// //Center drawing coords
     }
-    // }
 
-    //
     updatePieChart(updatedArcData: number[], params: PieChart.IPieChartParams) {
+        //
+        // Update/estalish data and presentation params for update
+        //
         this.arcData = updatedArcData;
-
         if (!this.plotWidth || !this.plotHeight || !this.arcData || !this.mainSvgGroup)
             throw new Error("updatePieChart being called before essential class properties have been defined!");
         const arcData = this.arcData;
@@ -65,30 +128,19 @@ export class PieChartD3 {
         const height = this.plotHeight!;
         const mainSvgGroup = this.mainSvgGroup!;
 
-        //
-        //Draw basic pie:
+        //Params for chart appearance
         const radius = Math.min(width, height) / 2;
+        const colors = PREZ.qualitativeColorPalette;
 
-        // const color = d3.scaleOrdinal(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f"]);
-        const color = PREZ.qualitativeColorPalette;
-
+        //Functions used to map data to angles
         const pie = d3
-            // .pie()
             .pie<number>()
-            // .value(d => d.count)
             .value(d => d)
             .sort(null);
-
         const arc = d3
             .arc<number>()
             .innerRadius(0)
             .outerRadius(radius);
-
-        function type(d: any) {
-            d.apples = Number(d.apples);
-            d.oranges = Number(d.oranges);
-            return d;
-        }
 
         //
         const path = mainSvgGroup.selectAll("path").data(pie(arcData)); //Dont need key function; default index is fine
@@ -108,10 +160,12 @@ export class PieChartD3 {
         path.enter()
             .append("path")
             // .attr("fill", (d, i) => color(i))
-            .attr("fill", (d, i) => color[i])
+            .attr("fill", (d, i) => colors[i])
             .attr("d", arc as any)
             .attr("stroke", "white")
-            .attr("stroke-width", "1px")
+            .attr("stroke-width", "0px")
+            .style("box-shadow", "0px 0px 10px rgba(0,0,0,0.5)")
+
             .each(function(d) {
                 // this._current = d;
                 (this! as any)._current = d;
