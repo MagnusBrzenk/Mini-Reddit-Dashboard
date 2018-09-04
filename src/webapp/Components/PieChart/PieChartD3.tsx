@@ -57,33 +57,44 @@ export class PieChartD3 {
                     .append("defs")
                     .append("filter")
                     .attr("id", this.dropShadowFilterId)
-                    .attr("x", -shadowSizePxls)
-                    .attr("y", -shadowSizePxls)
-                    .attr("width", width + 2 * shadowSizePxls)
-                    .attr("height", height + 2 * shadowSizePxls)
+                    // .attr("x", `-${shadowSizePxls * 0}px`)
+                    // .attr("y", `-${shadowSizePxls}px`)
+                    // .attr("width", `${width + 2 * shadowSizePxls}px`)
+                    // .attr("height", `${height + 2 * shadowSizePxls}px`)
+                    .attr("filterUnits", "userSpaceOnUse")
                     .call(filterElement => {
                         filterElement
                             .append("feDropShadow")
-                            .attr("dx", "0")
-                            .attr("dy", "0")
-                            .attr("stdDeviation", shadowSizePxls)
-                            .attr("flood-color", "rgba(0,0,0,0.75)")
+                            .attr("dx", "0px")
+                            .attr("dy", "0px")
+                            .attr("stdDeviation", `${shadowSizePxls}`)
+                            .attr("flood-color", "rgba(0,0,0,1.75)")
                             .attr("flood-opacity", "1");
                     });
-                svgElement
-                    .append("g")
-                    .append("circle")
-                    .attr("transform", `translate(${margin.left + width / 2}, ${margin.top + height / 2})`)
-                    .attr("class", "chart-circle")
-                    .attr("cx", "0")
-                    .attr("cy", "0")
-                    .attr("r", radius)
-                    .attr("filter", `url(#${this.dropShadowFilterId})`);
+                svgElement.append("g").call(group => {
+                    // group
+                    //     .append("rect")
+                    //     .attr("x", `${0}px`)
+                    //     .attr("y", `${0}px`)
+                    //     .attr("width", `${width + margin.left + margin.right}px`)
+                    //     .attr("height", `${height + margin.top + margin.bottom}px`)
+                    //     .attr("fill", "none");
+                    //
+                    group
+                        .append("circle")
+                        // .attr("transform", `translate(${margin.left + width / 2}, ${margin.top + height / 2})`)
+                        .attr("class", "chart-circle")
+                        .attr("cx", `${margin.left + width / 2}px`)
+                        .attr("cy", `${margin.top + height / 2}px`)
+                        .attr("r", `${radius}px`)
+                        .attr("fill", PREZ.primaryColorDarkest)
+                        .attr("filter", `url(#${this.dropShadowFilterId})`);
+                });
             });
 
         this.mainSvgGroup = mainSvg
-            .attr("width", this.plotWidth + margin.left + margin.right)
-            .attr("height", this.plotHeight + margin.top + margin.bottom)
+            .attr("width", `${this.plotWidth + margin.left + margin.right}px`)
+            .attr("height", `${this.plotHeight + margin.top + margin.bottom}px`)
             // .append("g")
             // .attr("transform", "translate(" + margin.left + "," + margin.top + ")") //Plotting zone
             // .append("g")

@@ -88,8 +88,8 @@ export namespace PieChart {
                         /* SVG Styles Localized Within .pie-chart */
                         /* --------------------------------------- */
 
-                        .pie-chart :global(.chart-circle) {
-                            fill: ${PREZ.primaryColorDarkest};
+                        .pie-chart :global(.chart-circleXXX) {
+                            // fill: ${PREZ.primaryColorDarkest};
                             // box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
                             // stroke: ${PREZ.secondaryColor};
                             // stroke-width: 3;

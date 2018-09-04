@@ -18,30 +18,28 @@ The data is simply an array of numbers representing relative arc size.
 
 ### SVG Shadows
 
-To add shadows to any of your SVG shapes, you need to follow this procedure:
+These proved to be tricky. After some trial-and-error, here are some important lessons for creating shadows on any of your svg shapes.
+
+First, safari will freak out unless you apply `filterUnits="userSpaceOnUse"` to your filter tag. ([This answer](https://stackoverflow.com/a/47946201/8620332) was super helpful!) As explained in the [official documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/filterUnits), `userSpaceOnUse` causes the attributes for the filter tag to use the coordinate system of, in this case, the circle element that uses the filter. (In this case, the filter seems to apply correctly to the circle in all browsers by simply not specifying any coord-relevant attributes.)
+
+To summarize, the following procedure seems to work:
 
 1. Add a `defs` tag as a child of your SVG with a `filter` tag wherein you need to specify:
     1. The various properties of your drop shadow
-    2. An `id` to be referenced by the element you wish to apply the shadow to
-2. Apply a `filter` attribute referencing the filter to-b-applied.
+    2. An `id` to be referenced by the element you wish to apply the shadow to;
+2. Apply a `filter` attribute referencing the filterId to-be-applied.
 
 For example:
 
 ```xml
 <svg>
     <defs>
-       <filter id="basic-shadow" x="0" y="0" width='100', height='100'>
-           <feOffset result="offOut" in="SourceAlpha" dx="-5" dy="-5" />
-           <feGaussianBlur result="blurOut" in="offOut" stdDeviation="3" />
-           <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+        <filter id="drop-shadow-filter-id8" filterUnits="userSpaceOnUse">
+            <feDropShadow dx="0px" dy="0px" stdDeviation="5" flood-color="rgba(0,0,0,1.75)" flood-opacity="1"> </feDropShadow>
         </filter>
     </defs>
     ...
-    <circle filter="url(#basic-shadow)">
-        <!-- circle params -->
-    </circle>
+    <circle cx="247.5px" cy="195px" r="145px" fill="#252A3F" filter="url(#drop-shadow-filter-id8)"></circle>
     ...
 </svg>
 ```
-
-A working example the shadow can be found in this d3 PieChart code, with the size of the shadow parameterized to fit around the circle.
