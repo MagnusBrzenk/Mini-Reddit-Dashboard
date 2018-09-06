@@ -44,7 +44,7 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
         this.state = {
             xRangeMax: 1000,
             responsiveNumXTicks: -1, //
-            selectedTab: 1,
+            selectedTab: 0,
             bDisplaySettings: false
         };
         this.handleWindowResize = this.handleWindowResize.bind(this);

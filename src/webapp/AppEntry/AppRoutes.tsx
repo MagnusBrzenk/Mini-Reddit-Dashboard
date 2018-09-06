@@ -5,6 +5,7 @@ import { Route, Switch } from "react-router";
 import { HomePage } from "__COMPONENTS/HomePage";
 import { NoMatchPage } from "__COMPONENTS/NoMatchPage";
 import { Templates } from "__COMPONENTS/Templates";
+import { Temp } from "__COMPONENTS/Temp";
 import { Testing } from "__COMPONENTS/Testing";
 
 export const AppRoutes = hot(module)(() => (
@@ -12,6 +13,7 @@ export const AppRoutes = hot(module)(() => (
         <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/templates" component={Templates} />
+            <Route exact path="/temp" component={Temp} />
             <Route exact path="*" component={NoMatchPage} />
         </Switch>
     </div>
