@@ -21,12 +21,14 @@ export class Temp extends React.Component<IProps, IState> {
                         height: 100%;
                         background-color: ${PREZ.primaryColorDarkest};
                     }
-                    .dashboard-wrapper {
+                    .temp-stuff {
                         width: 100%;
                         height: 100%;
                         display: flex;
                         justify-content: center;
                         align-items: center;
+                        font-size: 120%;
+                        color: white;
                     }
                 `}</style>
                 <div className="temp-stuff">Hello World!!!</div>
