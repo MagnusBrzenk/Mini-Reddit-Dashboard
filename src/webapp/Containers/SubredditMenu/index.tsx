@@ -1,13 +1,13 @@
-import * as React from "react";
-import Immutable from "immutable";
-import { getImType } from "__METATYPING";
-import { connect } from "react-redux";
-import { getAllSubredditDatums } from "__REDUX/selectors";
-import { genUniqueId } from "__UTILS/genUniqueId";
-import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
-import { AppActions } from "__REDUX/actions";
-import { CloseWindowIcon } from "__COMPONENTS/@FortawesomeWrappers/CloseWindowIcon";
-import PREZ from "__UTILS/frontendPresentation";
+import * as React from 'react';
+import Immutable from 'immutable';
+// import { getImType } from "__METATYPING";
+import { connect } from 'react-redux';
+import { getAllSubredditDatums } from '__REDUX/selectors';
+import { genUniqueId } from '__UTILS/genUniqueId';
+import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from '__MODELS';
+import { AppActions } from '__REDUX/actions';
+import { CloseWindowIcon } from '__COMPONENTS/@FortawesomeWrappers/CloseWindowIcon';
+import PREZ from '__UTILS/frontendPresentation';
 
 interface IParentProps {
     bShadowed?: boolean;
@@ -22,13 +22,13 @@ interface IState {
 type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
 class SubredditsMenuComponent extends React.Component<IProps, IState> {
-    readonly searchSubredditInputFieldId: string = "search-subreddit-input-field-" + genUniqueId();
-    readonly subredditsMenuId: string = "subreddits-menu-" + genUniqueId();
+    readonly searchSubredditInputFieldId: string = 'search-subreddit-input-field-' + genUniqueId();
+    readonly subredditsMenuId: string = 'subreddits-menu-' + genUniqueId();
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            searchWord: "",
+            searchWord: '',
             colMaxWidthPxls: 10
         };
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -38,15 +38,15 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
 
     componentDidMount() {
         //Add some of the top subreddits
-        ["pics", "funny", "videos", "worldnews", "aww"].forEach(el => this.props.cbAddSubredditDatumToFeed(el));
+        ['pics', 'funny', 'videos', 'worldnews', 'aww'].forEach(el => this.props.cbAddSubredditDatumToFeed(el));
 
         //Pesky logic to dynamically determine absolute column width to prevent text overflow
-        window.addEventListener("resize", this.handleWindowResize);
+        window.addEventListener('resize', this.handleWindowResize);
         this.handleWindowResize();
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.handleWindowResize);
+        window.removeEventListener('resize', this.handleWindowResize);
     }
 
     handleWindowResize() {
@@ -67,12 +67,12 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
 
     handleClickOnMatchedSubredditItem(index: number) {
         //Add name of subreddit to datums
-        const subredditName: string = this.props.matchedSubreddits.get(index);
+        const subredditName: string = this.props.matchedSubreddits[index]; //.get(index);
         this.props.cbAddSubredditDatumToFeed(subredditName);
         //Reset input field
         const inputField: HTMLElement | null = document.getElementById(this.searchSubredditInputFieldId);
-        if (!!inputField) (inputField as HTMLInputElement).value = "";
-        this.setState({ searchWord: "" });
+        if (!!inputField) (inputField as HTMLInputElement).value = '';
+        this.setState({ searchWord: '' });
     }
 
     handleClickOnDatumItem(index: number) {
@@ -86,7 +86,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
 
     render() {
         //Presentation params
-        const itemBorderColor = "rgba(255,255,255,0.05)";
+        const itemBorderColor = 'rgba(255,255,255,0.05)';
         const textIndentPxls: number = 10;
         const datumHeightPxls: number = 40;
         // State params
@@ -102,7 +102,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                     .subreddits-menu {
                         width: 100%;
                         height: 100%;
-                        box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
+                        box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ''};
                         background-color: ${PREZ.primaryColorDark};
                     }
                     /* FORM */
@@ -134,7 +134,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                         max-width: ${this.state.colMaxWidthPxls}px;
                         height: calc(100% - ${this.props.searchFieldHeightPxls}px);
                         overflow-x: hidden;
-                        white-space: wrap;
+                        white-space: normal;
                     }
 
                     /* SEARCH-RESULTS BRANCH */
@@ -193,7 +193,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                 `}</style>
 
                 <div className="form-wrapper">
-                    <form className={"subreddits-search-form"} autoComplete="off">
+                    <form className={'subreddits-search-form'} autoComplete="off">
                         <input
                             className="search-subreddits-input-field"
                             onChange={e => this.handleInputChange(e)}
@@ -214,7 +214,7 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                                     onClick={e => this.handleClickOnMatchedSubredditItem(ind!)}
                                     key={ind}
                                 >
-                                    <span className="xxx" style={{ display: "inline-block" }}>
+                                    <span className="xxx" style={{ display: 'inline-block' }}>
                                         {el}
                                     </span>
                                 </div>
@@ -228,18 +228,20 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
                                     onClick={e => this.handleClickOnDatumItem(ind!)}
                                     key={ind}
                                     style={{
-                                        color: !!el.get("bDisplayed") ? colorPallete[ind!] : "grey",
-                                        backgroundColor: ind! % 2 === 0 ? "rgba(255,255,255,0.03)" : "none"
+                                        color: !!el.bDisplayed ? colorPallete[ind!] : 'grey',
+                                        backgroundColor: ind! % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'none'
                                     }}
                                 >
-                                    <div className="subreddit-datum-label center-contents-vertically">
-                                        {el.get("name")}
+                                    <div //
+                                        className="subreddit-datum-label center-contents-vertically"
+                                    >
+                                        <span> {el.name}</span>
                                     </div>
                                     <div
                                         className="subreddit-datum-cross center-contents-vertically"
                                         onClick={e => this.handleClickOnDatumCloseIcon(e, ind!)}
                                     >
-                                        <CloseWindowIcon color={"grey"} />
+                                        <CloseWindowIcon color={'grey'} />
                                     </div>
                                 </div>
                             ))}
@@ -256,15 +258,15 @@ class SubredditsMenuComponent extends React.Component<IProps, IState> {
 //////////////////////////////////////////////////////////////////////////
 
 interface IReduxStateToProps {
-    subredditDatums: SUBREDDITDATUM.ImTypes;
+    subredditDatums: SUBREDDITDATUM.Interface[];
     searchWord: string;
-    matchedSubreddits: getImType<string[]>;
+    matchedSubreddits: string[];
 }
-function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
+function mapStateToProps(state: ROOTSTATE.Interface): IReduxStateToProps {
     return {
-        subredditDatums: state.get("subredditData").get("subredditDatums"),
-        searchWord: state.get("subredditSearch").get("searchWord"),
-        matchedSubreddits: state.get("subredditSearch").get("matchedSubreddits")
+        subredditDatums: state.subredditData.subredditDatums, //state.get('subredditData').get('subredditDatums'),
+        searchWord: state.subredditSearch.searchWord, //state.get('subredditSearch').get('searchWord'),
+        matchedSubreddits: state.subredditSearch.matchedSubreddits //state.get('subredditSearch').get('matchedSubreddits')
     };
 }
 
@@ -285,7 +287,7 @@ const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     };
 };
 
-export const SubredditMenu = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
+export const SubredditMenu = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.Interface>(
     mapStateToProps,
     mapDispatchToProps
 )(SubredditsMenuComponent);

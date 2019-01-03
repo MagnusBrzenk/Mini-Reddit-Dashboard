@@ -1,11 +1,11 @@
-import * as React from "react";
-import { connect } from "react-redux";
-import { getAllSubredditDatums } from "__REDUX/selectors";
-import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
-import { TrendyHamburger } from "__COMPONENTS/TrendyHamburger";
-import { AppActions } from "__REDUX/actions";
-import PREZ from "__UTILS/frontendPresentation";
-import { genUniqueId } from "__UTILS/genUniqueId";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { getAllSubredditDatums } from '__REDUX/selectors';
+import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from '__MODELS';
+import { TrendyHamburger } from '__COMPONENTS/TrendyHamburger';
+import { AppActions } from '__REDUX/actions';
+import PREZ from '__UTILS/frontendPresentation';
+import { genUniqueId } from '__UTILS/genUniqueId';
 
 interface IParentProps {
     bShadowed?: boolean;
@@ -20,9 +20,9 @@ type IProps = IReduxStateToProps & IReduxCallbacks & IParentProps;
 
 class ControlBarComponent extends React.Component<IProps, IState> {
     //unique-id references
-    readonly binWidthInputId: string = "bin-width-input-" + genUniqueId();
-    readonly maxRangeInputId: string = "max-range-input-" + genUniqueId();
-    readonly controlFormName: string = "control-bar-form-" + genUniqueId();
+    readonly binWidthInputId: string = 'bin-width-input-' + genUniqueId();
+    readonly maxRangeInputId: string = 'max-range-input-' + genUniqueId();
+    readonly controlFormName: string = 'control-bar-form-' + genUniqueId();
 
     //control params
     readonly deltaBinWidth: number = 25;
@@ -52,7 +52,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
             const bUpperBoundTest = provisionalNewBinWidth <= this.props.maxXRange;
             const newBinWidth = bLowerBoundTest && bUpperBoundTest ? provisionalNewBinWidth : this.props.binWidth;
             //Set new value to input field and redux state
-            (binWidthInput as HTMLInputElement).value = Math.round(newBinWidth) + "";
+            (binWidthInput as HTMLInputElement).value = Math.round(newBinWidth) + '';
             this.props.cbSetBinWidth(newBinWidth);
         }
     }
@@ -67,7 +67,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
             const bUpperBoundTest = provisionalNewMaxXRange <= this.maxMaxXRange;
             const newMaxXRange = bLowerBoundTest && bUpperBoundTest ? provisionalNewMaxXRange : this.props.maxXRange;
             //Set new value to input field and redux state
-            (maxXRangeInput as HTMLInputElement).value = Math.round(newMaxXRange) + "";
+            (maxXRangeInput as HTMLInputElement).value = Math.round(newMaxXRange) + '';
             this.props.cbSetMaxXRange(newMaxXRange);
         }
     }
@@ -81,7 +81,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
         const inputFieldWrapperInputHeightPxls = 30;
         const inputFieldWrapperHeightPxls = inputFieldWrapperLabelHeightPxls + inputFieldWrapperInputHeightPxls;
         const animationDurationSecs = 0.5;
-        const bufferSideBorderString = "10px solid rgba(255, 0, 0, 0)";
+        const bufferSideBorderString = '10px solid rgba(255, 0, 0, 0)';
         return (
             <div className="control-bar">
                 <style jsx>{`
@@ -192,7 +192,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                 `}</style>
 
                 <div className="title-wrapper">
-                    {"Mini-Reddit Dashboard"}
+                    {'Mini-Reddit Dashboard'}
                     <div
                         className={`hamburger-icon-wrapper`}
                         onClick={() => this.setState(oldState => ({ bHamburgerChecked: !oldState.bHamburgerChecked }))}
@@ -212,7 +212,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                     name={this.controlFormName}
                 >
                     <div className="control-wrapper">
-                        <label htmlFor={this.binWidthInputId}>{"BIN WIDTH"}</label>
+                        <label htmlFor={this.binWidthInputId}>{'BIN WIDTH'}</label>
                         <div className="input-field-wrapper">
                             <div className="tri-button" onClick={() => this.incrementBinWidth(1)}>
                                 ▲
@@ -233,7 +233,7 @@ class ControlBarComponent extends React.Component<IProps, IState> {
                     </div>
 
                     <div className="control-wrapper">
-                        <label htmlFor={this.maxRangeInputId}>{"MAX RANGE"}</label>
+                        <label htmlFor={this.maxRangeInputId}>{'MAX RANGE'}</label>
                         <div className="input-field-wrapper">
                             <div className="tri-button" onClick={() => this.incrementMaxXRange(1)}>
                                 ▲
@@ -266,15 +266,15 @@ class ControlBarComponent extends React.Component<IProps, IState> {
  * Data sent from redux state to component props via selectors
  */
 interface IReduxStateToProps {
-    subredditDatums: SUBREDDITDATUM.ImTypes;
+    subredditDatums: SUBREDDITDATUM.Interface[];
     binWidth: number;
     maxXRange: number;
 }
-function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
+function mapStateToProps(state: ROOTSTATE.Interface): IReduxStateToProps {
     return {
         subredditDatums: getAllSubredditDatums(state),
-        binWidth: state.get("subredditData").get("binWidth"),
-        maxXRange: state.get("subredditData").get("maxXRange")
+        binWidth: state.subredditData.binWidth,
+        maxXRange: state.subredditData.maxXRange
     };
 }
 
@@ -294,7 +294,7 @@ const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     };
 };
 
-export const ControlBar = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
+export const ControlBar = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.Interface>(
     mapStateToProps,
     mapDispatchToProps
 )(ControlBarComponent);

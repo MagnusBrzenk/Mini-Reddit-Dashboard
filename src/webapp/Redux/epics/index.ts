@@ -1,15 +1,15 @@
-import { epicDependencies } from "__REDUX/epics/epicDependencies";
-import { AppActions } from "__REDUX/actions";
-import { ROOTSTATE, SUBREDDITDATA, SUBREDDITDATUM } from "__MODELS";
-import { from, Observable, of, merge } from "rxjs"; //Get types and/or observable-creation functions
-import { mergeMap, map } from "rxjs/operators"; //Get piping operators
-import { combineEpics, ofType, Epic } from "redux-observable";
-import { Action, AnyAction } from "redux";
+import { epicDependencies } from '__REDUX/epics/epicDependencies';
+import { AppActions } from '__REDUX/actions';
+import { ROOTSTATE, SUBREDDITDATA, SUBREDDITDATUM } from '__MODELS';
+import { from, Observable, of, merge } from 'rxjs'; //Get types and/or observable-creation functions
+import { mergeMap, map } from 'rxjs/operators'; //Get piping operators
+import { combineEpics, ofType, Epic } from 'redux-observable';
+import { Action, AnyAction } from 'redux';
 
 const allEpics: TEpic[] = [
     function searchForSubreddit(
         action$: Observable<AnyAction>,
-        rootState: { value: ROOTSTATE.ImType },
+        rootState: { value: ROOTSTATE.Interface },
         dependencies: typeof epicDependencies
     ) {
         return action$.pipe(
@@ -24,7 +24,7 @@ const allEpics: TEpic[] = [
 
     function updateSubredditDatum(
         action$: Observable<AnyAction>,
-        rootState: { value: ROOTSTATE.ImType },
+        rootState: { value: ROOTSTATE.Interface },
         dependencies: typeof epicDependencies
     ) {
         return action$.pipe(
@@ -33,13 +33,9 @@ const allEpics: TEpic[] = [
                 from(
                     dependencies.fetchUpdatedSubredditDatum(
                         //1st Arg: subredditDatum (existence just verified/established by this action)
-                        rootState.value
-                            .get("subredditData")
-                            .get("subredditDatums")
-                            .find(el => el.get("name") === action.payload)
-                            .toJS(),
+                        rootState.value.subredditData.subredditDatums.find(el => el.name === action.payload),
                         //2nd Arg: maxXRange
-                        rootState.value.get("subredditData").get("maxXRange")
+                        rootState.value.subredditData.maxXRange //.get('subredditData').get('maxXRange')
                     )
                 ).pipe(map((response: SUBREDDITDATUM.Interface) => AppActions.updateSubredditDatumFulfilled(response)))
             )
@@ -49,5 +45,5 @@ const allEpics: TEpic[] = [
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DO NOT EDIT! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 export const rootEpic = combineEpics.apply(combineEpics, allEpics);
-type TEpic = Epic<AnyAction, AnyAction, ROOTSTATE.ImType, typeof epicDependencies>;
+type TEpic = Epic<AnyAction, AnyAction, ROOTSTATE.Interface, typeof epicDependencies>;
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

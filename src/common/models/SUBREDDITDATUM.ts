@@ -1,7 +1,3 @@
-import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
-import { __debug } from "__FUNCTIONS/__debug";
-const debug = __debug("CONTACT");
-
 export namespace SUBREDDITDATUM {
     export interface Interface {
         readonly name: string;
@@ -42,7 +38,6 @@ export namespace SUBREDDITDATUM {
             //At minimum, ensure input has no properties beyond those of Default
             for (const key in input)
                 if (!Object.keys(Default).includes(key)) {
-                    debug(`Key '${key}' not allowed!!!`);
                     return null;
                 }
             //More detailed type tests, etc. go here:
@@ -53,10 +48,4 @@ export namespace SUBREDDITDATUM {
             return input as Interface;
         }
     }
-
-    /*--------------------- DO NOT EDIT/REMOVE ---------------------*/
-    export const genIm = getImmutableGenerator<Interface>(Default);
-    export type ImType = getImType<Interface>;
-    export type ImTypes = getImType<Interface[]>;
-    /*--------------------------------------------------------------*/
 }

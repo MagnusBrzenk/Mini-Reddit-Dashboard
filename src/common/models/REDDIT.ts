@@ -3,8 +3,6 @@ const debug = __debug("CONTACT");
 
 export namespace REDDIT {
     //
-    //
-    //
     export interface ISubredditSearchResult {
         kind: string;
         data: {

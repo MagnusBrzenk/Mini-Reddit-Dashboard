@@ -1,19 +1,19 @@
-import * as React from "react";
-import { connect } from "react-redux";
-import { getAllSubredditDatums } from "__REDUX/selectors";
-import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from "__MODELS";
-import { LineChart } from "__COMPONENTS/LineChart";
-import { PieChart } from "__COMPONENTS/PieChart";
-import { AppActions } from "__REDUX/actions";
-import PREZ from "__UTILS/frontendPresentation";
-import { reshapeSimpleLineChartData, reshapePieChartData } from "./reshapePlottingData";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { getAllSubredditDatums } from '__REDUX/selectors';
+import { SUBREDDITDATUM, SUBREDDITDATA, ROOTSTATE } from '__MODELS';
+import { LineChart } from '__COMPONENTS/LineChart';
+import { PieChart } from '__COMPONENTS/PieChart';
+import { AppActions } from '__REDUX/actions';
+import PREZ from '__UTILS/frontendPresentation';
+import { reshapeSimpleLineChartData, reshapePieChartData } from './reshapePlottingData';
 
-import { PieChart as PieChartIcon } from "__COMPONENTS/@FortawesomeWrappers/PieChart";
-import { BarChart as BarChartIcon } from "__COMPONENTS/@FortawesomeWrappers/BarChart";
-import { LineChart as LineChartIcon } from "__COMPONENTS/@FortawesomeWrappers/LineChart";
-import { StreetView as StreetViewIcon } from "__COMPONENTS/@FortawesomeWrappers/StreetView";
+import { PieChart as PieChartIcon } from '__COMPONENTS/@FortawesomeWrappers/PieChart';
+import { BarChart as BarChartIcon } from '__COMPONENTS/@FortawesomeWrappers/BarChart';
+import { LineChart as LineChartIcon } from '__COMPONENTS/@FortawesomeWrappers/LineChart';
+import { StreetView as StreetViewIcon } from '__COMPONENTS/@FortawesomeWrappers/StreetView';
 
-import { TrendyHamburger } from "__COMPONENTS/TrendyHamburger";
+import { TrendyHamburger } from '__COMPONENTS/TrendyHamburger';
 
 type IDataPoint = LineChart.IDataPoint;
 
@@ -63,12 +63,12 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        window.addEventListener("resize", this.handleWindowResize);
+        window.addEventListener('resize', this.handleWindowResize);
         this.handleWindowResize();
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.handleWindowResize);
+        window.removeEventListener('resize', this.handleWindowResize);
     }
 
     render() {
@@ -86,16 +86,18 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
         // const pieChartArcData: number[] = [1, 2, 3, 4, 5];
         const pieChartArcData = reshapePieChartData(this.props.subredditDatums);
 
-        console.log("++++++++++++++++++++");
-        console.log(pieChartArcData);
-        console.log("++++++++++++++++++++");
+        console.log('++++++++++++++++++++');
+        console.log(this.props.subredditDatums);
+        console.log(simpleLineChartPlottingData);
+        // console.log(pieChartArcData);
+        console.log('++++++++++++++++++++');
         return (
             <div className="datum-visualizations">
                 <style jsx>{`
                     .datum-visualizations {
                         width: 100%;
                         height: 100%;
-                        box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ""};
+                        box-shadow: ${!!this.props.bShadowed ? PREZ.shadowString : ''};
                     }
                     .visualizations-wrapper {
                         width: 100%;
@@ -129,25 +131,25 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
 
                 <div className="tabs-wrapper">
                     <div
-                        className={`tab ${tab === 0 ? "selected-tab" : ""}`}
+                        className={`tab ${tab === 0 ? 'selected-tab' : ''}`}
                         onClick={() => this.setState({ selectedTab: 0 })}
                     >
                         <LineChartIcon color={tab === 0 ? PREZ.displayWhite : PREZ.unhighlightedIconColor} size="2x" />
                     </div>
                     <div
-                        className={`tab ${tab === 1 ? "selected-tab" : ""}`}
+                        className={`tab ${tab === 1 ? 'selected-tab' : ''}`}
                         onClick={() => this.setState({ selectedTab: 1 })}
                     >
                         <PieChartIcon color={tab === 1 ? PREZ.displayWhite : PREZ.unhighlightedIconColor} size="2x" />
                     </div>
                     <div
-                        className={`tab ${tab === 2 ? "selected-tab" : ""}`}
+                        className={`tab ${tab === 2 ? 'selected-tab' : ''}`}
                         onClick={() => this.setState({ selectedTab: 2 })}
                     >
                         <BarChartIcon color={tab === 2 ? PREZ.displayWhite : PREZ.unhighlightedIconColor} size="2x" />
                     </div>
                     <div
-                        className={`tab ${tab === 3 ? "selected-tab" : ""}`}
+                        className={`tab ${tab === 3 ? 'selected-tab' : ''}`}
                         onClick={() => this.setState({ selectedTab: 3 })}
                     >
                         <StreetViewIcon color={tab === 3 ? PREZ.displayWhite : PREZ.unhighlightedIconColor} size="2x" />
@@ -159,9 +161,9 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
                             plottingData={simpleLineChartPlottingData}
                             params={{
                                 //
-                                xAxisLabel: "All Time Rankings",
-                                yAxisLabel: "Bin Count",
-                                axisLabelFontSizePrcnt: "",
+                                xAxisLabel: 'All Time Rankings',
+                                yAxisLabel: 'Bin Count',
+                                axisLabelFontSizePrcnt: '',
                                 numXTicks: this.state.responsiveNumXTicks,
                                 numYTicks: -1, // -1 => pure function of window size
                                 binWidth: this.props.binWidth
@@ -187,15 +189,15 @@ class DatumVisualizationsComponent extends React.Component<IProps, IState> {
  * Data sent from redux state to component props via selectors
  */
 interface IReduxStateToProps {
-    subredditDatums: SUBREDDITDATUM.ImTypes;
+    subredditDatums: SUBREDDITDATUM.Interface[];
     binWidth: number;
     maxXRange: number;
 }
-function mapStateToProps(state: ROOTSTATE.ImType): IReduxStateToProps {
+function mapStateToProps(state: ROOTSTATE.Interface): IReduxStateToProps {
     return {
         subredditDatums: getAllSubredditDatums(state),
-        binWidth: state.get("subredditData").get("binWidth"),
-        maxXRange: state.get("subredditData").get("maxXRange")
+        binWidth: state.subredditData.binWidth, // state.get('subredditData').get('binWidth'),
+        maxXRange: state.subredditData.maxXRange //state.get('subredditData').get('maxXRange')
     };
 }
 
@@ -207,7 +209,7 @@ const mapDispatchToProps = (dispatch: any): IReduxCallbacks => {
     return {};
 };
 
-export const DatumVisualizations = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.ImType>(
+export const DatumVisualizations = connect<IReduxStateToProps, IReduxCallbacks, IParentProps, ROOTSTATE.Interface>(
     mapStateToProps,
     mapDispatchToProps
 )(DatumVisualizationsComponent);

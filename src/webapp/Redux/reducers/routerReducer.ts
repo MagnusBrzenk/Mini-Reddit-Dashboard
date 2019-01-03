@@ -1,11 +1,11 @@
-import { LOCATION_CHANGE, CALL_HISTORY_METHOD } from "react-router-redux";
-import { AnyAction, Reducer } from "redux";
-import { ROUTERSTATE } from "__MODELS";
+import { LOCATION_CHANGE, CALL_HISTORY_METHOD } from 'react-router-redux';
+import { AnyAction, Reducer } from 'redux';
+import { ROUTERSTATE } from '__MODELS';
 
-export const routerReducer: Reducer<ROUTERSTATE.ImType, AnyAction> = function(
-    substate0: ROUTERSTATE.ImType = ROUTERSTATE.genIm(),
+export const routerReducer: Reducer<ROUTERSTATE.Interface, AnyAction> = function(
+    substate0: ROUTERSTATE.Interface = { ...ROUTERSTATE.Default },
     action: AnyAction
-): ROUTERSTATE.ImType {
+): ROUTERSTATE.Interface {
     //
 
     switch (action.type) {
@@ -18,7 +18,7 @@ export const routerReducer: Reducer<ROUTERSTATE.ImType, AnyAction> = function(
                 location: (action.payload && action.payload.location) || action.payload,
                 action: (action.payload && action.payload.action) || null
             };
-            return ROUTERSTATE.genIm(newRouterState);
+            return newRouterState;
 
         default:
             return substate0;

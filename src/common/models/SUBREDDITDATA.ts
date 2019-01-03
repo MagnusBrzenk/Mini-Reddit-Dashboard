@@ -1,4 +1,3 @@
-import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
 import { SUBREDDITDATUM } from "./SUBREDDITDATUM";
 
 /**
@@ -23,14 +22,4 @@ export namespace SUBREDDITDATA {
         maxXRange: 1000,
         binWidth: 100
     };
-
-    /* DO NOT EDIT/REMOVE */
-    export const genIm = getImmutableGenerator(Default);
-    export type ImType = getImType<Interface>;
-    export type ImTypes = getImType<Interface[]>;
 }
-
-// /////////////////////////////////////////////////////////////////////
-// /////////////////////////////////////////////////////////////////////
-// /////////////////////////////////////////////////////////////////////
-// /////////////////////////////////////////////////////////////////////

@@ -1,4 +1,3 @@
-import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
 import { SUBREDDITDATA } from "./SUBREDDITDATA";
 import { SUBREDDITSEARCH } from "./SUBREDDITSEARCH";
 import { ROUTERSTATE } from "./ROUTERSTATE";
@@ -19,9 +18,4 @@ export namespace ROOTSTATE {
         subredditSearch: SUBREDDITSEARCH.Default,
         router: ROUTERSTATE.Default
     };
-
-    /* DO NOT EDIT/REMOVE */
-    export const genIm = getImmutableGenerator(Default);
-    export type ImType = getImType<Interface>;
-    export type ImTypes = getImType<Interface[]>;
 }

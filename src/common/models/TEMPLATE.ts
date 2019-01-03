@@ -1,15 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    TO USE THIS TEMPLATE: COPY, PASTE & EDIT CONTENT BETWEEN LINES WITH PATTERN /* ~~~ */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-import { getImmutableGenerator, getImType } from "__METATYPING"; //DO NOT REMOVE
-/* import namespaces from "__MODELS" and use their Interface/Demo/Default to build out the structure of this namespace */
-import { __debug } from "__FUNCTIONS/__debug";
-const debug = __debug("RENAME_ME");
-
 export namespace RENAME_ME {
     /* POJO structures to be customized */
 
@@ -41,7 +29,6 @@ export namespace RENAME_ME {
             //At minimum, ensure input has no properties that beyond those of Default
             for (const key in input)
                 if (!Object.keys(Default).includes(key)) {
-                    debug(`Key '${key}' not allowed!!!`);
                     return null;
                 }
             //More detailed type tests, etc. go here:
@@ -52,11 +39,6 @@ export namespace RENAME_ME {
             return input as Interface;
         }
     }
-
-    /* Immutable Generator and Types: DO NOT EDIT/REMOVE */
-    export const genIm = getImmutableGenerator(Default); //Get function to construct deeply-nested-immutable 'object' seeded by this namespace's Default POJO
-    export type ImType = getImType<Interface>; //Get the typescript type to apply to instances of this namespace's deeply-nested-immutable 'object'
-    export type ImTypes = getImType<Interface[]>; //Use this 'array version' of the Immutable type when e.g. getIn-ing a nested immutable List
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

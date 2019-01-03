@@ -1,8 +1,8 @@
-import * as React from "react";
-import { ControlBar } from "__CONTAINERS/ControlBar";
-import { DatumVisualizations } from "__CONTAINERS/DatumVisualizations";
-import { SubredditMenu } from "__CONTAINERS/SubredditMenu";
-import PREZ from "__UTILS/frontendPresentation";
+import * as React from 'react';
+import { ControlBar } from '__CONTAINERS/ControlBar';
+import { DatumVisualizations } from '__CONTAINERS/DatumVisualizations';
+import { SubredditMenu } from '__CONTAINERS/SubredditMenu';
+import PREZ from '__UTILS/frontendPresentation';
 
 interface IProps {}
 
@@ -20,11 +20,11 @@ export class Dashboard extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        window.addEventListener("resize", this.handleWindowResize);
+        window.addEventListener('resize', this.handleWindowResize);
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.handleWindowResize);
+        window.removeEventListener('resize', this.handleWindowResize);
     }
 
     handleWindowResize() {
@@ -51,7 +51,7 @@ export class Dashboard extends React.Component<IProps, IState> {
                         width: 100%;
                         display: flex;
                     }
-                    .header-wrapper {
+                    .control-bar-wrapper {
                         color: white;
                         padding: ${padWidthPxls}px;
                         padding-bottom: 0px;
@@ -113,7 +113,7 @@ export class Dashboard extends React.Component<IProps, IState> {
 
                 <div className="dash-board-column-container">
                     <div className="dashboard-header-row">
-                        <div className="header-wrapper">
+                        <div className="control-bar-wrapper">
                             <ControlBar bShadowed />
                         </div>
                     </div>

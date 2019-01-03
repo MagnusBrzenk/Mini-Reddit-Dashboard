@@ -1,8 +1,8 @@
-import { SUBREDDITDATUM, SUBREDDITDATA, REDDIT, NETWORK } from "__MODELS";
-import { parseSubredditSearch } from "__FUNCTIONS/redditFunctions/parseSubredditSearch";
-import { updateSubredditDatum } from "__FUNCTIONS/redditFunctions/updateSubredditDatum";
-import { __debug } from "__FUNCTIONS/__debug";
-const debug = __debug("EPIC-DEP");
+import { SUBREDDITDATUM, SUBREDDITDATA, REDDIT, NETWORK } from '__MODELS';
+import { parseSubredditSearch } from '__FUNCTIONS/redditFunctions/parseSubredditSearch';
+import { updateSubredditDatum } from '__FUNCTIONS/redditFunctions/updateSubredditDatum';
+import { __debug } from '__FUNCTIONS/__debug';
+const debug = __debug('EPIC-DEP');
 
 /**
  * Object containing functions used within epics to fetch resources
@@ -11,7 +11,7 @@ export const epicDependencies = {
     searchForSubreddit: async (subredditSearchText: string): Promise<string[]> => {
         try {
             //Prepare reddit-api request
-            console.log("EPIC: Searching for subreddit: ", subredditSearchText);
+            console.log('EPIC: Searching for subreddit: ', subredditSearchText);
             const subredditNameSearchUrl: string = `https://www.reddit.com/subreddits/search/.json?q=${subredditSearchText}`;
 
             //Handle reddit-api response
@@ -37,9 +37,10 @@ export const epicDependencies = {
     },
 
     fetchUpdatedSubredditDatum: async (
-        subredditDatum: SUBREDDITDATUM.Interface,
+        subredditDatum: SUBREDDITDATUM.Interface | undefined,
         maxXRange: number
-    ): Promise<SUBREDDITDATUM.Interface> => {
+    ): Promise<SUBREDDITDATUM.Interface | {}> => {
+        if (!subredditDatum) return {};
         return updateSubredditDatum(subredditDatum, maxXRange);
     }
 };
