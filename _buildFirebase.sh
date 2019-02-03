@@ -1,6 +1,7 @@
 #! /bin/bash
 
 clear
+
 printf "\n======================================================\n"
 printf   "RUNNING PIPELINE TO DEPLOY TO FIREBASE"
 printf   " "
